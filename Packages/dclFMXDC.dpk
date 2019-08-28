@@ -1,0 +1,47 @@
+package dclFMXDC;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'DC FMX controls'}
+{$DESIGNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  fmx,
+  FMXTee,
+  DC;
+
+contains
+  FMX.DCChart in '..\Source\FMX\FMX.DCChart.pas',
+  FMX.DCDataObject in '..\Source\FMX\FMX.DCDataObject.pas',
+  FMX.DCLineSeries in '..\Source\FMX\FMX.DCLineSeries.pas',
+  FMX.DCLabel in '..\Source\FMX\FMX.DCLabel.pas',
+  FMX.DCText in '..\Source\FMX\FMX.DCText.pas',
+  FMX.DCRegister in '..\Source\FMX\FMX.DCRegister.pas';
+
+end.
+

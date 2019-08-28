@@ -1,0 +1,95 @@
+object UserChoice: TUserChoice
+  Left = 0
+  Top = 0
+  Caption = #1040#1074#1090#1086#1088#1080#1079#1072#1094#1080#1103
+  ClientHeight = 567
+  ClientWidth = 384
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnClose = FormClose
+  DesignerMasterStyle = 0
+  object cbUser: TComboBox
+    Align = MostTop
+    Items.Strings = (
+      'User1'
+      'User2')
+    ItemIndex = 0
+    Margins.Left = 20.000000000000000000
+    Margins.Right = 20.000000000000000000
+    Position.X = 20.000000000000000000
+    Position.Y = 41.000000000000000000
+    Size.Width = 344.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+  end
+  object lUser: TLabel
+    Align = MostTop
+    Margins.Left = 20.000000000000000000
+    Margins.Right = 20.000000000000000000
+    Position.X = 20.000000000000000000
+    Size.Width = 344.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.VertAlign = Trailing
+    Text = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
+  end
+  object lPassword: TLabel
+    Align = MostTop
+    Margins.Left = 20.000000000000000000
+    Margins.Right = 20.000000000000000000
+    Position.X = 20.000000000000000000
+    Position.Y = 73.000000000000000000
+    Size.Width = 344.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.VertAlign = Trailing
+    Text = #1055#1072#1088#1086#1083#1100':'
+  end
+  object ePassword: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Align = MostTop
+    TabOrder = 4
+    Password = True
+    Position.X = 20.000000000000000000
+    Position.Y = 114.000000000000000000
+    Margins.Left = 20.000000000000000000
+    Margins.Right = 20.000000000000000000
+    Size.Width = 344.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Layout1: TLayout
+    Align = MostTop
+    Position.Y = 146.000000000000000000
+    Size.Width = 384.000000000000000000
+    Size.Height = 79.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    object bOk: TButton
+      Default = True
+      ModalResult = 1
+      Position.X = 16.000000000000000000
+      Position.Y = 30.000000000000000000
+      Size.Width = 130.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'OK'
+    end
+    object bCalcel: TButton
+      Anchors = [akTop, akRight]
+      Cancel = True
+      Default = True
+      ModalResult = 2
+      Position.X = 240.000000000000000000
+      Position.Y = 30.000000000000000000
+      Size.Width = 130.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = #1054#1090#1084#1077#1085#1072
+    end
+  end
+end
