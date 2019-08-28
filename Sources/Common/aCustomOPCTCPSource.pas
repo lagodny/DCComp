@@ -182,7 +182,7 @@ uses
   StrUtils, Math,
   IdTCPConnection,
   aOPCLog, aOPCconsts,
-  uStrFunc;
+  DC.StrUtils;
 
   { TODO : Разобраться с GetLocalUserName }
   function GetLocalUserName: string;
@@ -670,7 +670,7 @@ begin
     //FConnection.IOHandler.DefStringEncoding := TIdTextEncoding.ANSI;
     FConnection.IOHandler.DefStringEncoding := IndyTextEncoding_OSDefault;
     FConnection.IOHandler.MaxLineLength := 100 * (16 * 1024);
-    TIdIOHandlerSocket(FConnection.IOHandler).Binding.SetSockOpt(Id_SOL_SOCKET, Id_SO_RCVTIMEO, ReadTimeOut);
+    //TIdIOHandlerSocket(FConnection.IOHandler).Binding.SetSockOpt(Id_SOL_SOCKET, Id_SO_RCVTIMEO, ReadTimeOut);
   end;
 
   // авторизацию и обмен параметрами должны реализовать наследники

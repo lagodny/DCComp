@@ -33,18 +33,10 @@ requires
   dbrtl,
   IndySystem,
   IndyProtocols,
-  IndyCore;
+  IndyCore,
+  dclDC;
 
 contains
-  aOPCSource in '..\Sources\Common\aOPCSource.pas',
-  aOPCTCPSource in '..\Sources\Common\aOPCTCPSource.pas',
-  aOPCTCPSource_V30 in '..\Sources\Common\aOPCTCPSource_V30.pas',
-  aOPCTCPSource_V31 in '..\Sources\Common\aOPCTCPSource_V31.pas',
-  aOPCTCPSource_V32 in '..\Sources\Common\aOPCTCPSource_V32.pas',
-  aOPCLookupList in '..\Sources\Common\aOPCLookupList.pas',
-  aOPCLog in '..\Sources\Common\aOPCLog.pas',
-  aOPCTagDictionary in '..\Sources\Common\aOPCTagDictionary.pas',
-  aOPCProvider in '..\Sources\Common\aOPCProvider.pas',
-  uDCStrResource in '..\Sources\Common\uDCStrResource.pas';
+  aOPCTagDictionary in '..\Sources\Common\aOPCTagDictionary.pas';
 
 end.

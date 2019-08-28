@@ -106,7 +106,7 @@ implementation
 uses
   StrUtils, IdTCPConnection,
   aOPCLog, aOPCconsts,
-  uStrFunc;
+  DC.StrUtils;
 
 { TaOPCTCPSource }
 

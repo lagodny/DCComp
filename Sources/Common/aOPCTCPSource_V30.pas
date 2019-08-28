@@ -167,7 +167,7 @@ uses
   flcStdTypes, flcCipherRSA,
   IdGlobal, IdException,
   DateUtils, StrUtils,
-  uStrFunc, aOPCLog,
+  DC.StrUtils, aOPCLog,
 //  uDCLocalizer,
   uDCStrResource,
   aOPCConsts;

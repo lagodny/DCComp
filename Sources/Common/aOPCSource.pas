@@ -320,7 +320,7 @@ type
 implementation
 
 uses
-  uStrUtils, 
+  DC.StrUtils,
   uCommonClass,
   aOPCLog, uOPCCash, 
   // uUserMessageForm,

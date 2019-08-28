@@ -2,13 +2,6 @@ unit aOPCTCPSource_V33;
 
 interface
 
-//uses
-//  Classes, SysUtils,
-//  IdComponent,
-//  uStrFunc,
-//  aOPCSource, aOPCTCPSource_V30,
-//  uDCObjects, uUserMessage, aCustomOPCSource, aCustomOPCTCPSource;
-
 uses
   Classes,
   aOPCTCPSource_V30,

@@ -70,7 +70,7 @@ implementation
 
 uses
   System.StrUtils,
-  uStrFunc;
+  DC.StrUtils;
 
 var
   FOPCLog: TOPCLog;

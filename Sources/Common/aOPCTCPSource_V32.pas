@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   IdComponent,
-  uStrFunc,
+  DC.StrUtils,
   aOPCSource, aOPCTCPSource_V30,
   uDCObjects, uUserMessage, aCustomOPCSource, aCustomOPCTCPSource;
 
