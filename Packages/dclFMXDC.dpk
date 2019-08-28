@@ -25,23 +25,21 @@ package dclFMXDC;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'DC FMX controls'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
 requires
   rtl,
+  dbrtl,
   fmx,
-  FMXTee,
-  DC;
+  IndySystem;
 
 contains
-  FMX.DCChart in '..\Source\FMX\FMX.DCChart.pas',
-  FMX.DCDataObject in '..\Source\FMX\FMX.DCDataObject.pas',
-  FMX.DCLineSeries in '..\Source\FMX\FMX.DCLineSeries.pas',
-  FMX.DCLabel in '..\Source\FMX\FMX.DCLabel.pas',
-  FMX.DCText in '..\Source\FMX\FMX.DCText.pas',
-  FMX.DCRegister in '..\Source\FMX\FMX.DCRegister.pas';
+  FMX.DCChart in '..\Sources\FMX\FMX.DCChart.pas',
+  FMX.DCDataObject in '..\Sources\FMX\FMX.DCDataObject.pas',
+  FMX.DCLineSeries in '..\Sources\FMX\FMX.DCLineSeries.pas',
+  FMX.DCLabel in '..\Sources\FMX\FMX.DCLabel.pas',
+  FMX.DCText in '..\Sources\FMX\FMX.DCText.pas',
+  FMX.DCRegister in '..\Sources\FMX\FMX.DCRegister.pas';
 
 end.
-

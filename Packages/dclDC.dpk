@@ -25,22 +25,20 @@ package dclDC;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'DC non visual components'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
 requires
   rtl,
   designIDE,
+  dbrtl,
   IndySystem,
   IndyProtocols,
   IndyCore,
-  DC,
   bindengine,
   bindcomp;
 
 contains
-  aDCReg in '..\Source\Common\aDCReg.pas';
+  aDCReg in '..\Sources\Common\aDCReg.pas';
 
 end.
-

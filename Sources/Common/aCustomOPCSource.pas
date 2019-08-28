@@ -4,8 +4,6 @@
 {                                                       }
 {*******************************************************}
 
-{$I OPC.inc}
-
 unit aCustomOPCSource;
 
 interface

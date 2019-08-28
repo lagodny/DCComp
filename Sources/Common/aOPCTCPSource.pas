@@ -1,11 +1,9 @@
 unit aOPCTCPSource;
-{$I OPC.inc}
 
 interface
 
 uses
   SysUtils, Classes,
-  //Messages, Windows,
   DateUtils, SyncObjs,
   aCustomOPCSource, aOPCSource,
   IdTCPClient, IdGlobal, IdException, IdExceptionCore

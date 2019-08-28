@@ -1,12 +1,8 @@
 unit FMX.DCLineSeries;
 
-{$I OPC.inc}
-
 interface
 
 uses
-  //Windows, Forms,
-  //Controls, StdCtrls, Graphics,
   System.Classes, System.SysUtils, System.UITypes, System.Types,
   FMX.Forms,
   FMXTee.Chart, FMXTee.Series, FMXTee.Engine,
