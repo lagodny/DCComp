@@ -181,8 +181,7 @@ type
 implementation
 
 uses
-  uCommonClass,
-  uStrUtils;
+  uCommonClass, DC.StrUtils;
 
 { TOPCConnectionCollectionItem }
 
