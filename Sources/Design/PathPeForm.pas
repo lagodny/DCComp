@@ -57,7 +57,7 @@ var
 implementation
 
 uses
-  uStrUtils;
+  DC.StrUtils;
 
 {$R *.dfm}
 
