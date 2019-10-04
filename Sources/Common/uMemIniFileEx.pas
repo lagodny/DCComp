@@ -17,11 +17,27 @@ type
 
     function ReadFloat(const Section, Name: string; Default: Double): Double; override;
     procedure WriteFloat(const Section, Name: string; Value: Double); override;
+
+    procedure AddStrings(aStrings: TStrings);
   end;
 
 implementation
 
 { TMemIniFileEx }
+
+procedure TMemIniFileEx.AddStrings(aStrings: TStrings);
+var
+  s: TStrings;
+begin
+  s := TStringList.Create;
+  try
+    GetStrings(s);
+    s.AddStrings(aStrings);
+    SetStrings(s);
+  finally
+    s.Free;
+  end;
+end;
 
 constructor TMemIniFileEx.Create(const FileName: string);
 begin
