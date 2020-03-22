@@ -24,7 +24,9 @@ type
     skTomorrow = 7,
     skNextWeek = 8,
     skNext12Hours = 9,
-    skNextDay = 10
+    skNextDay = 10,
+    skYear = 11,
+    skLastYear = 12
   );
 
   EIntervalException = class(Exception);
@@ -40,6 +42,8 @@ type
     FShiftKind: TShiftKind;
     FOnChanged: TNotifyEvent;
     FTimeShiftUnit: TOPCIntervalTimeShiftUnit;
+    FEnableTime: Boolean;
+    //FFixedShiftTime: TDateTime;
     function GetDate1: TDatetime;
     function GetDate2: TDatetime;
     procedure SetDate1(const Value: TDatetime);
@@ -53,6 +57,8 @@ type
 
     class function GetLastInterval: TOPCInterval; static;
     class procedure SetLastInterval(const Value: TOPCInterval); static;
+    procedure SetEnableTime(const Value: Boolean);
+//    procedure SetFixedShiftTime(const Value: TDateTime);
 
   protected
     procedure AssignTo(Dest: TPersistent); override;
@@ -77,28 +83,59 @@ type
     procedure Lock;
     procedure Unlock;
 
+  published
     property Kind: TOPCIntervalKind read FKind write SetKind;
     property ShiftKind: TShiftKind read FShiftKind write SetShiftKind;
 
     property Date1: TDatetime read GetDate1 write SetDate1;
     property Date2: TDatetime read GetDate2 write SetDate2;
     property TimeShift: TDateTime read FTimeShift write SetTimeShift;
-    property TimeShiftUnit: TOPCIntervalTimeShiftUnit read FTimeShiftUnit write
-      SetTimeShiftUnit;
+    property TimeShiftUnit: TOPCIntervalTimeShiftUnit read FTimeShiftUnit write SetTimeShiftUnit;
+
+    property EnableTime: Boolean read FEnableTime write SetEnableTime;
+//    property FixedShiftTime: TDateTime read FFixedShiftTime write SetFixedShiftTime;
 
     property OnChanged: TNotifyEvent read FOnChanged write FOnChanged;
   end;
 
 implementation
 
-uses
-  uDCStrResource;
+//uses
 //  uDCLang,
 //  uDCLocalizer;
 
 resourcestring
   StrDate1MoreDate2Error = 'Date1 не может быть меньше Date2';
   StrTimeShiftMastBeMoreZeroError = 'TimeShift должно быть >= 0';
+
+  resToday = 'Today';
+  resYesterday = 'Yesterday';
+  resBeginningWeek = 'Beginning of the week';
+  resLastWeek = 'Last Week';
+  resBeginningMonth = 'Beginning of the month';
+  resLastMonth = 'Last Month';
+  resTomorrow = 'Tomorrow';
+  resNextWeek = 'Next Week';
+  resNext12Hours = 'Next 12 hours';
+  resNextDay = 'Next day';
+  resNLastHours = '%s last hours';
+  resNLastDays = '%s last days';
+  resYear = 'This year';
+  resLastYear = 'Last year';
+
+  resHour = 'hour';
+  resDay = 'day';
+
+  resForLast = 'for last';
+  resForDay = 'for day';
+  resForMonth = 'for month';
+  resForPeriod = 'for period';
+
+  resFrom = 'From';
+  resTo = 'to';
+
+  resPeriod = 'Period';
+
 
 var
   FLastInterval: TOPCInterval;
@@ -137,6 +174,7 @@ end;
 
 constructor TOPCInterval.Create;
 begin
+  FEnableTime := True;
   FTimeShift := 0.5; //12 часов
   FTimeShiftUnit := tsuHour;
   FKind := ikInterval;
@@ -205,9 +243,23 @@ begin
         Result := Now;
       skNextDay:
         Result := Now;
-
+      skYear:
+      begin
+        DecodeDate(Now, y, m, d);
+        Result := EncodeDate(y, 1, 1);
+      end;
+      skLastYear:
+      begin
+        DecodeDate(Now, y, m, d);
+        Result := EncodeDate(y-1, 1, 1);
+      end;
+      else
+        raise Exception.Create('Unknown ShiftKind');
     end;
   end;
+
+  if not EnableTime then
+    Result := Trunc(Result);
 end;
 
 function TOPCInterval.GetDate2: TDatetime;
@@ -244,8 +296,30 @@ begin
         Result := Now + 12/HoursPerDay;
       skNextDay:
         Result := Now + 1;
+      skYear:
+      begin
+        DecodeDate(Now, y, m, d);
+        Result := EncodeDate(y+1, 1, 1);
+      end;
+      skLastYear:
+      begin
+        DecodeDate(Now, y, m, d);
+        Result := EncodeDate(y, 1, 1);
+      end;
+      else
+        raise Exception.Create('Unknown ShiftKind');
 
     end;
+  end;
+
+  if not EnableTime then
+  begin
+    if Frac(Result) <> 0 then
+      Result := Trunc(Result) + 1
+    else
+      Result := Trunc(Result);
+
+    Result := Result;
   end;
 end;
 
@@ -293,10 +367,10 @@ begin
   else
   begin
     if TimeShiftUnit = tsuHour then
-      Result := Format(dcResS_N_LastHoursFmt, //'последние %s ч.',
+      Result := Format(resNLastHours, //'последние %s ч.',
         [FormatFloat('0.##', TimeShift * 24)])
     else
-      Result := Format(dcResS_N_LastDaysFmt, //'последние %s д.',
+      Result := Format(resNLastDays, //'последние %s д.',
         [FormatFloat('0.##', TimeShift)])
   end;
 end;
@@ -333,17 +407,21 @@ var
 begin
   Lock;
   try
-    aDate1 := aReg.ReadDateTime(aSectionName, 'Date1', Date1);
-    aDate2 := aReg.ReadDateTime(aSectionName, 'Date2', Date2);
-
-    SetInterval(aDate1, aDate2);
-
     FKind := TOPCIntervalKind(aReg.ReadInteger(aSectionName, 'Kind', Ord(FKind)));
-    ShiftKind := TShiftKind(aReg.ReadInteger(aSectionName, 'ShiftKind', Ord(FShiftKInd)));
+    ShiftKind := TShiftKind(aReg.ReadInteger(aSectionName, 'ShiftKind', Ord(FShiftKind)));
+
+    if (Kind = ikInterval) and (ShiftKind = skNone) then
+    begin
+      aDate1 := aReg.ReadDateTime(aSectionName, 'Date1', Date1);
+      aDate2 := aReg.ReadDateTime(aSectionName, 'Date2', Date2);
+      SetInterval(aDate1, aDate2);
+    end;
 
     FTimeShift := aReg.ReadDateTime(aSectionName, 'TimeShift', FTimeShift);
     FTimeShiftUnit := TOPCIntervalTimeShiftUnit(
       aReg.ReadInteger(aSectionName, 'TimeShiftUnit', Ord(FTimeShiftUnit)));
+
+    FEnableTime := aReg.ReadBool(aSectionName, 'EnableTime', FEnableTime);
   finally
     Unlock;
   end;
@@ -372,6 +450,7 @@ begin
   aReg.WriteInteger(aSectionName, 'ShiftKind', Ord(ShiftKind));
   aReg.WriteDateTime(aSectionName, 'TimeShift', TimeShift);
   aReg.WriteInteger(aSectionName, 'TimeShiftUnit', Ord(TimeShiftUnit));
+  aReg.WriteBool(aSectionName, 'EnableTime', EnableTime);
 end;
 
 procedure TOPCInterval.SetDate1(const Value: TDatetime);
@@ -398,6 +477,16 @@ begin
   DoChanged;
 end;
 
+procedure TOPCInterval.SetEnableTime(const Value: Boolean);
+begin
+  FEnableTime := Value;
+end;
+
+//procedure TOPCInterval.SetFixedShiftTime(const Value: TDateTime);
+//begin
+//  FFixedShiftTime := Value;
+//end;
+
 procedure TOPCInterval.SetInterval(aDate1, aDate2: TDateTime);
 begin
   if aDate1 < aDate2 then
@@ -418,6 +507,7 @@ begin
 
   FTimeShift := FDate2 - FDate1;
   FShiftKind := skNone;
+  FKind := ikInterval;
 
   DoChanged;
 end;
@@ -520,25 +610,30 @@ begin
     skNone:
       Result := '...';
     skToday:
-      Result := 'Сегодня';//TDCLocalizer.GetStringRes(idxInterval_skToday);
+      Result := resToday; //'Сегодня';
     skYesterday:
-      Result := 'Вчера';//TDCLocalizer.GetStringRes(idxInterval_skYesterday); //
+      Result := resYesterday; //'Вчера';
     skWeek:
-      Result := 'С начала недели';//TDCLocalizer.GetStringRes(idxInterval_skWeek); //
+      Result := resBeginningWeek; //'С начала недели';
     skLastWeek:
-      Result := 'Прошлая неделя';//TDCLocalizer.GetStringRes(idxInterval_skLastWeek); //
+      Result := resLastWeek; //'Прошлая неделя';
     skMonth:
-      Result := 'С начала месяца';//TDCLocalizer.GetStringRes(idxInterval_skMonth); //
+      Result := resBeginningMonth; //'С начала месяца';
     skLastMonth:
-      Result := 'Прошлый месяц';//TDCLocalizer.GetStringRes(idxInterval_skLastMonth); //
+      Result := resLastMonth; //'Прошлый месяц';
     skTomorrow:
-      Result := 'Завтра';//TDCLocalizer.GetStringRes(idxInterval_skTomorrow); //
+      Result := resTomorrow; //'Завтра';
     skNextWeek:
-      Result := 'Следующая неделя';//TDCLocalizer.GetStringRes(idxInterval_skNextWeek); //
+      Result := resNextWeek; //'Следующая неделя';
     skNext12Hours:
-      Result := 'Следующие 12 часов';//TDCLocalizer.GetStringRes(idxInterval_skNext12Hours); //
+      Result := resNext12Hours; //'Следующие 12 часов';
     skNextDay:
-      Result := 'Седующий день';//TDCLocalizer.GetStringRes(idxInterval_skNextDay); //
+      Result := resNextDay; //'Седующий день';
+    skYear:
+      Result := resYear; //'Этот год';
+    skLastYear:
+      Result := resLastYear; //'Прошлый год';
+
   end;
 end;
 
@@ -546,9 +641,9 @@ class function TOPCInterval.ShiftUnitToStr(aShiftUnit: TOPCIntervalTimeShiftUnit
 begin
   case aShiftUnit of
     tsuHour:
-      Result := 'часов';//TDCLocalizer.GetStringRes(idxInterval_tsuHour);
+      Result := resHour;
     tsuDay:
-      Result := 'дней';//TDCLocalizer.GetStringRes(idxInterval_tsuDay);
+      Result := resDay;
   end;
 end;
 

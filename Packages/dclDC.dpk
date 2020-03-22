@@ -36,7 +36,8 @@ requires
   IndyProtocols,
   IndyCore,
   bindengine,
-  bindcomp;
+  bindcomp,
+  DCPcrypt;
 
 contains
   aDCReg in '..\Sources\Common\aDCReg.pas';

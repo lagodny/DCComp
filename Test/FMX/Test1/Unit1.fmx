@@ -9,18 +9,6 @@ object Form1: TForm1
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   DesignerMasterStyle = 0
-  object aOPCLabel1: TaOPCLabel
-    OPCSource = aOPCTCPSource_V301
-    StairsOptions = []
-    PhysID = '1'
-    DisplayFormat = 'datedd.mm.yyyy hh:mm:ss'
-    ShowError = False
-    AutoSize = True
-    Position.X = 8.000000000000000000
-    Position.Y = 160.000000000000000000
-    Text = '28.08.2019 00:00:00'
-    WordWrap = False
-  end
   object CheckBox1: TCheckBox
     Position.X = 128.000000000000000000
     Position.Y = 48.000000000000000000
@@ -34,15 +22,5 @@ object Form1: TForm1
     TabOrder = 5
     Text = 'Button1'
     OnClick = Button1Click
-  end
-  object aOPCTCPSource_V301: TaOPCTCPSource_V30
-    RemoteMachine = 'tdc.org.ua'
-    User = 'lagodny'
-    Password = '314'
-    Port = 5152
-    MainHost = 'tdc.org.ua'
-    MainPort = 5152
-    Left = 192
-    Top = 96
   end
 end

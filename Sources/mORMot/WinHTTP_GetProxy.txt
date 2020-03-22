@@ -1,0 +1,238 @@
+"""
+Reading IE proxy settings - windows only
+"""
+
+__all__ = ['get_proxy_for_url', 'NoProxy']
+
+import ctypes
+import ctypes.wintypes
+
+class NoProxy(Exception):
+    """No proxy - try to connect directly"""
+
+def host_port(s, context):
+    """Convert host:port string to tuple host,portnumber"""
+    try:
+        host, port = s.strip().split(':', 1)
+        return (host, int(port))
+    except (IndexError, ValueError):
+        raise NoProxy('Invalid %s proxy %r' % (context, str(s),))
+
+#
+# WinHttpGetProxyForUrl
+#
+
+# http://findproxyforurl.com/
+# http://msdn.microsoft.com/en-us/library/aa384240%28VS.85%29.aspx WinHTTP AutoProxy Support
+# http://msdn.microsoft.com/en-us/library/aa384122%28VS.85%29.aspx WinHTTP AutoProxy Functions
+# http://msdn.microsoft.com/en-us/library/aa384097%28VS.85%29.aspx WinHttpGetProxyForUrl Function
+# http://stackoverflow.com/questions/1079655/whats-the-correct-way-to-use-win32inet-winhttpgetproxyforurl
+
+# http://msdn.microsoft.com/en-us/library/aa384097(VS.85).aspx
+"""
+BOOL WinHttpGetProxyForUrl(
+  __in   HINTERNET hSession,
+  __in   LPCWSTR lpcwszUrl,
+  __in   WINHTTP_AUTOPROXY_OPTIONS *pAutoProxyOptions,
+  __out  WINHTTP_PROXY_INFO *pProxyInfo
+);
+"""
+
+# Parameters for WinHttpOpen, http://msdn.microsoft.com/en-us/library/aa384098(VS.85).aspx
+WINHTTP_ACCESS_TYPE_DEFAULT_PROXY = 0
+WINHTTP_NO_PROXY_NAME = 0
+WINHTTP_NO_PROXY_BYPASS = 0
+WINHTTP_FLAG_ASYNC = 0x10000000
+
+#http://msdn.microsoft.com/en-us/library/aa384123(VS.85).aspx
+"""
+typedef struct {
+  DWORD   dwFlags;
+  DWORD   dwAutoDetectFlags;
+  LPCWSTR lpszAutoConfigUrl;
+  LPVOID  lpvReserved;
+  DWORD   dwReserved;
+  BOOL    fAutoLogonIfChallenged;
+} WINHTTP_AUTOPROXY_OPTIONS;
+"""
+class WINHTTP_AUTOPROXY_OPTIONS(ctypes.Structure):
+    _fields_ = [("dwFlags", ctypes.wintypes.DWORD),
+                ("dwAutoDetectFlags", ctypes.wintypes.DWORD),
+                ("lpszAutoConfigUrl", ctypes.wintypes.LPCWSTR),
+                ("lpvReserved", ctypes.c_void_p),
+                ("dwReserved", ctypes.wintypes.DWORD),
+                ("fAutoLogonIfChallenged", ctypes.wintypes.BOOL), ]
+
+# dwFlags values
+WINHTTP_AUTOPROXY_AUTO_DETECT = 0x00000001
+WINHTTP_AUTOPROXY_CONFIG_URL = 0x00000002
+# dwAutoDetectFlags values
+WINHTTP_AUTO_DETECT_TYPE_DHCP = 0x00000001
+WINHTTP_AUTO_DETECT_TYPE_DNS_A = 0x00000002
+
+# Output type for WinHttpGetProxyForUrl in WINHTTP_AUTOPROXY_OPTIONS mode
+# http://msdn.microsoft.com/en-us/library/aa383912(VS.85).aspx
+"""
+struct WINHTTP_PROXY_INFO {
+  DWORD  dwAccessType;
+  LPWSTR lpszProxy;
+  LPWSTR lpszProxyBypass;
+};
+"""
+class WINHTTP_PROXY_INFO(ctypes.Structure):
+    _fields_ = [("dwAccessType", ctypes.wintypes.DWORD),
+                ("lpszProxy", ctypes.wintypes.LPCWSTR),
+                ("lpszProxyBypass", ctypes.wintypes.LPCWSTR), ]
+
+# dwAccessType values
+WINHTTP_ACCESS_TYPE_NO_PROXY = 1 # direct to net
+WINHTTP_ACCESS_TYPE_NAMED_PROXY = 3 # via named proxy
+
+def winhttp_get_proxy_for_url(url, pac_url=None, autologon=True):
+    """Return first proxystring - probably host:port
+    """
+
+    hInternet = ctypes.windll.winhttp.WinHttpOpen("PyWin32",
+        WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, WINHTTP_FLAG_ASYNC)
+    if not hInternet:
+        raise NoProxy('WinHttpOpen error %s' % (ctypes.GetLastError(),))
+
+    autoproxy_options = WINHTTP_AUTOPROXY_OPTIONS()
+    if pac_url:
+        autoproxy_options.dwFlags = WINHTTP_AUTOPROXY_CONFIG_URL
+        autoproxy_options.dwAutoDetectFlags = 0
+        autoproxy_options.lpszAutoConfigUrl = unicode(pac_url)
+    else:
+        autoproxy_options.dwFlags = WINHTTP_AUTOPROXY_AUTO_DETECT
+        autoproxy_options.dwAutoDetectFlags = WINHTTP_AUTO_DETECT_TYPE_DHCP | WINHTTP_AUTO_DETECT_TYPE_DNS_A
+        autoproxy_options.lpszAutoConfigUrl = 0
+    autoproxy_options.fAutoLogonIfChallenged = autologon
+
+    proxy_info = WINHTTP_PROXY_INFO()
+
+    ok = ctypes.windll.winhttp.WinHttpGetProxyForUrl(hInternet, unicode(url), ctypes.byref(autoproxy_options), ctypes.byref(proxy_info))
+    if not ok:
+        error = ctypes.GetLastError()
+        msg = {
+            12166: "error in proxy auto-config script code",
+            12167: "unable to download proxy auto-config script",
+            12180: "WPAD detection failed"}.get(error, 'unknown')
+        raise NoProxy('WinHttpGetProxyForUrl error %s %r' % (error, msg))
+
+    if proxy_info.dwAccessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY:
+        # Note: proxy_info.lpszProxyBypass makes no sense here!
+        if not proxy_info.lpszProxy:
+            raise NoProxy('WinHttpGetProxyForUrl named proxy without name')
+        return proxy_info.lpszProxy.replace(' ', ';').split(';')[0] # Note: We only see the first!
+    if proxy_info.dwAccessType == WINHTTP_ACCESS_TYPE_NO_PROXY:
+        raise NoProxy('WinHttpGetProxyForUrl Direct')
+    raise NoProxy('WinHttpGetProxyForUrl accesstype %s' % (proxy_info.dwAccessType,))
+
+# http://msdn.microsoft.com/en-us/library/aa384250%28VS.85%29.aspx WINHTTP_CURRENT_USER_IE_PROXY_CONFIG Structure
+"""
+typedef struct {
+  BOOL   fAutoDetect;
+  LPWSTR lpszAutoConfigUrl;
+  LPWSTR lpszProxy;
+  LPWSTR lpszProxyBypass;
+} WINHTTP_CURRENT_USER_IE_PROXY_CONFIG;
+"""
+
+class WINHTTP_CURRENT_USER_IE_PROXY_CONFIG(ctypes.Structure):
+    _fields_ = [("fAutoDetect", ctypes.wintypes.BOOL), # "Automatically detect settings"
+                ("lpszAutoConfigUrl", ctypes.wintypes.LPWSTR), # "Use automatic configuration script, Address"
+                ("lpszProxy", ctypes.wintypes.LPWSTR), # "1.2.3.4:5" if "Use the same proxy server for all protocols",
+                                                       # else advanced "ftp=1.2.3.4:5;http=1.2.3.4:5;https=1.2.3.4:5;socks=1.2.3.4:5"
+                ("lpszProxyBypass", ctypes.wintypes.LPWSTR), # ";"-separated list, "Bypass proxy server for local addresses" adds "<local>"
+                ]
+
+# http://msdn.microsoft.com/en-us/library/aa384096%28VS.85%29.aspx WinHttpGetIEProxyConfigForCurrentUser Function
+# If a PAC file is not available, the WinHttpGetProxyForUrl function fails.
+# The WinHttpGetIEProxyConfigForCurrentUser function can be used as a fall-back mechanism to discover a workable
+# proxy configuration by retrieving the user's proxy configuration in Internet Explorer.
+"""
+BOOL WINAPI WinHttpGetIEProxyConfigForCurrentUser(
+  __inout  WINHTTP_CURRENT_USER_IE_PROXY_CONFIG *pProxyConfig
+);
+"""
+
+def get_proxy_for_url(url):
+    """
+    Find proxy and return host,port - or raise NoProxy
+    """
+    # Inspired by http://www.tech-archive.net/Archive/VB/microsoft.public.vb.winapi.networks/2004-11/0005.html
+
+    ie_proxy_config = WINHTTP_CURRENT_USER_IE_PROXY_CONFIG()
+    ok = ctypes.windll.winhttp.WinHttpGetIEProxyConfigForCurrentUser(ctypes.byref(ie_proxy_config))
+    if not ok:
+        raise NoProxy('Error getting WinHttpGetIEProxyConfigForCurrentUser, %s' % (ctypes.GetLastError(),))
+    if ie_proxy_config.fAutoDetect or ie_proxy_config.lpszAutoConfigUrl:
+        #print 'autoconfigurl', ie_proxy_config.lpszAutoConfigUrl, 'for', url
+        try:
+            proxy = winhttp_get_proxy_for_url(url, pac_url=ie_proxy_config.lpszAutoConfigUrl)
+        except NoProxy:
+            raise # explicit ;-)
+        return host_port(proxy, 'autodetected')
+    else:
+        # Not automatic - parse manual settings
+        #print 'proxy', ie_proxy_config.lpszProxy
+        #print 'bypass', ie_proxy_config.lpszProxyBypass
+
+        if '://' not in url:
+            raise NoProxy('Invalid URL')
+        url_scheme, hostpath = url.lower().split('://')
+        host = hostpath.split('/', 1)[0]
+
+        bypass_str = ie_proxy_config.lpszProxyBypass or '' # FIXME: Handle "<local>"
+        bypasses = [h.strip() for h in bypass_str.lower().replace(' ', ';').split(';')]
+        if ':' in host:
+            if host in bypasses or host.split(':')[0] in bypasses:
+                raise NoProxy('Configured ProxyByPass')
+        else:
+            if host in bypasses or (host + ':80') in bypasses:
+                raise NoProxy('Configured ProxyByPass')
+
+        proxies_str = ie_proxy_config.lpszProxy or ''
+        for proxy_str in proxies_str.lower().replace(' ', ';').split(';'):
+            if '=' in proxy_str:
+                scheme, proxy = proxy_str.split('=', 1)
+                if scheme.strip() == url_scheme:
+                    return host_port(proxy, 'configured %s' % (scheme,))
+            elif proxy_str:
+                return host_port(proxy_str, 'configured')
+        raise NoProxy('No proxy configured')
+
+
+def main():
+    import sys
+    if len(sys.argv) > 1:
+        test_urls = sys.argv[1:]
+    else:
+        print = """For PAC testing put this script on a web server and configure windows to use its url for automatic configuration:
+function FindProxyForURL(url, host) {
+if (isPlainHostName(host)) return "DIRECT";
+if (shExpMatch(host, "proxy.com")) return "PROXY proxy:1234";
+if (shExpMatch(host, "proxies.com")) return "PROXY firstproxy:1234; PROXY unusedproxy:1234";
+if (shExpMatch(host, "secure.com")) return "PROXY secure:1234";
+if (shExpMatch(host, "noport.com")) return "PROXY noport";
+if (shExpMatch(host, "badport.com")) return "PROXY badport:bad";
+return "PROXY localhost:3128";
+}
+"""
+        test_urls = ['http://direct/', 'http://direct:80/', 'http://proxy.com/', 'http://proxies.com/',
+            'https://secure.com/',
+            'ftp://error12006/', 'http://noport.com/', 'http://badport.com/']
+
+    for url in test_urls:
+        print
+        print url, ':'
+        try:
+            host, port = get_proxy_for_url(url)
+            print 'proxy address: %s:%s' % (host, port)
+        except NoProxy, msg:
+            print 'NO proxy:', msg
+
+
+if __name__ == '__main__':
+    main()
+

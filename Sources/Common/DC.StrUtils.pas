@@ -59,7 +59,7 @@ begin
     Inc(Buffer);
 
   Inc(Buffer);
-  while Buffer^ in [' ', #9] do
+  while CharInSet(Buffer^, [' ', #9]) do
   begin
     Inc(Buffer);
     Inc(Level);
@@ -88,7 +88,7 @@ end;
 
 function IsNumericDisplayFormat(aDisplayFormat: string):boolean;
 var
-  i: integer;
+//  i: integer;
   ch: Char;
 begin
   Result := true;

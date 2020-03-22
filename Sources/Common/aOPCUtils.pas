@@ -8,11 +8,28 @@ uses
   function FormatValue(aValue:Extended; FormatString:string):string;
   function TryStrToFloat(aValue: string; OpcFS: TFormatSettings): extended;
   function TryStrToFloatDef(aValue: string; OpcFS: TFormatSettings; aDefault: extended = 0): extended;
+  function RemoveNonNumbers(aStr: string): string;
+
+var
+  dotFS: TFormatSettings;
 
 implementation
 
 uses
   aCustomOPCSource;
+
+  function RemoveNonNumbers(aStr: string): string;
+  var
+    i: Integer;
+  begin
+    Result := '';
+    for i := 1 to Length(aStr) do
+      if CharInSet(aStr[i], ['.', ',', ' ', '#', '0'..'9']) then
+        Result := Result + aStr[i];
+
+    Result := Trim(Result);
+  end;
+
 
 
   function FormatValue(aValue:Extended; FormatString:string):string;
@@ -68,5 +85,10 @@ uses
     else
       Result := StrToFloatDef(aValue, aDefault,OpcFS);
   end;
+
+initialization
+  dotFS := TFormatSettings.Create;
+  dotFS.DecimalSeparator := '.';
+
 
 end.

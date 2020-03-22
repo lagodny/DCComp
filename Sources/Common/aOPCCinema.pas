@@ -82,6 +82,7 @@ type
     FOnRequest: TNotifyEvent;
     FSpeed: integer;
     FShowUserMessages: Boolean;
+    FBeforeActivate: TNotifyEvent;
     procedure TimeTimer(Sender: TObject);
     //    procedure SetOPCSource(const Value: TaOPCSource);
     procedure SetDate1(const Value: TDateTime);
@@ -135,12 +136,13 @@ type
 
     property Playing: boolean read GetPlaying write SetPlaing;
   published
-    property OnChangeMoment: TNotifyEvent
-      read FOnChangeMoment write FOnChangeMoment;
-    property OnFillHistory: TFillHistoryEvent
-      read FOnFillHistory write FOnFillHistory;
-    property OnRequest: TNotifyEvent read FOnRequest
-      write FOnRequest; // случается, когда прошел цикл опроса датчиков
+    property OnChangeMoment: TNotifyEvent read FOnChangeMoment write FOnChangeMoment;
+    property OnFillHistory: TFillHistoryEvent read FOnFillHistory write FOnFillHistory;
+
+    // случается, когда прошел цикл опроса датчиков
+    property OnRequest: TNotifyEvent read FOnRequest write FOnRequest;
+    // случается перед загрузкой
+    property BeforeActivate: TNotifyEvent read FBeforeActivate write FBeforeActivate;
 
     //    property OPCSource:TaOPCSource read FOPCSource write SetOPCSource;
     property Date1: TDateTime read FDate1 write SetDate1 stored false;
@@ -159,7 +161,7 @@ type
 implementation
 
 uses SysUtils, Math
-  //, uCinemaControlForm
+  , uCinemaControlForm
   ;
 
 { TOPCDataLinkGroupHistory }
@@ -856,6 +858,9 @@ end;
 
 procedure TaOPCCinema.DoActive;
 begin
+  if Assigned(FBeforeActivate) then
+    BeforeActivate(Self);
+
   FActive := FillHistory(Date1, Date2);
   if fActive then
   begin
@@ -1051,9 +1056,8 @@ end;
 
 procedure TaOPCCinema.HidePult;
 begin
-  { TODO : Реализовать }
-//  if Assigned(CinemaControlForm) then
-//    CinemaControlForm.Close;
+  if Assigned(CinemaControlForm) then
+    CinemaControlForm.Close;
 end;
 
 function TaOPCCinema.GetPlaying: boolean;
@@ -1069,30 +1073,32 @@ end;
 procedure TaOPCCinema.ShowPult(aFormToPrint: TForm = nil; Modal: Boolean = True);
 begin
   { TODO : Реализовать }
-//  if not Assigned(CinemaControlForm) then
-//    CinemaControlForm := TCinemaControlForm.Create(aFormToPrint)
-//  else
-//    CinemaControlForm.Hide;
-//
-//  with CinemaControlForm do
-//  begin
-//    try
-//      aOPCCinemaControl1.OPCCinema := Self;
-//      aOPCCinemaControl1.FormToPrint := aFormToPrint;
-//      //      if OPCSource<>nil then
-//      //      begin
-//      //        //OPCSource.Active := false;
-//      //        ConnectOPCSourceDataLinks;
-//      //      end;
-//
-//      if Modal then
-//        ShowModal
-//      else
-//        Show;
-//    finally
-//      //Free;
-//    end;
-//  end;
+  {.$IFDEF VCL}
+  if not Assigned(CinemaControlForm) then
+    CinemaControlForm := TCinemaControlForm.Create(aFormToPrint)
+  else
+    CinemaControlForm.Hide;
+
+  with CinemaControlForm do
+  begin
+    try
+      aOPCCinemaControl1.OPCCinema := Self;
+      aOPCCinemaControl1.FormToPrint := aFormToPrint;
+      //      if OPCSource<>nil then
+      //      begin
+      //        //OPCSource.Active := false;
+      //        ConnectOPCSourceDataLinks;
+      //      end;
+
+      if Modal then
+        ShowModal
+      else
+        Show;
+    finally
+      //Free;
+    end;
+  end;
+  {.$ENDIF}
 end;
 
 procedure TaOPCCinema.LoadHistory(aFileName, aVersion: string);
@@ -1147,9 +1153,8 @@ begin
   inherited;
 end;
 
-{ TODO : Реализовать }
-//initialization
-//  CinemaControlForm := nil;
+initialization
+  CinemaControlForm := nil;
 
 end.
 

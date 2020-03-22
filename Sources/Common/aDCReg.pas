@@ -64,6 +64,7 @@ begin
   RegisterComponents('DC', [TaOPCTCPSource_V30]);
   RegisterComponents('DC', [TaOPCTCPSource_V31]);
   RegisterComponents('DC', [TaOPCTCPSource_V32]);
+
 //
 //  // просмотрщик истории
 //  RegisterComponents('DC', [TaOPCCinema]);

@@ -3,7 +3,7 @@ unit aOPCLog;
 interface
 
 uses
-  //Windows,
+  Winapi.Windows,
   System.SysUtils, System.Classes, System.SyncObjs;
 
 type
@@ -50,7 +50,7 @@ type
     destructor Destroy;override;
 
     // йункции записи aMessage в лог файл
-    procedure WriteToLog(aMessage:string);
+    procedure WriteToLog(aMessage:string; aShift: string = '  '; aShowAll: Boolean = False);
     procedure WriteToLogFmt(const aMessage:string;const Args:array of TVarRec);
     procedure WriteToLogFmtDbg(const aMessage:string;const Args:array of TVarRec;
       aDetailLevel: integer = 0);
@@ -111,7 +111,7 @@ begin
 end;
 
 
-procedure TOPCLog.WriteToLog(aMessage: string);
+procedure TOPCLog.WriteToLog(aMessage: string; aShift: string = '  '; aShowAll: Boolean = False);
 var
   aMsg: string;
   LogFileName1: string;
@@ -188,7 +188,8 @@ begin
           LoginName         + #09 +
           ComputerName      + #09 +
           IPAdress          + #09 +
-          RemoveNonprintingSymbols(aMessage) + #13#10;
+          aShift            +
+          IfThen(aShowAll, aMessage, RemoveNonprintingSymbols(aMessage)) + #13#10;
       end
       else
         aMsg := #13#10;

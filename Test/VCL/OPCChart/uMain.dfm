@@ -1,0 +1,46 @@
+object Form3: TForm3
+  Left = 0
+  Top = 0
+  Caption = 'Form3'
+  ClientHeight = 403
+  ClientWidth = 819
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object ChartFrame1: TChartFrame
+    Left = 0
+    Top = 0
+    Width = 819
+    Height = 403
+    Align = alClient
+    AutoScroll = True
+    DoubleBuffered = True
+    Color = clBtnFace
+    ParentBackground = False
+    ParentColor = False
+    ParentDoubleBuffered = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 0
+    TabStop = True
+    Touch.GestureManager = ChartFrame1.GestureManager1
+    AllowClick = False
+  end
+  object aOPCTCPSource_V301: TaOPCTCPSource_V30
+    RemoteMachine = 'tdc.org.ua'
+    User = 'lagodny'
+    Password = '314'
+    Port = 5152
+    MainHost = 'tdc.org.ua'
+    MainPort = 5152
+    Left = 120
+    Top = 72
+  end
+end

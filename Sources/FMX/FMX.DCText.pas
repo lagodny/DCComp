@@ -322,7 +322,7 @@ procedure TTextSettingsInfo.TTextPropLoader.ReadFontFillColor(Reader: TReader);
 var
   LFontColor: TAlphaColor;
 begin
-  IdentToAlphaColor(Reader.ReadIdent, Longint(LFontColor));
+  IdentToAlphaColor(Reader.ReadIdent, Integer(LFontColor));
   TextSettings.FontColor := LFontColor;
 end;
 

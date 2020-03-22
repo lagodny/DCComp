@@ -12,10 +12,16 @@
         <Projects Include="Packages\dclFMXDC.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Packages\dclVCLDC.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Test\FMX\Test1\Project1.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="Test\FMX\Migration\TestMigration.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Test\VCL\OPCChart\TestOPCChart.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -53,6 +59,15 @@
     <Target Name="dclFMXDC:Make">
         <MSBuild Projects="Packages\dclFMXDC.dproj" Targets="Make"/>
     </Target>
+    <Target Name="dclVCLDC">
+        <MSBuild Projects="Packages\dclVCLDC.dproj"/>
+    </Target>
+    <Target Name="dclVCLDC:Clean">
+        <MSBuild Projects="Packages\dclVCLDC.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dclVCLDC:Make">
+        <MSBuild Projects="Packages\dclVCLDC.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Project1">
         <MSBuild Projects="Test\FMX\Test1\Project1.dproj"/>
     </Target>
@@ -71,14 +86,23 @@
     <Target Name="TestMigration:Make">
         <MSBuild Projects="Test\FMX\Migration\TestMigration.dproj" Targets="Make"/>
     </Target>
+    <Target Name="TestOPCChart">
+        <MSBuild Projects="Test\VCL\OPCChart\TestOPCChart.dproj"/>
+    </Target>
+    <Target Name="TestOPCChart:Clean">
+        <MSBuild Projects="Test\VCL\OPCChart\TestOPCChart.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestOPCChart:Make">
+        <MSBuild Projects="Test\VCL\OPCChart\TestOPCChart.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DC;dclDC;dclFMXDC;Project1;TestMigration"/>
+        <CallTarget Targets="DC;dclDC;dclFMXDC;dclVCLDC;Project1;TestMigration;TestOPCChart"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DC:Clean;dclDC:Clean;dclFMXDC:Clean;Project1:Clean;TestMigration:Clean"/>
+        <CallTarget Targets="DC:Clean;dclDC:Clean;dclFMXDC:Clean;dclVCLDC:Clean;Project1:Clean;TestMigration:Clean;TestOPCChart:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DC:Make;dclDC:Make;dclFMXDC:Make;Project1:Make;TestMigration:Make"/>
+        <CallTarget Targets="DC:Make;dclDC:Make;dclFMXDC:Make;dclVCLDC:Make;Project1:Make;TestMigration:Make;TestOPCChart:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -1,0 +1,229 @@
+unit aOPCLog;
+
+interface
+
+uses
+  Winapi.Windows,
+  System.SysUtils, System.Classes, System.SyncObjs;
+
+type
+
+
+  TOPCLog = class
+  private
+    FDebug: boolean;
+    csLogFile: TCriticalSection;
+  public
+    // флаг ведения лог файла
+    Active: boolean;
+
+    // флаг автоматического заполнения свойств
+    //    - UserName
+    //    - LoginName
+    //    - ComputerName
+    // при авторизации
+    AutoFillOnAuthorize: boolean;
+
+    // имя лог файла
+    LogFileName: string;
+
+    // имя пользователя, который выполнил подключение
+    UserName: string;
+    // имя пользователя домена
+    LoginName: string;
+
+    // имя компьютера, с которого подключаемся к серверу
+    ComputerName: string;
+    // IP адрес этого компьютера
+    IPAdress: string;
+
+    // максимальный размер лог файла после чего он переименовывается
+    // и запись продолжается в новый пустой лог файл
+    MaxSize: integer;
+
+    // уровень детализации отладочной информации (0..10)
+    // чем больше тем более детальный лог
+    DetailLevel: integer;
+
+    // доступ к объекту возможен только через функцию OPCLog
+    constructor Create;
+    destructor Destroy;override;
+
+    // йункции записи aMessage в лог файл
+    procedure WriteToLog(aMessage:string);
+    procedure WriteToLogFmt(const aMessage:string;const Args:array of TVarRec);
+    procedure WriteToLogFmtDbg(const aMessage:string;const Args:array of TVarRec;
+      aDetailLevel: integer = 0);
+  end;
+
+{
+  класс предназначен для определения параметров
+  ведения журнала ошибок и событий
+  ПЕРЕОПРЕДЕЛИТЕ СВОЙСТВА OPCLog В ВАШЕМ ПРИЛОЖЕНИИ ДЛЯ ПОЛУЧЕНИЯ
+  НАИБОЛЕЕ ПОЛЕЗНОЙ ВАМ ИНФОРМАЦИИ В ЖУРНАЛЕ ОШИБОК
+}
+
+  function OPCLog: TOPCLog; // функция возвращает наш Singleton
+
+
+implementation
+
+uses
+  System.StrUtils,
+  DC.StrUtils;
+
+var
+  FOPCLog: TOPCLog;
+
+// ***************************
+function OPCLog:TOPCLog;
+begin
+  if not Assigned(FOPCLog) then
+    Result := TOPCLog.Create
+  else
+    Result := FOPCLog;
+end;
+// **********************
+
+
+{ TOPCLog }
+
+constructor TOPCLog.Create;
+begin
+  FOPCLog := inherited Create;
+
+  csLogFile := TCriticalSection.Create;
+  DetailLevel := 10; // уровень детализации отладочной информации (0..10)
+                    // чем выше тем более детальная информация
+
+  FDebug  := true; // режим отладки - функция WriteToLogFmtDbg будет работать
+  MaxSize := 500; // Kb
+  LogFileName := ExtractFilePath(ParamStr(0))+'\OPCLog.log';
+  AutoFillOnAuthorize := true;
+  Active := true;
+end;
+
+destructor TOPCLog.Destroy;
+begin
+  FOPCLog := nil;
+  csLogFile.Free;
+  inherited;
+end;
+
+
+procedure TOPCLog.WriteToLog(aMessage: string);
+var
+  aMsg: string;
+  LogFileName1: string;
+  LogFileStream: TFileStream;
+
+  Encoding: TEncoding;
+  Buffer, Preamble: TBytes;
+
+//  function ReplaceNonPrintingSymbol(s: String): String;
+//  var
+//    i: integer;
+//    L: integer;
+//  begin
+//    L := Length(s);
+//    SetLength(Result, L);
+//    for i := 1 to L do
+//    begin
+//      if CharInSet(s[i], [#0..#31]) then
+//        Result[i] := ' '
+//      else
+//        Result[i] := s[i];
+//    end;
+//  end;
+
+begin
+  Exit;
+
+  LogFileStream := nil;
+  Encoding := TEncoding.Default;
+
+  if Assigned(csLogFile) then
+    csLogFile.Enter;
+  try
+    try
+      try
+        LogFileStream := TFileStream.Create(LogFileName, fmOpenWrite + fmShareDenyNone);
+        LogFileStream.Position := LogFileStream.Size;
+      except
+        LogFileStream := TFileStream.Create(LogFileName, fmCreate);
+        FreeAndNil(LogFileStream);
+
+        LogFileStream := TFileStream.Create(LogFileName, fmOpenWrite + fmShareDenyNone);
+        Preamble := Encoding.GetPreamble;
+        if Length(Preamble) > 0 then
+          LogFileStream.WriteBuffer(Preamble[0], Length(Preamble));
+      end;
+
+      if (LogFileStream.Size div 1024) > MaxSize then
+      begin
+        FreeAndNil(LogFileStream);
+
+        LogFileName1 := LogFileName + '1';
+        if FileExists(LogFileName1) then
+          System.SysUtils.DeleteFile(LogFileName1);
+
+        RenameFile(LogFileName, LogFileName1);
+
+        LogFileStream := TFileStream.Create(LogFileName, fmCreate);
+        FreeAndNil(LogFileStream);
+
+        LogFileStream := TFileStream.Create(LogFileName, fmOpenWrite + fmShareDenyNone);
+        Preamble := Encoding.GetPreamble;
+        if Length(Preamble) > 0 then
+          LogFileStream.WriteBuffer(Preamble[0], Length(Preamble));
+
+      end;
+
+      if aMessage <> '' then
+      begin
+
+        aMsg :=
+          FormatDateTime('dd.MM.yyyy hh:mm:ss:zzz', Now) + #09 +
+          UserName          + #09 +
+          LoginName         + #09 +
+          ComputerName      + #09 +
+          IPAdress          + #09 +
+          RemoveNonprintingSymbols(aMessage) + #13#10;
+      end
+      else
+        aMsg := #13#10;
+
+      Buffer := Encoding.GetBytes(aMsg);
+      LogFileStream.Write(Buffer[0], Length(Buffer));
+
+      //LogFileStream.Write(PAnsiChar(aMsg)^, Length(aMsg));
+    except
+      FreeAndNil(LogFileStream);
+    end;
+  finally
+    FreeAndNil(LogFileStream);  
+    if Assigned(csLogFile) then
+      csLogFile.Leave;
+  end;
+end;
+
+procedure TOPCLog.WriteToLogFmt(const aMessage: string;
+  const Args: array of TVarRec);
+begin
+  WriteToLog(Format(aMessage,Args));
+end;
+
+procedure TOPCLog.WriteToLogFmtDbg(const aMessage: string;
+  const Args: array of TVarRec; aDetailLevel: integer = 0);
+begin
+  if FDebug and (DetailLevel >= aDetailLevel) then
+    WriteToLogFmt(aMessage,Args);
+end;
+
+initialization
+
+finalization
+  FreeAndNil(FOPCLog);
+
+
+end.
