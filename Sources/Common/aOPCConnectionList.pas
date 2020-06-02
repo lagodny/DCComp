@@ -8,7 +8,7 @@ uses
   aOPCClass, uDCObjects, uAppStorage,
   aOPCLookupList,
   aCustomOPCSource, aOPCSource, aCustomOPCTCPSource,
-  aOPCTCPSource, aOPCTCPSource_V30, aOPCTCPSource_V31, aOPCTCPSource_V32; //, aOPCTCPSource_V33;
+  aOPCTCPSource, aOPCTCPSource_V30, aOPCTCPSource_V31, aOPCTCPSource_V32, aOPCTCPSource_V33;
 
 type
   EOPCConnectionCollectionError = class(Exception);
@@ -238,7 +238,7 @@ begin
     opv30: Result := TaOPCTCPSource_V30.Create(aOwner);
     opv31: Result := TaOPCTCPSource_V31.Create(aOwner);
     opv32: Result := TaOPCTCPSource_V32.Create(aOwner);
-//    opv33: Result := TaOPCTCPSource_V33.Create(aOwner);
+    opv33: Result := TaOPCTCPSource_V33.Create(aOwner);
   end;
   Result.SetSubComponent(true);
 
@@ -328,6 +328,9 @@ function TOPCConnectionCollectionItem.GetLookupByTableName(
 var
   i: integer;
 begin
+  if aRefTableName = '' then
+    Exit(nil);
+
   for i := 0 to FLookupsList.Count - 1 do
   begin
     if aRefTableName = FLookupsList.Strings[i] then

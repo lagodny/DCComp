@@ -2,32 +2,32 @@ unit uChartFrame;
 
 interface
 
-{$DEFINE TEECHARTEDITOR}
 {$I VCL.DC.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
+  {$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+  {$ENDIF}
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Menus, ActnList, ExtCtrls, AppEvnts,
   System.IniFiles,
   SpTBXItem, TB2Dock, TB2Toolbar, TB2Item, SpTBXCustomizer,
 {$IFDEF TEEVCL}
-  VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.TeeStore, VCLTee.Chart, VCLTee.Series,
+  VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.TeeStore, VCLTee.Chart, VCLTee.Series, VclTee.TeeGDIPlus,
+  VCLTee.TeeEdit, VCLTee.TeeEditCha, VCLTee.TeeRussian, VCLTee.TeeTools,
 {$ELSE}
   TeEngine, TeeProcs, TeeStore, Chart, Series,
 {$ENDIF}
   aOPCChart,
   uOPCFrame,
-  aCustomOPCSource,
-  aOPCSource,
-  uOPCIntervalForm,
-  uOPCInterval,
+  aCustomOPCSource, aOPCSource,
+  uOPCIntervalForm, uOPCInterval,
   aOPCDataObject, aOPCLabel,
   uOPCSeriesTypes, aOPCLineSeries, uOPCGanttSeries,
   uDCTeeTools,
   uDCObjects,
   aOPCConnectionList, aOPCLog, aOPCUtils, ImgList,
-  VCLTee.TeeEdit, VCLTee.TeeEditCha, VCLTee.TeeRussian,
-  Vcl.Touch.GestureMgr, System.ImageList, System.Actions, VclTee.TeeGDIPlus;
+  Vcl.Touch.GestureMgr, System.ImageList;
 
 type
   TSavePosition = record
@@ -328,7 +328,6 @@ implementation
 
 uses
   StrUtils,
-  VCLTee.TeeTools,
   aOPCChartMessureTool,
   uDataLinkedClasses,
   aOPCLookupList;

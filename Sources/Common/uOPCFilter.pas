@@ -264,8 +264,8 @@ begin
     if FActive then
     begin
       FEvaluator := TaOPCFilterCalc.Create;
-//      FEvaluator.Eval.AddFunc('S', S);
-//      FEvaluator.Eval.AddFunc('L', L);
+      FEvaluator.Eval.AddFuncOfObject('S', S);
+      FEvaluator.Eval.AddFuncOfObject('L', L);
 
       FEvaluator.Recompile(FExpression);
 

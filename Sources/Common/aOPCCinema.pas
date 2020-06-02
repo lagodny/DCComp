@@ -204,6 +204,7 @@ begin
     Result := -1;
     exit;
   end;
+  I := -1;
   L := low(FValues);
   while L <= H do
   begin

@@ -97,10 +97,9 @@ var
   aIndexNum, aNameNum: Double;
   i: Integer;
 begin
-  if Trim(aIndex) = '' then
-    Exit;
-    
   aValue := aIndex;
+  if Trim(aIndex) = '' then
+    Exit(-1);
 
   if ShowValue = svExact then
   begin
