@@ -19,8 +19,8 @@ type
 
 implementation
 
-uses
-  SynCommons;//, mORMoti18n;
+//uses
+//  SynCommons;
 
 { TaOPCTCPSource_V33 }
 
@@ -28,9 +28,8 @@ procedure TaOPCTCPSource_V33.AddOrUpdateSCSTracker(aParams: TAddTrackerParamsDTO
 var
   s: string;
 begin
-  //s :=  U2S(RecordSaveJSON(aParams, TypeInfo(TAddTrackerParamsDTO)));
-  s :=  UTF8DecodeToUnicodeString(RecordSaveJSON(aParams, TypeInfo(TAddTrackerParamsDTO)));
-  LockAndDoCommandFmt('AddOrUpdateSCSTracker %s', [s]);
+//  s :=  UTF8DecodeToUnicodeString(RecordSaveJSON(aParams, TypeInfo(TAddTrackerParamsDTO)));
+//  LockAndDoCommandFmt('AddOrUpdateSCSTracker %s', [s]);
 end;
 
 constructor TaOPCTCPSource_V33.Create(aOwner: TComponent);

@@ -3,8 +3,9 @@ unit aDCReg;
 interface
 
 uses
-  Classes, DesignEditors,
-  DesignIntf, PLDesign;
+  Classes,
+  DesignEditors, DesignIntf,
+  PLDesign;
 
 type
 //  {  TaOPCImageListEditor  }

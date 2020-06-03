@@ -3,8 +3,8 @@ unit uSCSTypes;
 interface
 
 uses
-  System.SysUtils,
-  SynCommons;
+  System.SysUtils;
+//  SynCommons;
 
 type
   TTrackerOperation = (Add, Update, Delete);
@@ -60,7 +60,7 @@ type
     function GetClientName: string;
 
     function GetFullTrackerSID: string;
-    procedure SetFullTrackerSID(aFullSID: RawUTF8);
+    procedure SetFullTrackerSID(aFullSID: string);
 
     procedure InitDef;
 
@@ -151,7 +151,7 @@ begin
   DistanceTrip := False;
 end;
 
-procedure TAddTrackerParamsDTO.SetFullTrackerSID(aFullSID: RawUTF8);
+procedure TAddTrackerParamsDTO.SetFullTrackerSID(aFullSID: string);
 var
   s: string;
   p: Integer;

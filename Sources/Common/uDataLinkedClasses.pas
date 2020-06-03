@@ -7,7 +7,8 @@ uses
   System.Generics.Collections,
   uExprEval,
   aOPCSource, aCustomOPCSource, aCustomOPCTCPSource, aOPCCinema,
-  aOPCConnectionList, aOPCLookupList;
+  aOPCConnectionList,
+  aOPCLookupList;
   //uEvents;
 
 type

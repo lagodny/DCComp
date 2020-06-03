@@ -25,6 +25,7 @@ package dclVCLDC;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX '27'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
@@ -35,11 +36,11 @@ requires
   dclDC,
   JclContainers,
   Jcl,
-  Tee926,
+  Tee927,
   vcltouch,
-  TeePro926,
-  TeeUI926,
-  TeeLanguage926,
+  TeePro927,
+  TeeUI927,
+  TeeLanguage927,
   tb2k_d12,
   SpTBXLib;
 

@@ -25,6 +25,7 @@ package dclDC;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX '27'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
@@ -36,7 +37,8 @@ requires
   IndyProtocols,
   IndyCore,
   bindengine,
-  bindcomp;
+  bindcomp,
+  DCPcrypt;
 
 contains
   aDCReg in '..\..\Sources\Common\aDCReg.pas';
