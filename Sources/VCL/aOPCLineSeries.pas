@@ -12,13 +12,14 @@ uses
   Chart, Series, TeEngine,
   {$ENDIF}
   aOPCUtils, aCustomOPCSource, aOPCSource, aOPCLookupList, uDCObjects,
+  aOPCSeries,
   uChoiceIntervalExt, uOPCInterval,
   uOPCSeriesTypes,
   uOPCFilter;
 
-const
-  cErrorSerieColor = clGray;
-  //cErrorSerieColor = clNone;
+//const
+//  cErrorSerieColor = clGray;
+//  //cErrorSerieColor = clNone;
 
 type
 //  TXY = record

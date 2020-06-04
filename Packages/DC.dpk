@@ -33,8 +33,7 @@ requires
   dbrtl,
   IndySystem,
   IndyProtocols,
-  IndyCore,
-  dclDC;
+  IndyCore;
 
 contains
   aOPCTagDictionary in '..\Sources\Common\aOPCTagDictionary.pas';

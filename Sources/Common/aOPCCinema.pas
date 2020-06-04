@@ -3,15 +3,16 @@ unit aOPCCinema;
 interface
 
 uses
-  Classes, Forms, ExtCtrls, Windows, Dialogs, Controls,
+  System.Classes,
+  // Forms, ExtCtrls, Windows, Dialogs, Controls,
   aOPCClass, uDCObjects, aCustomOPCSource, aOPCSource, aOPCLog;
 
 type
   TCrackOPCLink = class(TaOPCDataLink);
   TCrackOPCSource = class(TaOPCSource);
 
-  TFillHistoryEvent = procedure(var StopFill: boolean; Progress: integer) of
-    object;
+  TFillHistoryEvent = procedure(var StopFill: boolean; Progress: integer)
+    of object;
 
   TValueSnapshot = record
     FDateTime: TDateTime;
@@ -32,13 +33,13 @@ type
     FValues: array of TValueSnapshot;
     FSource: TaCustomOPCSource;
 
-    property CurrentPosition: integer read FCurrentPosition write
-      SetCurrentPosition;
+    property CurrentPosition: integer read FCurrentPosition
+      write SetCurrentPosition;
     function IsEmpty: boolean;
     property Eof: boolean read FEof;
     property Bof: boolean read FBof;
     function GetIndexOnDate(aDateTime: TDateTime): integer;
-    function GetValueOnDate(aDateTime: TDateTime): extended;
+    function GetValueOnDate(aDateTime: TDateTime): Extended;
 
     function GetSnapshotOnDate(aDateTime: TDateTime): TValueSnapshot;
 
@@ -63,41 +64,41 @@ type
     FInTimer: boolean;
     FInCalc: boolean;
 
-    //FSources: TList;
+    // FSources: TList;
 
     FSaveOPCSourceActive: boolean;
 
-    //FOPCSource: TaOPCSource;
+    // FOPCSource: TaOPCSource;
 
     FDate1: TDateTime;
     FDate2: TDateTime;
 
     FStep: integer;
     FOnChangeMoment: TNotifyEvent;
-    FTimer: TTimer;
+    // FTimer: TTimer;
     FOnFillHistory: TFillHistoryEvent;
     FBof: boolean;
     FEof: boolean;
     FDataKind: TDataKind;
     FOnRequest: TNotifyEvent;
     FSpeed: integer;
-    FShowUserMessages: Boolean;
+    FShowUserMessages: boolean;
     FBeforeActivate: TNotifyEvent;
-    procedure TimeTimer(Sender: TObject);
-    //    procedure SetOPCSource(const Value: TaOPCSource);
+//    procedure TimeTimer(Sender: TObject);
     procedure SetDate1(const Value: TDateTime);
     procedure SetDate2(const Value: TDateTime);
-    procedure SetSleepInterval(const Value: integer);
-    procedure SetStep(const Value: integer);
-    function GetSleepInterval: integer;
-    function GetPlaying: boolean;
-    procedure SetPlaing(const Value: boolean);
     procedure SetDataKind(const Value: TDataKind);
-    procedure SetSpeed(const Value: integer);
-    procedure SetShowUserMessages(const Value: Boolean);
+//    procedure SetSleepInterval(const Value: integer);
+//    procedure SetStep(const Value: integer);
+//    function GetSleepInterval: integer;
+//    function GetPlaying: boolean;
+//    procedure SetPlaing(const Value: boolean);
+//    procedure SetDataKind(const Value: TDataKind);
+//    procedure SetSpeed(const Value: integer);
+//    procedure SetShowUserMessages(const Value: boolean);
   protected
-    function FindDataLinkGroupHistory(
-      DataLink: TaOPCDataLink; aSource: TaCustomOPCSource): TOPCDataLinkGroupHistory;
+    function FindDataLinkGroupHistory(DataLink: TaOPCDataLink;
+      aSource: TaCustomOPCSource): TOPCDataLinkGroupHistory;
 
     procedure SetCurrentMoment(const Value: TDateTime); override;
 
@@ -112,21 +113,21 @@ type
   public
     // упрощенный вариант (ищем только по ID
     function FindGroupHistory(aID: TPhysID): TOPCDataLinkGroupHistory;
-    
+
     procedure ConnectOPCSourceDataLinks(aSource: TaOPCSource);
     procedure DisconnectOPCSourceDataLinks;
     procedure FreeHistory;
-    function FillHistory(Date1, Date2: TDatetime): boolean;
+    function FillHistory(Date1, Date2: TDateTime): boolean;
     procedure SaveHistory(aFileName: string; aVersion: string);
     procedure LoadHistory(aFileName: string; aVersion: string);
     function GetNextMoment: TDateTime;
     function GetPredMoment: TDateTime;
     procedure CalcValuesOnMoment(aMoment: TDateTime);
-    procedure Play;
-    procedure Stop;
-    procedure HidePult;
-    procedure ShowPult(aFormToPrint: TForm = nil; Modal: boolean = true);
-    function Skip(aCount: integer): boolean;
+//    procedure Play;
+//    procedure Stop;
+//    procedure HidePult;
+//    procedure ShowPult(aFormToPrint: TForm = nil; Modal: boolean = true);
+//    function Skip(aCount: integer): boolean;
 
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
@@ -134,7 +135,7 @@ type
     property Eof: boolean read FEof;
     property Bof: boolean read FBof;
 
-    property Playing: boolean read GetPlaying write SetPlaing;
+//    property Playing: boolean read GetPlaying write SetPlaing;
   published
     property OnChangeMoment: TNotifyEvent read FOnChangeMoment write FOnChangeMoment;
     property OnFillHistory: TFillHistoryEvent read FOnFillHistory write FOnFillHistory;
@@ -144,37 +145,35 @@ type
     // случаетс€ перед загрузкой
     property BeforeActivate: TNotifyEvent read FBeforeActivate write FBeforeActivate;
 
-    //    property OPCSource:TaOPCSource read FOPCSource write SetOPCSource;
+    // property OPCSource:TaOPCSource read FOPCSource write SetOPCSource;
     property Date1: TDateTime read FDate1 write SetDate1 stored false;
     property Date2: TDateTime read FDate2 write SetDate2 stored false;
     property CurrentMoment;
-      // : TDateTime;// read FCurrentMoment write SetCurrentMoment stored false;
 
-    property Step: integer read FStep write SetStep default 20; // в секундах
-    property SleepInterval: integer read GetSleepInterval write SetSleepInterval default 100; // милисекунд
-    property Speed: integer read FSpeed write SetSpeed default 1;
+//    property Step: integer read FStep write SetStep default 20; // в секундах
+//    property SleepInterval: integer read GetSleepInterval write SetSleepInterval  default 100; // милисекунд
+//    property Speed: integer read FSpeed write SetSpeed default 1;
 
     property DataKind: TDataKind read FDataKind write SetDataKind default dkValue;
-    property ShowUserMessages: Boolean read FShowUserMessages write SetShowUserMessages default False;
+//    property ShowUserMessages: boolean read FShowUserMessages write SetShowUserMessages default false;
   end;
 
 implementation
 
-uses SysUtils, Math
-  , uCinemaControlForm
-  ;
+uses
+  SysUtils, Math; //, uCinemaControlForm;
 
 { TOPCDataLinkGroupHistory }
 {
-function TOPCDataLinkGroupHistory.Bof: boolean;
-begin
+  function TOPCDataLinkGroupHistory.Bof: boolean;
+  begin
   Result := (CurrentPosition <= Low(FValues));
-end;
+  end;
 
-function TOPCDataLinkGroupHistory.Eof: boolean;
-begin
+  function TOPCDataLinkGroupHistory.Eof: boolean;
+  begin
   Result := (CurrentPosition >= High(FValues));
-end;
+  end;
 }
 
 function TOPCDataLinkGroupHistory.GetCurrentMoment: TDateTime;
@@ -192,10 +191,9 @@ begin
   Result := FValues[CurrentPosition].FValue;
 end;
 
-function TOPCDataLinkGroupHistory.GetIndexOnDate(
-  aDateTime: TDateTime): integer;
+function TOPCDataLinkGroupHistory.GetIndexOnDate(aDateTime: TDateTime): integer;
 var
-  L, H, I: Integer;
+  L, H, I: integer;
   Item1: TDateTime;
 begin
   H := High(FValues);
@@ -218,7 +216,7 @@ begin
       H := I - 1;
       if Item1 = aDateTime then
       begin
-        //Result := I;
+        // Result := I;
         L := I;
       end;
     end;
@@ -238,34 +236,35 @@ begin
     Inc(Result);
 end;
 
-function TOPCDataLinkGroupHistory.GetNextMoment(
-  var aMoment: TDateTime): boolean;
+function TOPCDataLinkGroupHistory.GetNextMoment(var aMoment: TDateTime)
+  : boolean;
 begin
   if FCurrentPosition >= High(FValues) then
     Result := false
   else
   begin
     aMoment := FValues[CurrentPosition + 1].FDateTime;
-    Result := True;
+    Result := true;
   end;
 end;
 
-function TOPCDataLinkGroupHistory.GetPredMoment(
-  var aMoment: TDateTime): boolean;
+function TOPCDataLinkGroupHistory.GetPredMoment(var aMoment: TDateTime)
+  : boolean;
 begin
   if FCurrentPosition <= Low(FValues) then
     Result := false
   else
   begin
     aMoment := FValues[CurrentPosition - 1].FDateTime;
-    Result := True;
+    Result := true;
   end;
 end;
 
-function TOPCDataLinkGroupHistory.GetSnapshotOnDate(aDateTime: TDateTime): TValueSnapshot;
+function TOPCDataLinkGroupHistory.GetSnapshotOnDate(aDateTime: TDateTime)
+  : TValueSnapshot;
 var
   i1: integer;
-  v1, v2: extended;
+  v1, v2: Extended;
   x1, x2: TDateTime;
 begin
   Result.FDateTime := aDateTime;
@@ -276,7 +275,7 @@ begin
   if i1 < 0 then
   begin
     CurrentPosition := 0;
-    Exit;
+    exit;
   end;
   CurrentPosition := i1;
 
@@ -294,11 +293,9 @@ begin
     x2 := FValues[i1 + 1].FDateTime;
     v2 := FValues[i1 + 1].FValue;
 
-    if
-      (Result.FState = 0) and // добавим проверку на корректность данных
-      (x2 <> x1) and
-      (((v1 < v2) and (soIncrease in StairsOptions))
-      or ((v1 > v2) and (soDecrease in StairsOptions))) then
+    if (Result.FState = 0) and // добавим проверку на корректность данных
+      (x2 <> x1) and (((v1 < v2) and (soIncrease in StairsOptions)) or
+      ((v1 > v2) and (soDecrease in StairsOptions))) then
     begin
       Moment := aDateTime;
       Result.FValue := v2 - (v2 - v1) * (x2 - aDateTime) / (x2 - x1)
@@ -311,11 +308,11 @@ begin
   end;
 end;
 
-function TOPCDataLinkGroupHistory.GetValueOnDate(
-  aDateTime: TDateTime): extended;
+function TOPCDataLinkGroupHistory.GetValueOnDate(aDateTime: TDateTime)
+  : Extended;
 var
   i1: integer;
-  v1, v2: extended;
+  v1, v2: Extended;
   x1, x2: TDateTime;
 begin
   i1 := GetIndexOnDate(aDateTime);
@@ -323,7 +320,7 @@ begin
   begin
     CurrentPosition := 0;
     Result := 0;
-    Exit;
+    exit;
   end;
   CurrentPosition := i1;
   v1 := FValues[i1].FValue;
@@ -337,9 +334,8 @@ begin
     x1 := FValues[i1].FDateTime;
     x2 := FValues[i1 + 1].FDateTime;
     v2 := FValues[i1 + 1].FValue;
-    if (x2 <> x1) and
-      (((v1 < v2) and (soIncrease in StairsOptions))
-      or ((v1 > v2) and (soDecrease in StairsOptions))) then
+    if (x2 <> x1) and (((v1 < v2) and (soIncrease in StairsOptions)) or
+      ((v1 > v2) and (soDecrease in StairsOptions))) then
     begin
       Moment := aDateTime;
       Result := v2 - (v2 - v1) * (x2 - aDateTime) / (x2 - x1)
@@ -383,7 +379,7 @@ var
   HistoryGroup: TOPCDataLinkGroupHistory;
 begin
   HistoryGroup := FindDataLinkGroupHistory(DataLink, DataLink.RealSource);
-    // OldSource);
+  // OldSource);
   if HistoryGroup = nil then
   begin
     Active := false;
@@ -397,7 +393,7 @@ begin
       HistoryGroup.StairsOptions := [];
 
     HistoryGroup.UpdateOnChangeMoment := DataLink.UpdateOnChangeMoment;
-    HistoryGroup.FSource := DataLink.RealSource; //OldSource;
+    HistoryGroup.FSource := DataLink.RealSource; // OldSource;
     DataLinkGroups.Add(HistoryGroup);
   end;
 
@@ -406,27 +402,27 @@ begin
   TCrackOPCLink(DataLink).FOPCSource := Self;
 end;
 
-function TaOPCCinema.FillHistory(Date1, Date2: TDatetime): boolean;
+function TaOPCCinema.FillHistory(Date1, Date2: TDateTime): boolean;
 const
   sizeT = SizeOf(TDateTime);
-  sizeV = SizeOf(extended);
-  sizeS = SizeOf(extended);
+  sizeV = SizeOf(Extended);
+  sizeS = SizeOf(Extended);
 var
-  i, j: integer;
+  I, j: integer;
   d1, d2: TDateTime;
 
   Stream: TMemoryStream;
   aDataLinkGroupHistory: TOPCDataLinkGroupHistory;
   StopFill: boolean;
-  V, S: extended;
+  V, S: Extended;
   T: TDateTime;
   L: integer;
-  //  tc1 : cardinal;
+  // tc1 : cardinal;
   mr: integer;
 begin
   Result := false;
   StopFill := false;
-  mr := mrYes;
+//  mr := mrYes;
 
   // фактические данные о периоде
   d1 := 0; // начало
@@ -434,47 +430,44 @@ begin
 
   Stream := TMemoryStream.Create;
   try
-    for i := 0 to FDataLinkGroups.Count - 1 do
+    for I := 0 to FDataLinkGroups.Count - 1 do
     begin
       if Assigned(FOnFillHistory) then
-        FOnFillHistory(StopFill, (i * 100) div FDataLinkGroups.Count);
+        FOnFillHistory(StopFill, (I * 100) div FDataLinkGroups.Count);
 
       if StopFill then
-        Exit;
+        exit;
 
-      aDataLinkGroupHistory := TOPCDataLinkGroupHistory(FDataLinkGroups.Items[i]);
+      aDataLinkGroupHistory := TOPCDataLinkGroupHistory
+        (FDataLinkGroups.Items[I]);
 
       if not Assigned(aDataLinkGroupHistory.FSource) then
       begin
-        if not ShowUserMessages then
-          Continue;
-
-        OPCLog.WriteToLogFmt(
-          'TaOPCCinema.FillHistory: дл€ %s не указан источник данных.',
-          [aDataLinkGroupHistory.PhysID]);
-
-        if mr <> mrYesToAll then
-          mr := MessageDlg(
-            Format('ƒл€ одного из датчиков (ID = %s) не указан источник данных'
-              + #13
-            + 'и получение данных за выбранный период по нему невозможно.' + #13
-            + 'ѕродолжить процесс получени€ данных?',
-              [aDataLinkGroupHistory.PhysID]),
-            mtWarning, [mbYes, mbYesToAll, mbNo], 0, mbYes);
-
-        if mr = mrNo then
-          Break
-        else
+//        if not ShowUserMessages then
+//          Continue;
+//
+//        OPCLog.WriteToLogFmt
+//          ('TaOPCCinema.FillHistory: дл€ %s не указан источник данных.',
+//          [aDataLinkGroupHistory.PhysID]);
+//
+//        if mr <> mrYesToAll then
+//          mr := MessageDlg
+//            (Format('ƒл€ одного из датчиков (ID = %s) не указан источник данных'
+//            + #13 + 'и получение данных за выбранный период по нему невозможно.'
+//            + #13 + 'ѕродолжить процесс получени€ данных?',
+//            [aDataLinkGroupHistory.PhysID]), mtWarning,
+//            [mbYes, mbYesToAll, mbNo], 0, mbYes);
+//
+//        if mr = mrNo then
+//          Break
+//        else
           Continue;
       end;
 
-//      TaOPCSource(aDataLinkGroupHistory.FSource).FillHistory(
-//        Stream, aDataLinkGroupHistory.PhysID, Date1, Date2, [FDataKind]);
-
       if FDataKind = dkValue then
       begin
-        TaOPCSource(aDataLinkGroupHistory.FSource).FillHistory(
-          Stream, aDataLinkGroupHistory.PhysID, Date1, Date2, [dkValue, dkState]);
+        TaOPCSource(aDataLinkGroupHistory.FSource).FillHistory(Stream,
+          aDataLinkGroupHistory.PhysID, Date1, Date2, [dkValue, dkState]);
 
         // расчитаем количество элементов массива
         L := Stream.Size div (sizeT + sizeV + sizeS);
@@ -490,7 +483,8 @@ begin
           Stream.Read(V, sizeV);
           Stream.Read(S, sizeS);
           // добавл€ем данные так, чтобы следующа€ дата не была меньше предыдущей
-          if (j = 0) or (T > aDataLinkGroupHistory.FValues[j - 1].FDateTime) then
+          if (j = 0) or (T > aDataLinkGroupHistory.FValues[j - 1].FDateTime)
+          then
           begin
             aDataLinkGroupHistory.FValues[j].FDateTime := T;
             aDataLinkGroupHistory.FValues[j].FValue := V;
@@ -502,14 +496,14 @@ begin
             if d2 < T then
               d2 := T;
 
-            inc(j);
+            Inc(j);
           end;
         end;
       end
       else
       begin
-        TaOPCSource(aDataLinkGroupHistory.FSource).FillHistory(
-          Stream, aDataLinkGroupHistory.PhysID, Date1, Date2, [FDataKind]);
+        TaOPCSource(aDataLinkGroupHistory.FSource).FillHistory(Stream,
+          aDataLinkGroupHistory.PhysID, Date1, Date2, [FDataKind]);
 
         // расчитаем количество элементов массива
         L := Stream.Size div (sizeT + sizeV);
@@ -524,7 +518,8 @@ begin
           Stream.Read(T, sizeT);
           Stream.Read(V, sizeV);
           // добавл€ем данные так, чтобы следующа€ дата не была меньше предыдущей
-          if (j = 0) or (T > aDataLinkGroupHistory.FValues[j - 1].FDateTime) then
+          if (j = 0) or (T > aDataLinkGroupHistory.FValues[j - 1].FDateTime)
+          then
           begin
             aDataLinkGroupHistory.FValues[j].FDateTime := T;
             aDataLinkGroupHistory.FValues[j].FValue := V;
@@ -535,7 +530,7 @@ begin
             if d2 < T then
               d2 := T;
 
-            inc(j);
+            Inc(j);
           end;
         end;
       end;
@@ -559,19 +554,18 @@ end;
 function TaOPCCinema.FindDataLinkGroupHistory(DataLink: TaOPCDataLink;
   aSource: TaCustomOPCSource): TOPCDataLinkGroupHistory;
 var
-  i: integer;
+  I: integer;
   HistoryGroup: TOPCDataLinkGroupHistory;
 begin
   Result := nil;
-  for i := 0 to DataLinkGroups.Count - 1 do
+  for I := 0 to DataLinkGroups.Count - 1 do
   begin
-    HistoryGroup := TOPCDataLinkGroupHistory(DataLinkGroups[i]);
+    HistoryGroup := TOPCDataLinkGroupHistory(DataLinkGroups[I]);
     if HistoryGroup <> nil then
     begin
       if (HistoryGroup.PhysID = DataLink.PhysID) and
         (HistoryGroup.UpdateOnChangeMoment = DataLink.UpdateOnChangeMoment) and
-        (HistoryGroup.FSource = aSource) and
-        not HistoryGroup.Deleted then
+        (HistoryGroup.FSource = aSource) and not HistoryGroup.Deleted then
       begin
         Result := HistoryGroup;
         exit;
@@ -582,111 +576,36 @@ end;
 
 function TaOPCCinema.FindGroupHistory(aID: TPhysID): TOPCDataLinkGroupHistory;
 var
-  i: integer;
+  I: integer;
   HistoryGroup: TOPCDataLinkGroupHistory;
 begin
   Result := nil;
-  for i := 0 to DataLinkGroups.Count - 1 do
+  for I := 0 to DataLinkGroups.Count - 1 do
   begin
-    HistoryGroup := TOPCDataLinkGroupHistory(DataLinkGroups[i]);
+    HistoryGroup := TOPCDataLinkGroupHistory(DataLinkGroups[I]);
     if HistoryGroup <> nil then
     begin
-      if (HistoryGroup.PhysID = aID) and
-        not HistoryGroup.Deleted then
+      if (HistoryGroup.PhysID = aID) and not HistoryGroup.Deleted then
       begin
         Result := HistoryGroup;
-        Exit;
+        exit;
       end;
     end;
   end;
 end;
-
-{
-function TaOPCCinema.FillHistory(Date1,Date2:TDatetime):boolean;
-var
-  i,j,IDIndex:integer;
-  Stream:TMemoryStream;
-  aDataLinkGroupHistory:TOPCDataLinkGroupHistory;
-  StopFill : boolean;
-  SensorIDs : string;
-  IDList : TStringList;
-  sID : string;
-  sCount:integer;
-  List : TList;
-begin
-  Result := false;
-  StopFill := false;
-  if (OPCSource = nil)
-    or not TaOPCSource(OPCSource).Connected
-    or (Date1>Date2) then exit;
-
-  FDataLinkGroups.Sort(CompareDataLinkGroup);
-  Stream := TMemoryStream.Create;
-  try
-    SensorIDs := ',';
-    for i:=0 to FDataLinkGroups.Count - 1 do
-      SensorIDs := SensorIDs +
-        TOPCDataLinkGroupHistory(FDataLinkGroups.Items[i]).PhysID+',';
-      //OPCSource.GetSensorsJurnal(Stream,
-      //  TOPCDataLinkGroupHistory(FDataLinkGroups.Items[i]).PhysID,Date1,Date2)+';';
-
-    SensorIDs := OPCSource.GetSensorsJurnal(Stream,SensorIDs,Date1,Date2);
-    IDList := TStringList.Create;
-    try
-      IDList.Delimiter := ';';
-      IDList.DelimitedText := SensorIDs;
-      for IDIndex:=0 to IDList.Count - 1 do
-      begin
-        if Assigned(FOnFillHistory) then
-          FOnFillHistory(StopFill,((IDIndex+1)*100) div IDList.Count);
-        if StopFill then
-          Exit;
-
-        sID := IDList.Names[IDIndex];
-        sCount := StrToIntDef(IDList.ValueFromIndex[IDIndex],0);
-        List := FindDataLinkGroups(sID);
-        if List<>nil then
-        begin
-          try
-            aDataLinkGroupHistory := TOPCDataLinkGroupHistory(List.Items[0]);
-            SetLength(aDataLinkGroupHistory.FValues,sCount);
-
-            aDataLinkGroupHistory.CurrentPosition := Low(aDataLinkGroupHistory.FValues);
-            for j:=Low(aDataLinkGroupHistory.FValues) to High(aDataLinkGroupHistory.FValues) do
-            begin
-              Stream.Read(aDataLinkGroupHistory.FValues[j].FDateTime,SIZEOF(TDateTime));
-              Stream.Read(aDataLinkGroupHistory.FValues[j].FValue,SIZEOF(Extended));
-            end;
-
-            for j:=1 to List.Count - 1 do
-              TOPCDataLinkGroupHistory(List.Items[j]).FValues := aDataLinkGroupHistory.FValues;
-          finally
-            FreeAndNil(List);
-          end;
-        end;
-      end;
-    finally
-      IDList.Free;
-    end;
-  finally
-    Stream.Free;
-  end;
-  Result := true;
-end;
-}
 
 procedure TaOPCCinema.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
-  //  if (Operation = opRemove) and (AComponent = FOPCSource) then
-  //    FOPCSource := nil;
+  // if (Operation = opRemove) and (AComponent = FOPCSource) then
+  // FOPCSource := nil;
 end;
 
-procedure TaOPCCinema.Play;
-begin
-  Playing := True;
-end;
+//procedure TaOPCCinema.Play;
+//begin
+//  Playing := true;
+//end;
 
 procedure TaOPCCinema.SetDataKind(const Value: TDataKind);
 begin
@@ -697,7 +616,7 @@ procedure TaOPCCinema.SetDate1(const Value: TDateTime);
 begin
   if FDate1 <> Value then
   begin
-    Active := False;
+    Active := false;
     FDate1 := Value;
     if FDate1 > FDate2 then
       FDate2 := FDate1 + 1;
@@ -708,55 +627,46 @@ procedure TaOPCCinema.SetDate2(const Value: TDateTime);
 begin
   if FDate2 <> Value then
   begin
-    Active := False;
+    Active := false;
     FDate2 := Value;
     if FDate2 < FDate1 then
       FDate1 := FDate2 - 1;
   end;
 end;
 
-procedure TaOPCCinema.SetShowUserMessages(const Value: Boolean);
-begin
-  FShowUserMessages := Value;
-end;
-
-procedure TaOPCCinema.SetSleepInterval(const Value: integer);
-begin
-  FTimer.Interval := Value;
-end;
-
-procedure TaOPCCinema.SetSpeed(const Value: integer);
-begin
-  FSpeed := Value;
-  if FSpeed = 0 then
-    FSpeed := 1;
-end;
-
-//procedure TaOPCCinema.SetOPCSource(const Value: TaOPCSource);
+//procedure TaOPCCinema.SetShowUserMessages(const Value: boolean);
 //begin
-//  if FOPCSource <> Value then
-//  begin
-//    FOPCSource := Value;
-//    if Value <> nil then Value.FreeNotification(Self);
-//  end;
+//  FShowUserMessages := Value;
 //end;
 
-function TaOPCCinema.Skip(aCount: integer): boolean;
-begin
-  if not Active then
-    Active := True;
-  CurrentMoment := CurrentMoment + Step * Speed / (24 * 60 * 60) * aCount;
-  Result := CurrentMoment < Date2;
-end;
+//procedure TaOPCCinema.SetSleepInterval(const Value: integer);
+//begin
+//  FTimer.Interval := Value;
+//end;
+//
+//procedure TaOPCCinema.SetSpeed(const Value: integer);
+//begin
+//  FSpeed := Value;
+//  if FSpeed = 0 then
+//    FSpeed := 1;
+//end;
 
-procedure TaOPCCinema.SetStep(const Value: integer);
-begin
-  FStep := Value;
-end;
+//function TaOPCCinema.Skip(aCount: integer): boolean;
+//begin
+//  if not Active then
+//    Active := true;
+//  CurrentMoment := CurrentMoment + Step * Speed / (24 * 60 * 60) * aCount;
+//  Result := CurrentMoment < Date2;
+//end;
+
+//procedure TaOPCCinema.SetStep(const Value: integer);
+//begin
+//  FStep := Value;
+//end;
 
 procedure TaOPCCinema.SetCurrentMoment(const Value: TDateTime);
 begin
-  if (not Active) or FInCalc {or (FCurrentMoment=Value)} then
+  if (not Active) or FInCalc { or (FCurrentMoment=Value) } then
     exit;
 
   FInCalc := true;
@@ -776,10 +686,10 @@ begin
     end;
 
     CalcValuesOnMoment(FCurrentMoment);
-    if Assigned(FOnChangeMoment) and (not (csLoading in ComponentState)) then
+    if Assigned(FOnChangeMoment) and (not(csLoading in ComponentState)) then
       FOnChangeMoment(Self);
 
-    //    Application.ProcessMessages;
+    // Application.ProcessMessages;
   finally
     FInCalc := false;
   end;
@@ -789,13 +699,13 @@ constructor TaOPCCinema.Create(aOwner: TComponent);
 begin
   inherited;
 
-  FShowUserMessages := False;
-
-  FTimer := TTimer.Create(self);
-  FTimer.OnTimer := TimeTimer;
-  FTimer.Enabled := false;
-  FTimer.Interval := 100;
-  FTimer.OnTimer := TimeTimer;
+//  FShowUserMessages := false;
+//
+//  FTimer := TTimer.Create(Self);
+//  FTimer.OnTimer := TimeTimer;
+//  FTimer.Enabled := false;
+//  FTimer.Interval := 100;
+//  FTimer.OnTimer := TimeTimer;
 
   FDataKind := dkValue;
 
@@ -809,7 +719,7 @@ end;
 
 procedure TaOPCCinema.CalcValuesOnMoment(aMoment: TDateTime);
 var
-  i, j: integer;
+  I, j: integer;
   aShapshort: TValueSnapshot;
   aDataLinkGroupHistory: TOPCDataLinkGroupHistory;
   CrackDataLink: TCrackOPCLink;
@@ -817,9 +727,9 @@ begin
   if not Active then
     exit;
 
-  for i := 0 to FDataLinkGroups.Count - 1 do
+  for I := 0 to FDataLinkGroups.Count - 1 do
   begin
-    aDataLinkGroupHistory := TOPCDataLinkGroupHistory(FDataLinkGroups.Items[i]);
+    aDataLinkGroupHistory := TOPCDataLinkGroupHistory(FDataLinkGroups.Items[I]);
     if aDataLinkGroupHistory.IsEmpty then
       Continue;
 
@@ -827,13 +737,11 @@ begin
     aDataLinkGroupHistory.Value := FloatToStr(aShapshort.FValue);
     aDataLinkGroupHistory.FloatValue := aShapshort.FValue;
     aDataLinkGroupHistory.ErrorCode := Trunc(aShapshort.FState);
-    //aDataLinkGroupHistory.ErrorString := ;
-//      FloatToStr(aDataLinkGroupHistory.GetValueOnDate(CurrentMoment));
     for j := 0 to aDataLinkGroupHistory.DataLinks.Count - 1 do
     begin
       CrackDataLink := TCrackOPCLink(aDataLinkGroupHistory.DataLinks.Items[j]);
-      if (CrackDataLink.fValue <> aDataLinkGroupHistory.Value) or
-         (CrackDataLink.ErrorCode <> aDataLinkGroupHistory.ErrorCode)then
+      if (CrackDataLink.FValue <> aDataLinkGroupHistory.Value) or
+        (CrackDataLink.ErrorCode <> aDataLinkGroupHistory.ErrorCode) then
       begin
         CrackDataLink.FMoment := aDataLinkGroupHistory.Moment;
         CrackDataLink.FOldValue := CrackDataLink.FValue;
@@ -843,7 +751,8 @@ begin
         if (CrackDataLink.FErrorCode <> 0) and
           Assigned(CrackDataLink.RealSource) and
           Assigned(CrackDataLink.RealSource.States) then
-          CrackDataLink.ErrorString := CrackDataLink.RealSource.States.Items.Values[IntToStr(CrackDataLink.FErrorCode)]
+          CrackDataLink.ErrorString := CrackDataLink.RealSource.States.Items.
+            Values[IntToStr(CrackDataLink.FErrorCode)]
         else
           CrackDataLink.ErrorString := '';
 
@@ -863,7 +772,7 @@ begin
     BeforeActivate(Self);
 
   FActive := FillHistory(Date1, Date2);
-  if fActive then
+  if FActive then
   begin
     CurrentMoment := Date1;
     inherited;
@@ -903,25 +812,25 @@ end;
 
 procedure TaOPCCinema.FreeHistory;
 var
-  i: integer;
+  I: integer;
   aDataLinkGroupHistory: TOPCDataLinkGroupHistory;
 begin
-  for i := 0 to FDataLinkGroups.Count - 1 do
+  for I := 0 to FDataLinkGroups.Count - 1 do
   begin
-    aDataLinkGroupHistory := TOPCDataLinkGroupHistory(FDataLinkGroups.Items[i]);
+    aDataLinkGroupHistory := TOPCDataLinkGroupHistory(FDataLinkGroups.Items[I]);
     SetLength(aDataLinkGroupHistory.FValues, 0);
   end;
 end;
 
-procedure TaOPCCinema.Stop;
-begin
-  FTimer.Enabled := false;
-end;
+//procedure TaOPCCinema.Stop;
+//begin
+//  FTimer.Enabled := false;
+//end;
 
 destructor TaOPCCinema.Destroy;
 begin
-  Stop;
-  FTimer.Free;
+//  Stop;
+//  FTimer.Free;
   inherited;
 end;
 
@@ -932,32 +841,32 @@ end;
 
 procedure TaOPCCinema.ConnectOPCSourceDataLinks(aSource: TaOPCSource);
 var
-  i, j: integer;
+  I, j: integer;
 
   CrackOPCSource: TCrackOPCSource;
   tmpGroup: TOPCDataLinkGroup;
   List: TList;
 begin
   if not Assigned(aSource) then
-    Exit;
+    exit;
 
-  Stop;
+//  Stop;
   FSaveOPCSourceActive := aSource.Active;
   aSource.Active := false;
   List := TList.Create;
   try
     CrackOPCSource := TCrackOPCSource(aSource);
-    for i := 0 to CrackOPCSource.DataLinkGroups.Count - 1 do
+    for I := 0 to CrackOPCSource.DataLinkGroups.Count - 1 do
     begin
-      tmpGroup := CrackOPCSource.DataLinkGroups[i];
+      tmpGroup := CrackOPCSource.DataLinkGroups[I];
       if tmpGroup = nil then
         Continue;
       for j := 0 to tmpGroup.DataLinks.Count - 1 do
         List.Add(tmpGroup.DataLinks[j]);
     end;
 
-    for i := 0 to List.Count - 1 do
-      TaOPCDataLink(List.Items[i]).OPCSource := Self;
+    for I := 0 to List.Count - 1 do
+      TaOPCDataLink(List.Items[I]).OPCSource := Self;
 
     aSource.Active := FSaveOPCSourceActive;
   finally
@@ -967,36 +876,33 @@ end;
 
 procedure TaOPCCinema.DisconnectOPCSourceDataLinks;
 var
-  i, j: integer;
+  I, j: integer;
   tmpGroup: TOPCDataLinkGroupHistory;
   LinkList: TList;
   SourceList: TList;
-  //aOPCSource: TaOPCSource;
 begin
-  Stop;
-  //  FSaveOPCSourceActive := OPCSource.Active;
+//  Stop;
   Active := false;
   LinkList := TList.Create;
   SourceList := TList.Create;
   try
-    for i := 0 to DataLinkGroups.Count - 1 do
+    for I := 0 to DataLinkGroups.Count - 1 do
     begin
-      tmpGroup := TOPCDataLinkGroupHistory(DataLinkGroups.Items[i]);
+      tmpGroup := TOPCDataLinkGroupHistory(DataLinkGroups.Items[I]);
       for j := 0 to tmpGroup.DataLinks.Count - 1 do
       begin
         LinkList.Add(tmpGroup.DataLinks.Items[j]);
         SourceList.Add(tmpGroup.FSource);
       end;
     end;
-    for i := 0 to LinkList.Count - 1 do
+    for I := 0 to LinkList.Count - 1 do
     begin
-      TaOPCDataLink(LinkList.Items[i]).OPCSource := //OPCSource;
-      TaOPCSource(SourceList[i]);
+      TaOPCDataLink(LinkList.Items[I]).OPCSource := // OPCSource;
+        TaOPCSource(SourceList[I]);
     end;
   finally
     SourceList.Free;
     LinkList.Free;
-    //    OPCSource.Active := FSaveOPCSourceActive;
   end;
 end;
 
@@ -1007,7 +913,7 @@ end;
 
 function TaOPCCinema.GetMoment(aDirection: TDirection): TDateTime;
 var
-  i: integer;
+  I: integer;
   aHistory: TOPCDataLinkGroupHistory;
   tmpMoment: TDateTime;
 begin
@@ -1015,9 +921,9 @@ begin
   if not Active then
     exit;
 
-  for i := 0 to FDataLinkGroups.Count - 1 do
+  for I := 0 to FDataLinkGroups.Count - 1 do
   begin
-    aHistory := TOPCDataLinkGroupHistory(FDataLinkGroups.Items[i]);
+    aHistory := TOPCDataLinkGroupHistory(FDataLinkGroups.Items[I]);
     case aDirection of
       dNext:
         if not aHistory.GetNextMoment(tmpMoment) then
@@ -1031,76 +937,79 @@ begin
       Result := tmpMoment
     else
       case aDirection of
-        dNext: if tmpMoment < Result then
+        dNext:
+          if tmpMoment < Result then
             Result := tmpMoment;
-        dPred: if tmpMoment > Result then
+        dPred:
+          if tmpMoment > Result then
             Result := tmpMoment;
       end;
   end;
 end;
 
-procedure TaOPCCinema.TimeTimer(Sender: TObject);
-begin
-  FInTimer := true;
-  try
-    if not Skip(1) then
-      Playing := false;
-  finally
-    FInTimer := false;
-  end;
-end;
+//procedure TaOPCCinema.TimeTimer(Sender: TObject);
+//begin
+//  FInTimer := true;
+//  try
+//    if not Skip(1) then
+//      Playing := false;
+//  finally
+//    FInTimer := false;
+//  end;
+//end;
 
-function TaOPCCinema.GetSleepInterval: integer;
-begin
-  Result := FTimer.Interval;
-end;
+//function TaOPCCinema.GetSleepInterval: integer;
+//begin
+//  Result := FTimer.Interval;
+//end;
+//
+//procedure TaOPCCinema.HidePult;
+//begin
+//  if Assigned(CinemaControlForm) then
+//    CinemaControlForm.Close;
+//end;
 
-procedure TaOPCCinema.HidePult;
-begin
-  if Assigned(CinemaControlForm) then
-    CinemaControlForm.Close;
-end;
+//function TaOPCCinema.GetPlaying: boolean;
+//begin
+//  Result := FTimer.Enabled;
+//end;
+//
+//procedure TaOPCCinema.SetPlaing(const Value: boolean);
+//begin
+//  FTimer.Enabled := Value;
+//end;
 
-function TaOPCCinema.GetPlaying: boolean;
-begin
-  Result := FTimer.Enabled;
-end;
-
-procedure TaOPCCinema.SetPlaing(const Value: boolean);
-begin
-  FTimer.Enabled := Value;
-end;
-
-procedure TaOPCCinema.ShowPult(aFormToPrint: TForm = nil; Modal: Boolean = True);
-begin
-  { TODO : –еализовать }
-  {.$IFDEF VCL}
-  if not Assigned(CinemaControlForm) then
-    CinemaControlForm := TCinemaControlForm.Create(aFormToPrint)
-  else
-    CinemaControlForm.Hide;
-
-  with CinemaControlForm do
-  begin
-    try
-      aOPCCinemaControl1.OPCCinema := Self;
-      aOPCCinemaControl1.FormToPrint := aFormToPrint;
-      //      if OPCSource<>nil then
-      //      begin
-      //        //OPCSource.Active := false;
-      //        ConnectOPCSourceDataLinks;
-      //      end;
-
-      if Modal then
-        ShowModal
-      else
-        Show;
-    finally
-      //Free;
-    end;
-  end;
-  {.$ENDIF}
-end;
+//procedure TaOPCCinema.ShowPult(aFormToPrint: TForm = nil;
+//  Modal: boolean = true);
+//begin
+//  { TODO : –еализовать }
+//  { .$IFDEF VCL }
+//  if not Assigned(CinemaControlForm) then
+//    CinemaControlForm := TCinemaControlForm.Create(aFormToPrint)
+//  else
+//    CinemaControlForm.Hide;
+//
+//  with CinemaControlForm do
+//  begin
+//    try
+//      aOPCCinemaControl1.OPCCinema := Self;
+//      aOPCCinemaControl1.FormToPrint := aFormToPrint;
+//      // if OPCSource<>nil then
+//      // begin
+//      // //OPCSource.Active := false;
+//      // ConnectOPCSourceDataLinks;
+//      // end;
+//
+//      if Modal then
+//        ShowModal
+//      else
+//        Show;
+//    finally
+//      // Free;
+//    end;
+//  end;
+//  { .$ENDIF }
+//end;
 
 procedure TaOPCCinema.LoadHistory(aFileName, aVersion: string);
 begin
@@ -1111,24 +1020,22 @@ procedure TaOPCCinema.SaveHistory(aFileName, aVersion: string);
 var
   aFileStream: TFileStream;
   VerLength: integer;
-  i, j: integer;
+  I, j: integer;
   DLG: TOPCDataLinkGroupHistory;
-  //dt:TDateTime;
-  //Val:Double;
   PhysID: integer;
   aValueSnapshot: TValueSnapshot;
 begin
   aFileStream := TFileStream.Create(aFileName, fmOpenWrite);
   try
     VerLength := length(aVersion);
-    aFileStream.Write(VerLength, sizeof(VerLength)); //размер строки версии
-    aFileStream.Write(PChar(aVersion)^, VerLength); //строка версии
-    for i := 0 to FDataLinkGroups.Count - 1 do
+    aFileStream.Write(VerLength, SizeOf(VerLength)); // размер строки версии
+    aFileStream.Write(PChar(aVersion)^, VerLength); // строка версии
+    for I := 0 to FDataLinkGroups.Count - 1 do
     begin
-      DLG := TOPCDataLinkGroupHistory(FDataLinkGroups[i]);
+      DLG := TOPCDataLinkGroupHistory(FDataLinkGroups[I]);
       PhysID := StrToIntDef(DLG.PhysID, 0);
-      aFileStream.Write(PhysID, sizeof(PhysID)); //адрес (id) датчика
-      for j := low(dlg.FValues) to High(dlg.FValues) do
+      aFileStream.Write(PhysID, SizeOf(PhysID)); // адрес (id) датчика
+      for j := low(DLG.FValues) to High(DLG.FValues) do
       begin
         aValueSnapshot.FDateTime := DLG.FValues[j].FDateTime;
         aValueSnapshot.FValue := DLG.FValues[j].FValue;
@@ -1154,8 +1061,7 @@ begin
   inherited;
 end;
 
-initialization
-  CinemaControlForm := nil;
+//initialization
+//  CinemaControlForm := nil;
 
 end.
-

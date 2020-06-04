@@ -33,7 +33,6 @@ requires
   rtl,
   vcl,
   IndySystem,
-  dclDC,
   JclContainers,
   Jcl,
   Tee927,
@@ -42,7 +41,10 @@ requires
   TeeUI927,
   TeeLanguage927,
   tb2k_d12,
-  SpTBXLib;
+  SpTBXLib,
+  IndyProtocols,
+  IndyCore,
+  DC;
 
 contains
   VCL.DCRegister in '..\Sources\VCL\VCL.DCRegister.pas',
@@ -52,15 +54,13 @@ contains
   aOPCLineSeries in '..\Sources\VCL\aOPCLineSeries.pas',
   aOPCStateLine in '..\Sources\VCL\aOPCStateLine.pas',
   uChoiceIntervalExt in '..\Sources\VCL\uChoiceIntervalExt.pas' {ChoiceIntervalExt},
-  uOPCSeriesTypes in '..\Sources\Common\uOPCSeriesTypes.pas',
-  uOPCFilter in '..\Sources\Common\uOPCFilter.pas',
-  uDataTypes in '..\Sources\Common\uDataTypes.pas',
   uOPCFrame in '..\Sources\VCL\Frames\uOPCFrame.pas' {aOPCFrame: TFrame},
   aOPCImage in '..\Sources\VCL\aOPCImage.pas',
   aOPCImageList in '..\Sources\VCL\aOPCImageList.pas',
   uOPCGanttSeries in '..\Sources\VCL\uOPCGanttSeries.pas',
   aOPCChartMessureTool in '..\Sources\VCL\aOPCChartMessureTool.pas',
   uDCTeeTools in '..\Sources\VCL\uDCTeeTools.pas',
-  uChartFrame in '..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame};
+  uChartFrame in '..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame},
+  aOPCSeries in '..\Sources\VCL\aOPCSeries.pas';
 
 end.

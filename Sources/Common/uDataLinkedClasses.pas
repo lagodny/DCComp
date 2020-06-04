@@ -6,7 +6,7 @@ uses
   System.Classes, System.IniFiles, System.Contnrs,
   System.Generics.Collections,
   uExprEval,
-  aOPCSource, aCustomOPCSource, aCustomOPCTCPSource, aOPCCinema,
+  aOPCSource, aCustomOPCSource, aCustomOPCTCPSource, //aOPCCinema,
   aOPCConnectionList,
   aOPCLookupList;
   //uEvents;
@@ -881,10 +881,11 @@ function TCustomDataPoint.GetDate: TDateTime;
 begin
   if Assigned(OPCSource) then
   begin
-    if (OPCSource is TaOPCCinema) then
-      Result := TaOPCCinema(OPCSource).CurrentMoment
-    else if (OPCSource is TaCustomOPCTCPSource) then
-      Result := TaCustomOPCTCPSource(OPCSource).ServerTime
+//    if (OPCSource is TaOPCCinema) then
+//      Result := TaOPCCinema(OPCSource).CurrentMoment
+//    else
+    if (OPCSource is TaCustomOPCTCPSource) then
+      Result := TaCustomOPCTCPSource(OPCSource).CurrentMoment
     else
       Result := Now;
   end
@@ -953,10 +954,11 @@ function TCustomDataPoint.GetServerDate: TDateTime;
 begin
   if Assigned(OPCSource) then
   begin
-    if (OPCSource is TaOPCCinema) then
-      Result := TaOPCCinema(OPCSource).CurrentMoment
-    else if (OPCSource is TaCustomOPCTCPSource) then
-      Result := TaCustomOPCTCPSource(OPCSource).ServerTime
+//    if (OPCSource is TaOPCCinema) then
+//      Result := TaOPCCinema(OPCSource).CurrentMoment
+//    else
+    if (OPCSource is TaCustomOPCTCPSource) then
+      Result := TaCustomOPCTCPSource(OPCSource).CurrentMoment
     else
       Result := Now;
   end

@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, ImgList, ComCtrls, ToolWin, aCustomOPCSource,
   aOPCCinema, StdCtrls, ActnList,
-  uOPCInterval;
+  uOPCInterval, System.Actions, System.ImageList;
 
 type
   TStepMode = (smNextMoment,smStep);
@@ -404,3 +404,4 @@ begin
 end;
 
 end.
+

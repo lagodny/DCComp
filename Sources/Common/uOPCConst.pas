@@ -53,7 +53,7 @@ const
   sSensorOnWriteConvertValueFuncName = 'OnWriteConvertValueFuncName';
 
   cState_IsFiltered = -7;
-  
+
 implementation
   
   

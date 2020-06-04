@@ -4,7 +4,7 @@ unit aOPCConnectionList;
 interface
 
 uses
-  Classes, SysUtils, IniFiles,
+  System.Classes, System.SysUtils, System.IniFiles,
   aOPCClass, uDCObjects, uAppStorage,
   aOPCLookupList,
   aCustomOPCSource, aOPCSource, aCustomOPCTCPSource,

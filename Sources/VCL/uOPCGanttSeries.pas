@@ -12,6 +12,7 @@ uses
   {$ELSE}
   Chart, Series, TeEngine, GanttCh,
   {$ENDIF}
+  aOPCSeries,
   uOPCSeriesTypes,
   uDCObjects, uOPCInterval,
   aOPCLookupList, uOPCFilter,

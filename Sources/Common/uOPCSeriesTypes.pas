@@ -3,11 +3,11 @@ unit uOPCSeriesTypes;
 interface
 
 uses
-  Vcl.Graphics,
+  //Vcl.Graphics,
   aCustomOPCSource;
 
-const
-  cErrorSerieColor = clGray;
+//const
+//  cErrorSerieColor = clGray;
 
 type
   TXY = record

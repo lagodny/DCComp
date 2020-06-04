@@ -328,6 +328,7 @@ implementation
 
 uses
   StrUtils,
+  aOPCSeries,
   aOPCChartMessureTool,
   uDataLinkedClasses,
   aOPCLookupList;
