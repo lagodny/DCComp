@@ -25,6 +25,7 @@ package dclFMXDC;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX '27'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
@@ -33,8 +34,8 @@ requires
   dbrtl,
   fmx,
   IndySystem,
-  dclDC,
-  FMXTee927;
+  FMXTee927,
+  DC;
 
 contains
   FMX.DCChart in '..\..\Sources\FMX\FMX.DCChart.pas',

@@ -12,6 +12,9 @@
         <Projects Include="..\dclVCLDC.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="dclFMXDC.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="dclVCLDC:Make">
         <MSBuild Projects="..\dclVCLDC.dproj" Targets="Make"/>
     </Target>
+    <Target Name="dclFMXDC">
+        <MSBuild Projects="dclFMXDC.dproj"/>
+    </Target>
+    <Target Name="dclFMXDC:Clean">
+        <MSBuild Projects="dclFMXDC.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dclFMXDC:Make">
+        <MSBuild Projects="dclFMXDC.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DC;dclDC;dclVCLDC"/>
+        <CallTarget Targets="DC;dclDC;dclVCLDC;dclFMXDC"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DC:Clean;dclDC:Clean;dclVCLDC:Clean"/>
+        <CallTarget Targets="DC:Clean;dclDC:Clean;dclVCLDC:Clean;dclFMXDC:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DC:Make;dclDC:Make;dclVCLDC:Make"/>
+        <CallTarget Targets="DC:Make;dclDC:Make;dclVCLDC:Make;dclFMXDC:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

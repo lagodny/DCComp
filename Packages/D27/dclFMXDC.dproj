@@ -159,6 +159,11 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <DllSuffix>27</DllSuffix>
+        <DCC_DcpOutput>C:\_Dev\Comp\DC\Compiled\Delphi27.win32\Lib\</DCC_DcpOutput>
+        <DCC_DcuOutput>C:\_Dev\Comp\DC\Compiled\Delphi27.win32\Lib\</DCC_DcuOutput>
+        <DCC_BplOutput>C:\_Dev\Comp\DC\Compiled\Delphi27.win32\Bin\</DCC_BplOutput>
+        <DCC_UnitSearchPath>C:\_Dev\Comp\DC\Sources\FMX;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -168,8 +173,8 @@
         <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="fmx.dcp"/>
         <DCCReference Include="IndySystem.dcp"/>
-        <DCCReference Include="dclDC.dcp"/>
         <DCCReference Include="FMXTee927.dcp"/>
+        <DCCReference Include="DC.dcp"/>
         <DCCReference Include="..\..\Sources\FMX\FMX.DCChart.pas"/>
         <DCCReference Include="..\..\Sources\FMX\FMX.DCDataObject.pas"/>
         <DCCReference Include="..\..\Sources\FMX\FMX.DCLineSeries.pas"/>

@@ -36,7 +36,8 @@ requires
   IndyProtocols,
   IndyCore,
   JclContainers,
-  Jcl;
+  Jcl,
+  DCPcrypt;
 
 contains
   aCustomOPCSource in '..\..\Sources\Common\aCustomOPCSource.pas',
