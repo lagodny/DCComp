@@ -10,7 +10,6 @@ interface
 
 uses
   System.Classes,
-  //Contnrs,
   System.Generics.Collections, System.Generics.Defaults;
 
 const
@@ -53,6 +52,7 @@ type
     ok_scs_TrackerTeltonika = 61, // трекер Телтоника
     ok_scs_TrackerAndroid = 62, // трекер Android
     ok_scs_TrackerCicada = 63, // трекер Cicada
+    ok_scs_TrackerWialonIPS = 64, // трекер с протоколом WialonIPS
 
     okStorageTanks = 100,  // ПК №1 Фрейм "Ёмкости хранения"
 
@@ -260,7 +260,13 @@ type
   end;
 
 const
-   cDC_SCS_Trackers: TDCObjectKindSet = [ok_scs_TrackerTDC, ok_scs_TrackerTeltonika, ok_scs_TrackerAndroid, ok_scs_TrackerCicada];
+   cDC_SCS_Trackers: TDCObjectKindSet = [
+     ok_scs_TrackerTDC,
+     ok_scs_TrackerTeltonika,
+     ok_scs_TrackerAndroid,
+     ok_scs_TrackerCicada,
+     ok_scs_TrackerWialonIPS
+   ];
 
 
 //function CompareByID(const Item1, Item2: TDCObject): Integer;
