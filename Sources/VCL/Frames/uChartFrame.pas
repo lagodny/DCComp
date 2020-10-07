@@ -5,29 +5,29 @@ interface
 {$I VCL.DC.inc}
 
 uses
-  {$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-  System.Actions,
-  {$ENDIF}
+//  {$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions, System.ImageList,
+//  {$ENDIF}
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Menus, ActnList, ExtCtrls, AppEvnts,
   System.IniFiles,
-  SpTBXItem, TB2Dock, TB2Toolbar, TB2Item, SpTBXCustomizer,
-{$IFDEF TEEVCL}
-  VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.TeeStore, VCLTee.Chart, VCLTee.Series, VclTee.TeeGDIPlus,
+  SpTBXItem, TB2Dock, TB2Toolbar, TB2Item, SpTBXCustomizer, uOPCFrame,
+//  Vcl.ImgList, System.Actions, VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.Chart, aOPCChart,
+//{$IFDEF TEEVCL}
+  VclTee.TeeGDIPlus, Vcl.Touch.GestureMgr,
+  VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.TeeStore, VCLTee.Chart, VCLTee.Series,
   VCLTee.TeeEdit, VCLTee.TeeEditCha, VCLTee.TeeRussian, VCLTee.TeeTools,
-{$ELSE}
-  TeEngine, TeeProcs, TeeStore, Chart, Series,
-{$ENDIF}
+//{$ELSE}
+//  TeEngine, TeeProcs, TeeStore, Chart, Series,
+//{$ENDIF}
   aOPCChart,
-  uOPCFrame,
   aCustomOPCSource, aOPCSource,
   uOPCIntervalForm, uOPCInterval,
   aOPCDataObject, aOPCLabel,
   uOPCSeriesTypes, aOPCLineSeries, uOPCGanttSeries,
   uDCTeeTools,
   uDCObjects,
-  aOPCConnectionList, aOPCLog, aOPCUtils, ImgList,
-  Vcl.Touch.GestureMgr, System.ImageList;
+  aOPCConnectionList, aOPCLog, aOPCUtils, Vcl.ImgList;
 
 type
   TSavePosition = record
@@ -168,6 +168,8 @@ type
     SpTBXSeparatorItem23: TSpTBXSeparatorItem;
     pmLineTools: TSpTBXPopupMenu;
     SpTBXItem19: TSpTBXItem;
+    Series1: TLineSeries;
+    SpTBXItem25: TSpTBXItem;
     procedure ChartBeforeDrawAxes(Sender: TObject);
     procedure ChartDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -1559,18 +1561,24 @@ var
   aAxis: TChartAxis;
 begin
   aAxis := TChartAxis.Create(Chart);
-  aAxis.Automatic := true;
+  aAxis.Automatic := True;
   //  aAxis.
 
     //aAxis.Title.Caption := aSerie.Title;
   aAxis.Title.Angle := 90;
-  aAxis.Title.Visible := true;
+  aAxis.Title.Visible := True;
   //aAxis.Title.Font.Color := Result.SeriesColor;
 
   aAxis.PositionUnits := muPixels;
   aAxis.PositionPercent := (aIndex + 1) * 50;
+
+  aAxis.Grid.Style := psDot;
+  aAxis.Grid.Width := 0;
+  aAxis.Grid.Color := clBlack;
+
   aAxis.Axis.Color := aSerie.SeriesColor;
-  aAxis.Axis.Width := 1;
+  aAxis.Axis.Width := 0;
+
   aAxis.StartPosition := 1;
   aAXis.EndPosition := 99;
 

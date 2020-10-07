@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{13DD2C02-4CA5-4DEB-A981-97D0A6C27BF2}</ProjectGuid>
+        <ProjectGuid>{173D401A-E3BC-4AEA-9860-B7D5387D7065}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
         <Projects Include="DC.dproj">
@@ -9,10 +9,7 @@
         <Projects Include="dclDC.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\dclVCLDC.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="dclFMXDC.dproj">
+        <Projects Include="dclVCLDC.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -42,31 +39,22 @@
         <MSBuild Projects="dclDC.dproj" Targets="Make"/>
     </Target>
     <Target Name="dclVCLDC">
-        <MSBuild Projects="..\dclVCLDC.dproj"/>
+        <MSBuild Projects="dclVCLDC.dproj"/>
     </Target>
     <Target Name="dclVCLDC:Clean">
-        <MSBuild Projects="..\dclVCLDC.dproj" Targets="Clean"/>
+        <MSBuild Projects="dclVCLDC.dproj" Targets="Clean"/>
     </Target>
     <Target Name="dclVCLDC:Make">
-        <MSBuild Projects="..\dclVCLDC.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="dclFMXDC">
-        <MSBuild Projects="dclFMXDC.dproj"/>
-    </Target>
-    <Target Name="dclFMXDC:Clean">
-        <MSBuild Projects="dclFMXDC.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="dclFMXDC:Make">
-        <MSBuild Projects="dclFMXDC.dproj" Targets="Make"/>
+        <MSBuild Projects="dclVCLDC.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="DC;dclDC;dclVCLDC;dclFMXDC"/>
+        <CallTarget Targets="DC;dclDC;dclVCLDC"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DC:Clean;dclDC:Clean;dclVCLDC:Clean;dclFMXDC:Clean"/>
+        <CallTarget Targets="DC:Clean;dclDC:Clean;dclVCLDC:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DC:Make;dclDC:Make;dclVCLDC:Make;dclFMXDC:Make"/>
+        <CallTarget Targets="DC:Make;dclDC:Make;dclVCLDC:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

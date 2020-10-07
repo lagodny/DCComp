@@ -25,6 +25,7 @@ package dclDC;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX AUTO}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
@@ -37,9 +38,11 @@ requires
   IndyCore,
   bindengine,
   bindcomp,
-  DCPcrypt;
+  DC;
 
 contains
-  aDCReg in '..\Sources\Common\aDCReg.pas';
+  aDCReg in '..\..\Sources\Common\aDCReg.pas',
+  PLDesign in '..\..\Sources\Design\PLDesign.pas' {ProvidersEditor},
+  PathPeForm in '..\..\Sources\Design\PathPeForm.pas' {TreeForm};
 
 end.

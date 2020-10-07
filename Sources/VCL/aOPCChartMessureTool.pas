@@ -147,6 +147,7 @@ begin
   end;
 
   FLine := NewColorLine;
+  FLine.Pen.Width := 0;
 end;
 
 class function TaOPCMessureTool.Description: String;
@@ -358,9 +359,11 @@ begin
     ShapeBounds.Top := 10;
     Width := 300;
     Height := 40;
-  end;
 
+  end;
   FBand := NewBand;
+  FBand.StartLine.Pen.Width := 0;
+  FBand.EndLine.Pen.Width := 0;
 end;
 
 class function TaOPCMessureBandTool.Description: String;

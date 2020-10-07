@@ -41,7 +41,9 @@ begin
     aSeries := ChartFrame1.AddSerieByParam('3', [soIncrease, soDecrease], aOPCTCPSource_V301, 'Количество подключений', clRed, False, '');
     //(aSensor, True);
     //aSeries.OPCSource := aOPCTCPSource_V301;
-    aSeries.LinePen.Width := 1;
+    //aSeries.LinePen.Width := 1;
+    aSeries.DisplayFormat := '# ##0';
+
     aOPCTCPSource_V301.Active := True;
 
     ChartFrame1.Chart.RealTime := True;

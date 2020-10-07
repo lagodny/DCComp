@@ -155,7 +155,7 @@ type
 //    property Speed: integer read FSpeed write SetSpeed default 1;
 
     property DataKind: TDataKind read FDataKind write SetDataKind default dkValue;
-//    property ShowUserMessages: boolean read FShowUserMessages write SetShowUserMessages default false;
+    property ShowUserMessages: boolean read FShowUserMessages write FShowUserMessages default False;
   end;
 
 implementation

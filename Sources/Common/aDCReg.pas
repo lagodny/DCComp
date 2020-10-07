@@ -33,9 +33,9 @@ implementation
 uses
   Data.Bind.Components,
 
-  aOPCTCPSource, aOPCTCPSource_V30, aOPCTCPSource_V31, aOPCTCPSource_V32,
+  aOPCTCPSource, aOPCTCPSource_V30, aOPCTCPSource_V31, aOPCTCPSource_V32, //aOPCTCPSource_V33,
   aOPCProvider,
-//  aOPCCinema, uCinemaControl,
+  aOPCCinema, //uCinemaControl,
 //
 //  aOPCConnectionList,
 //  aDCAuthorization,
@@ -67,8 +67,8 @@ begin
   RegisterComponents('DC', [TaOPCTCPSource_V32]);
 
 //
-//  // просмотрщик истории
-//  RegisterComponents('DC', [TaOPCCinema]);
+  // просмотрщик истории
+  RegisterComponents('DC', [TaOPCCinema]);
 //  RegisterComponents('DC', [TaOPCCinemaControl]);
 //
   // авторизация

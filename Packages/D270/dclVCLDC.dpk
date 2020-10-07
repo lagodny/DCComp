@@ -43,7 +43,9 @@ requires
   TeePro927,
   TeeUI927,
   Tee927,
-  TeeLanguage927;
+  TeeLanguage927,
+  tb2k_d27,
+  SpTBXLibDsgn;
 
 contains
   VCL.DCRegister in '..\..\Sources\VCL\VCL.DCRegister.pas',
@@ -53,9 +55,6 @@ contains
   aOPCLineSeries in '..\..\Sources\VCL\aOPCLineSeries.pas',
   aOPCStateLine in '..\..\Sources\VCL\aOPCStateLine.pas',
   uChoiceIntervalExt in '..\..\Sources\VCL\uChoiceIntervalExt.pas' {ChoiceIntervalExt},
-  uOPCSeriesTypes in '..\..\Sources\Common\uOPCSeriesTypes.pas',
-  uOPCFilter in '..\..\Sources\Common\uOPCFilter.pas',
-  uDataTypes in '..\..\Sources\Common\uDataTypes.pas',
   uOPCFrame in '..\..\Sources\VCL\Frames\uOPCFrame.pas' {aOPCFrame: TFrame},
   aOPCImage in '..\..\Sources\VCL\aOPCImage.pas',
   aOPCImageList in '..\..\Sources\VCL\aOPCImageList.pas',
