@@ -4,7 +4,10 @@ interface
 
 uses
   SysUtils, Classes,
-  //Messages, Windows,
+  {$IFDEF MSWINDOWS}
+  //Messages,
+  Windows,
+  {$ENDIF}
   DateUtils,
   //aCustomOPCSource,
   aOPCSource,
@@ -189,12 +192,13 @@ uses
   var
     Count: UInt32;
   begin
-//    Count := 256 + 1; // UNLEN + 1
-//    SetLength(Result, Count);
-//    if GetUserName(PChar(Result), Count) then
-//      SetLength(Result, StrLen(PChar(Result)))
-//    else
-      Result := '';
+    Result := '';
+    {$IFDEF MSWINDOWS}
+      Count := 256 + 1; // UNLEN + 1
+      SetLength(Result, Count);
+      if GetUserName(PChar(Result), Count) then
+        SetLength(Result, StrLen(PChar(Result)));
+    {$ENDIF}
   end;
 
   function GetComputerName: string;
@@ -202,12 +206,14 @@ uses
     Size: UInt32;
   begin
     Result := '';
-//    Size := MAX_PATH;
-//    SetLength(Result, Size);
-//    if Windows.GetComputerName(PChar(Result), Size) then
-//      SetLength(Result, StrLen(PChar(Result)))
-//    else
-//      RaiseLastOSError;
+    {$IFDEF MSWINDOWS}
+    Size := MAX_PATH;
+    SetLength(Result, Size);
+    if Windows.GetComputerName(PChar(Result), Size) then
+      SetLength(Result, StrLen(PChar(Result)))
+    else
+      RaiseLastOSError;
+    {$ENDIF}
   end;
 
 { TaCustomOPCTCPSource }
