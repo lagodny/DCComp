@@ -196,6 +196,7 @@ end;
 constructor TaOPCGanttSeries.Create(aOwner: TComponent);
 begin
   inherited;
+  Pointer.Pen.Width := 0;
 
   Active := true;
 

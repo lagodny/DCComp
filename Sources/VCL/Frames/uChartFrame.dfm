@@ -79,8 +79,8 @@ inherited ChartFrame: TChartFrame
     BottomAxis.Grid.Visible = False
     BottomAxis.GridCentered = True
     BottomAxis.LabelStyle = talValue
-    BottomAxis.Maximum = 44111.602535277780000000
-    BottomAxis.Minimum = 44111.102535277780000000
+    BottomAxis.Maximum = 44123.641843807870000000
+    BottomAxis.Minimum = 44123.141843807870000000
     BottomAxis.MinorTicks.Visible = False
     BottomAxis.Ticks.Color = clBlack
     BottomAxis.TicksInner.Visible = False
@@ -149,8 +149,8 @@ inherited ChartFrame: TChartFrame
     OnMouseMove = ChartMouseMove
     Interval.Kind = ikInterval
     Interval.ShiftKind = skNone
-    Interval.Date1 = 44111.102535277780000000
-    Interval.Date2 = 44111.602535277780000000
+    Interval.Date1 = 44123.141843807870000000
+    Interval.Date2 = 44123.641843807870000000
     Interval.TimeShift = 0.500000000000000000
     Interval.TimeShiftUnit = tsuHour
     Interval.EnableTime = True
@@ -591,6 +591,7 @@ inherited ChartFrame: TChartFrame
     object aDelSensorValues: TAction
       Category = #1048#1085#1089#1090#1088#1091#1084#1077#1085#1090
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1076#1072#1090#1095#1080#1082#1072#1084
+      Visible = False
       OnExecute = aDelSensorValuesExecute
     end
   end

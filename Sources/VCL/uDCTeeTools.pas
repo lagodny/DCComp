@@ -58,6 +58,8 @@ end;
 constructor TDCTextColorBandTool.Create(AOwner: TComponent);
 begin
   inherited;
+  StartLine.Pen.Width := 0;
+  EndLine.Pen.Width := 0;
   FFont:=TTeeFont.Create(CanvasChanged);
 end;
 
@@ -73,6 +75,11 @@ var
   t: String;
   h: Integer;
 begin
+//  r := BoundsRect();
+//  t := GetDisplayText(r);
+//  TextOut(ParentChart.Canvas.Handle, r.Left, r.Top, t, False);
+//  Exit;
+
   r := BoundsRect();
   InflateRect(r, -1, -1);
   ParentChart.Canvas.BackMode:=cbmTransparent;
@@ -81,7 +88,9 @@ begin
   if TextOrientation = 0 then
   begin
     t := GetDisplayText(r);
-    DrawText(ParentChart.Canvas.Handle, PChar(t), Length(t), r, DT_WORDBREAK + DT_CENTER);
+    ParentChart.Canvas.TextAlign := TA_CENTER;
+    ParentChart.Canvas.TextOut(r.Left + r.Width div 2, r.Top, t, True);
+//    DrawText(ParentChart.Canvas.Handle, PChar(t), Length(t), r, DT_WORDBREAK + DT_CENTER);
   end
   else
   begin

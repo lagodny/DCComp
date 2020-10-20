@@ -1601,6 +1601,7 @@ begin
   end;
 
   Result := TaOPCGanttSeries.Create(Chart);
+
   Result.PhysID := aPhysID;
 
   if aColor <> clNone then
@@ -1649,6 +1650,8 @@ begin
     Result.VertAxis := aLeftAxis;
 
   Result.UpdateRealTime;
+
+  Result.Pen.Width := 0;
 end;
 
 function TChartFrame.CreateOPCSerie(aDataLink: TaCustomDataLink): TaOPCLineSeries;
