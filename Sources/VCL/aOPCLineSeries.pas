@@ -365,6 +365,7 @@ begin
 
   FFilter := TaOPCFilter.Create;
   //FFilter.DataLink := FDataLink;
+  Pen.Width := 0;
 end;
 
 destructor TaOPCLineSeries.Destroy;
