@@ -78,9 +78,10 @@ inherited ChartFrame: TChartFrame
     BottomAxis.Grid.Color = 14079702
     BottomAxis.Grid.Width = 0
     BottomAxis.GridCentered = True
+    BottomAxis.LabelsBehind = True
     BottomAxis.LabelStyle = talValue
-    BottomAxis.Maximum = 44126.510288645830000000
-    BottomAxis.Minimum = 44126.010288645830000000
+    BottomAxis.Maximum = 44132.477524155100000000
+    BottomAxis.Minimum = 44131.977524155100000000
     BottomAxis.MinorGrid.Width = 0
     BottomAxis.MinorTicks.Visible = False
     BottomAxis.Ticks.Color = clBlack
@@ -106,6 +107,7 @@ inherited ChartFrame: TChartFrame
     LeftAxis.AxisValuesFormat = '#,##0'
     LeftAxis.Grid.Color = 14671839
     LeftAxis.Grid.Width = 0
+    LeftAxis.LabelsBehind = True
     LeftAxis.LabelStyle = talValue
     LeftAxis.MinorTicks.Visible = False
     LeftAxis.StartPosition = 1.000000000000000000
@@ -149,8 +151,8 @@ inherited ChartFrame: TChartFrame
     OnMouseMove = ChartMouseMove
     Interval.Kind = ikInterval
     Interval.ShiftKind = skNone
-    Interval.Date1 = 44126.010288645830000000
-    Interval.Date2 = 44126.510288645830000000
+    Interval.Date1 = 44131.977524155100000000
+    Interval.Date2 = 44132.477524155100000000
     Interval.TimeShift = 0.500000000000000000
     Interval.TimeShiftUnit = tsuHour
     Interval.EnableTime = True
