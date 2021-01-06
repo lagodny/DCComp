@@ -421,7 +421,7 @@ begin
     FTimeShiftUnit := TOPCIntervalTimeShiftUnit(
       aReg.ReadInteger(aSectionName, 'TimeShiftUnit', Ord(FTimeShiftUnit)));
 
-    FEnableTime := aReg.ReadBool(aSectionName, 'EnableTime', FEnableTime);
+    //FEnableTime := aReg.ReadBool(aSectionName, 'EnableTime', FEnableTime);
   finally
     Unlock;
   end;
@@ -450,7 +450,7 @@ begin
   aReg.WriteInteger(aSectionName, 'ShiftKind', Ord(ShiftKind));
   aReg.WriteDateTime(aSectionName, 'TimeShift', TimeShift);
   aReg.WriteInteger(aSectionName, 'TimeShiftUnit', Ord(TimeShiftUnit));
-  aReg.WriteBool(aSectionName, 'EnableTime', EnableTime);
+  //aReg.WriteBool(aSectionName, 'EnableTime', EnableTime);
 end;
 
 procedure TOPCInterval.SetDate1(const Value: TDatetime);
