@@ -61,6 +61,7 @@ contains
   uOPCGanttSeries in '..\..\Sources\VCL\uOPCGanttSeries.pas',
   aOPCChartMessureTool in '..\..\Sources\VCL\aOPCChartMessureTool.pas',
   uDCTeeTools in '..\..\Sources\VCL\uDCTeeTools.pas',
-  uChartFrame in '..\..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame};
+  uChartFrame in '..\..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame},
+  uCinemaControl in '..\..\Sources\VCL\uCinemaControl.pas' {aOPCCinemaControl: TFrame};
 
 end.

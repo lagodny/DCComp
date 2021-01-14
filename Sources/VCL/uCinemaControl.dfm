@@ -825,4 +825,11 @@ object aOPCCinemaControl: TaOPCCinemaControl
     Left = 208
     Top = 16
   end
+  object Timer: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = TimerTimer
+    Left = 240
+    Top = 16
+  end
 end

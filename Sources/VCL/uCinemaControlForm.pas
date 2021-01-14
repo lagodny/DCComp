@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, uCinemaControl;
+  Dialogs, uCinemaControl,
+  aOPCCinema;
 
 type
   TCinemaControlForm = class(TForm)
@@ -18,7 +19,8 @@ type
   private
     { Private declarations }
   public
-    { Public declarations }
+    class procedure ShowPult(aCinema: TaOPCCinema; aFormToPrint: TForm = nil; Modal: Boolean = True);
+    class procedure HidePult;
   end;
 
 var
@@ -65,6 +67,41 @@ begin
     aOPCCinemaControl1.FillHistory
   else
     Close;
+
+end;
+
+class procedure TCinemaControlForm.HidePult;
+begin
+  if Assigned(CinemaControlForm) then
+    CinemaControlForm.Close;
+end;
+
+class procedure TCinemaControlForm.ShowPult(aCinema: TaOPCCinema; aFormToPrint: TForm = nil; Modal: Boolean = True);
+begin
+  if not Assigned(CinemaControlForm) then
+    CinemaControlForm := TCinemaControlForm.Create(aFormToPrint)
+  else
+    CinemaControlForm.Hide;
+
+  with CinemaControlForm do
+  begin
+    try
+      aOPCCinemaControl1.OPCCinema := aCinema;
+      aOPCCinemaControl1.FormToPrint := aFormToPrint;
+      // if OPCSource<>nil then
+      // begin
+      // //OPCSource.Active := false;
+      // ConnectOPCSourceDataLinks;
+      // end;
+
+      if Modal then
+        ShowModal
+      else
+        Show;
+    finally
+      // Free;
+    end;
+  end;
 
 end;
 
