@@ -13,7 +13,8 @@ type
     constructor Create(aOwner: TComponent); override;
 
     function CreateClient(aClientID: Integer): Integer;
-    function CreateTracker(aClientID: Integer; const aTrackerSID, aTrackerLogin, aProtoSID: string; aInherit: Boolean): Integer;
+    function CreateTracker(aClientID: Integer; const aTrackerSID, aTrackerLogin,
+  aProtoSID: string; aInherit: Boolean): Integer;
     procedure AddOrUpdateSCSTracker(aParams: TAddTrackerParamsDTO);
     procedure DeleteSCSTracker(aSID: string);
   end;
@@ -47,7 +48,8 @@ begin
   Result := StrToInt(LockDoCommandReadLnFmt('CreateClient %d', [aClientID]));
 end;
 
-function TaOPCTCPSource_V33.CreateTracker(aClientID: Integer; const aTrackerSID, aTrackerLogin, aProtoSID: string; aInherit: Boolean): Integer;
+function TaOPCTCPSource_V33.CreateTracker(aClientID: Integer; const aTrackerSID, aTrackerLogin,
+  aProtoSID: string; aInherit: Boolean): Integer;
 begin
   Result := StrToInt(LockDoCommandReadLnFmt('CreateTracker %d;%s;%s;%s;%s',
     [aClientID, aTrackerSID, aTrackerLogin, aProtoSID, BoolToStr(aInherit, False)]));

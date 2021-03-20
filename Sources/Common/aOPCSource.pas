@@ -193,6 +193,7 @@ type
     function IsReal: Boolean; override;
 
     function ExtractParamsFromAnswer(aAnswer: string; aParamCount: Integer = 0): string;
+    function OPCStringToFloat(aStr: string): Double;
 
     property Connected: Boolean read GetConnected write SetConnected default false;
     property Error: string read FError;
@@ -231,6 +232,7 @@ type
 
     function DelSensorValue(PhysID: string; Moment: TDateTime): string; virtual;
     function SetSensorValue(PhysID, Value: string; Moment: TDateTime = 0): string; virtual;
+    procedure IncSensorValue(PhysID: string; aIncValue: Double; Moment: TDateTime); virtual;
 
     function DelSensorValues(PhysID: string; Date1, Date2: TDateTime): string; virtual;
 
@@ -1461,6 +1463,11 @@ begin
 
 end;
 
+procedure TaOPCSource.IncSensorValue(PhysID: string; aIncValue: Double; Moment: TDateTime);
+begin
+  raise ENotImplemented.Create('IncSensorValue not Implemented');
+end;
+
 function TaOPCSource.IsReal: Boolean;
 begin
   Result := True;
@@ -1737,6 +1744,14 @@ begin
     // попытаемся использовать старый режим загрузки из реестра
     aCustomIniFile.ReadSection(aSectionName + 'Data', FNameSpaceCash);
 
+end;
+
+function TaOPCSource.OPCStringToFloat(aStr: string): Double;
+begin
+  if OpcFS.DecimalSeparator <> FormatSettings.DecimalSeparator then
+    Result := StrToFloat(StringReplace(aStr, OpcFS.DecimalSeparator, FormatSettings.DecimalSeparator, []))
+  else
+    Result := StrToFloat(aStr);
 end;
 
 {

@@ -84,10 +84,12 @@ type
     FSpeed: integer;
     FShowUserMessages: boolean;
     FBeforeActivate: TNotifyEvent;
+    FUpdateControlsOnChangeMoment: Boolean;
 //    procedure TimeTimer(Sender: TObject);
     procedure SetDate1(const Value: TDateTime);
     procedure SetDate2(const Value: TDateTime);
     procedure SetDataKind(const Value: TDataKind);
+    procedure SetUpdateControlsOnChangeMoment(const Value: Boolean);
 //    procedure SetSleepInterval(const Value: integer);
 //    procedure SetStep(const Value: integer);
 //    function GetSleepInterval: integer;
@@ -155,7 +157,14 @@ type
 //    property Speed: integer read FSpeed write SetSpeed default 1;
 
     property DataKind: TDataKind read FDataKind write SetDataKind default dkValue;
+
+    /// следует отключать для выполнения расчетов
     property ShowUserMessages: boolean read FShowUserMessages write FShowUserMessages default False;
+
+    /// вызывать события изменения данных при изменении времени
+    ///  может быть полезно отключить это срабатывание для визуальных элементов
+    ///  и включить для расчетов без участия визуальных элементов
+    property UpdateControlsOnChangeMoment: Boolean read FUpdateControlsOnChangeMoment write SetUpdateControlsOnChangeMoment;
   end;
 
 implementation
@@ -634,6 +643,11 @@ begin
   end;
 end;
 
+procedure TaOPCCinema.SetUpdateControlsOnChangeMoment(const Value: Boolean);
+begin
+  FUpdateControlsOnChangeMoment := Value;
+end;
+
 //procedure TaOPCCinema.SetShowUserMessages(const Value: boolean);
 //begin
 //  FShowUserMessages := Value;
@@ -720,12 +734,13 @@ end;
 procedure TaOPCCinema.CalcValuesOnMoment(aMoment: TDateTime);
 var
   I, j: integer;
-  aShapshort: TValueSnapshot;
+  aSnapshort: TValueSnapshot;
+  aNeedUpdateEvents: Boolean;
   aDataLinkGroupHistory: TOPCDataLinkGroupHistory;
   CrackDataLink: TCrackOPCLink;
 begin
   if not Active then
-    exit;
+    Exit;
 
   for I := 0 to FDataLinkGroups.Count - 1 do
   begin
@@ -733,31 +748,47 @@ begin
     if aDataLinkGroupHistory.IsEmpty then
       Continue;
 
-    aShapshort := aDataLinkGroupHistory.GetSnapshotOnDate(CurrentMoment);
-    aDataLinkGroupHistory.Value := FloatToStr(aShapshort.FValue);
-    aDataLinkGroupHistory.FloatValue := aShapshort.FValue;
-    aDataLinkGroupHistory.ErrorCode := Trunc(aShapshort.FState);
+    //aSnapshort := aDataLinkGroupHistory.GetSnapshotOnDate(CurrentMoment);
+    aSnapshort := aDataLinkGroupHistory.GetSnapshotOnDate(aMoment);
+    aNeedUpdateEvents := (aDataLinkGroupHistory.FloatValue <> aSnapshort.FValue)
+      or (aDataLinkGroupHistory.ErrorCode <> Trunc(aSnapshort.FState))
+      or (UpdateControlsOnChangeMoment and (aDataLinkGroupHistory.Moment <> aSnapshort.FDateTime));
+
+    aDataLinkGroupHistory.Value := FloatToStr(aSnapshort.FValue);
+    aDataLinkGroupHistory.FloatValue := aSnapshort.FValue;
+    aDataLinkGroupHistory.ErrorCode := Trunc(aSnapshort.FState);
     for j := 0 to aDataLinkGroupHistory.DataLinks.Count - 1 do
     begin
       CrackDataLink := TCrackOPCLink(aDataLinkGroupHistory.DataLinks.Items[j]);
-      if (CrackDataLink.FValue <> aDataLinkGroupHistory.Value) or
-        (CrackDataLink.ErrorCode <> aDataLinkGroupHistory.ErrorCode) then
+
+//      if (CrackDataLink.FValue <> aDataLinkGroupHistory.Value) or
+//        (CrackDataLink.ErrorCode <> aDataLinkGroupHistory.ErrorCode) then
       begin
-        CrackDataLink.FMoment := aDataLinkGroupHistory.Moment;
+        CrackDataLink.FOldMoment := CrackDataLink.FMoment;
         CrackDataLink.FOldValue := CrackDataLink.FValue;
+        CrackDataLink.FOldFloatValue := CrackDataLink.FFloatValue;
+
+        CrackDataLink.FMoment := aDataLinkGroupHistory.Moment;
         CrackDataLink.FValue := aDataLinkGroupHistory.Value;
         CrackDataLink.FFloatValue := aDataLinkGroupHistory.FloatValue;
-        CrackDataLink.FErrorCode := aDataLinkGroupHistory.ErrorCode;
-        if (CrackDataLink.FErrorCode <> 0) and
-          Assigned(CrackDataLink.RealSource) and
-          Assigned(CrackDataLink.RealSource.States) then
-          CrackDataLink.ErrorString := CrackDataLink.RealSource.States.Items.
-            Values[IntToStr(CrackDataLink.FErrorCode)]
-        else
-          CrackDataLink.ErrorString := '';
 
-        CrackDataLink.DoChangeDataThreaded;
-        CrackDataLink.ChangeData;
+        if CrackDataLink.ErrorCode <> aDataLinkGroupHistory.ErrorCode then
+        begin
+          CrackDataLink.FErrorCode := aDataLinkGroupHistory.ErrorCode;
+          if (CrackDataLink.FErrorCode <> 0) and
+            Assigned(CrackDataLink.RealSource) and
+            Assigned(CrackDataLink.RealSource.States) then
+            CrackDataLink.ErrorString := CrackDataLink.RealSource.States.Items.
+              Values[IntToStr(CrackDataLink.FErrorCode)]
+          else
+            CrackDataLink.ErrorString := '';
+        end;
+
+        if aNeedUpdateEvents then
+        begin
+          CrackDataLink.DoChangeDataThreaded;
+          CrackDataLink.ChangeData;
+        end;
       end;
     end;
   end;

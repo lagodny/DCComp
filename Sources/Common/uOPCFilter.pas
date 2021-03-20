@@ -75,7 +75,7 @@ type
     // датчик, для которого будет применен фильтр
     property DataLink: TaOPCDataLink read FDataLink write SetDataLink;
 
-    // датчики, которые учавтвуют в расчете фильтра
+    // датчики, которые учаcтвуют в расчете фильтра
     property DataLinks: TObjectList read FDataLinks;
 
     property Evaluator: TaOPCFilterCalc read GetEvaluator;

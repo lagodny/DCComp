@@ -85,7 +85,8 @@ begin
   //lFields.InitObject(Fields);
     lFields.AddValue('LogonName', ServiceContext.Request.SessionUserName);
     lFields.AddValue('RecID', lFields.Value['ModifiedRecord'] shr 6);
-    lFields.AddValue('TableName', ServiceContext.Request.Server.Model.Tables[lFields.I['ModifiedRecord'] and 63].SQLTableName);
+    if (lFields.I['ModifiedRecord'] and 63) < ServiceContext.Request.Server.Model.TablesMax then
+      lFields.AddValue('TableName', ServiceContext.Request.Server.Model.Tables[lFields.I['ModifiedRecord'] and 63].SQLTableName);
 
     JSON := lFields.ToJSON;
   end;

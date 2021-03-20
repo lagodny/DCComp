@@ -114,6 +114,8 @@ type
     function GetValueText(PhysID: string): string;
 
     function SetSensorValue(PhysID, Value: string; Moment: TDateTime = 0): string; override;
+    procedure IncSensorValue(PhysID: string; aIncValue: Double; Moment: TDateTime); override;
+
     function GetSensorValue(PhysID: String; var ErrorCode: integer; var ErrorString: String; var Moment: TDateTime): string; override;
     function GetSensorValueText(PhysID: String; var ErrorCode: integer; var ErrorString: String; var Moment: TDateTime): string;
 
@@ -167,7 +169,7 @@ uses
   flcStdTypes, flcCipherRSA,
   IdGlobal, IdException,
   DateUtils, StrUtils,
-  DC.StrUtils, aOPCLog,
+  DC.StrUtils, aOPCLog, aOPCUtils,
 //  uDCLocalizer,
   uDCStrResource,
   aOPCConsts;
@@ -852,6 +854,11 @@ begin
   finally
     UnLockConnection('GetValue');
   end;
+end;
+
+procedure TaOPCTCPSource_V30.IncSensorValue(PhysID: string; aIncValue: Double; Moment: TDateTime);
+begin
+  LockAndDoCommandFmt('IncValue %s;%s;%s', [PhysID, FloatToStr(aIncValue, DotFS), FloatToStr(Moment, DotFS)]);
 end;
 
 //function TaOPCTCPSource_V30.GetSensorProperties(id: string): TSensorProperties;

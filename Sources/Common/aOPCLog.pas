@@ -137,7 +137,7 @@ var
 //  end;
 
 begin
-  Exit;
+  //Exit;
 
   LogFileStream := nil;
   Encoding := TEncoding.Default;

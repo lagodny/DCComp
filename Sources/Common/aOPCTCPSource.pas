@@ -68,6 +68,7 @@ type
 
     function DelSensorValue(PhysID: string; Moment: TDateTime): string; override;
     function SetSensorValue(PhysID, Value: string; Moment: TDateTime = 0): string; override;     // +
+
     function GetSensorValue(PhysID: String; var ErrorCode: integer; var ErrorString: String;
       var Moment: TDateTime): string; override;
     function GetSensorsValues(PhysIDs: String): string; override;                               // +
@@ -105,7 +106,7 @@ implementation
 
 uses
   StrUtils, IdTCPConnection,
-  aOPCLog, aOPCconsts,
+  aOPCLog, aOPCconsts, aOPCUtils,
   DC.StrUtils;
 
 { TaOPCTCPSource }

@@ -42,11 +42,15 @@ type
     FPrecision: Integer;
     procedure SetStairsOptions(const Value: TDCStairsOptionsSet);
   protected
-    FOldValue: string;
     FValue: string;
     FFloatValue: Double;
+
+    FOldValue: string;
     FOldFloatValue: Double;
+
     FMoment: TDateTime;
+    FOldMoment: TDateTime;
+
     FErrorCode: integer;
     FErrorString: string;
 
@@ -64,8 +68,11 @@ type
     property Control: TObject read FControl write FControl;
 
     property OldValue: string read FOldValue;
+    property OldFloatValue: Double read FOldFloatValue;
+
     property Value: string read FValue write SetValue;
     property FloatValue: Double read FFloatValue write SetFloatValue;
+
     property ID: Integer read FID;
     property PhysID: TPhysID read GetPhysID write SetPhysID;
     property ErrorCode: integer read fErrorCode write fErrorCode;
