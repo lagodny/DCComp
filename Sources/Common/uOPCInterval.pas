@@ -505,6 +505,8 @@ begin
     FDate2 := aDate1;
   end;
 
+  FKind := ikInterval;
+
   FTimeShift := FDate2 - FDate1;
   FShiftKind := skNone;
   FKind := ikInterval;

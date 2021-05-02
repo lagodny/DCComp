@@ -53,6 +53,7 @@ type
     ok_scs_TrackerAndroid = 62, // трекер Android
     ok_scs_TrackerCicada = 63, // трекер Cicada
     ok_scs_TrackerWialonIPS = 64, // трекер с протоколом WialonIPS
+    ok_scs_TrackerBCE = 65, // трекер с протоколом BCE
 
     okStorageTanks = 100,  // ПК №1 Фрейм "Ёмкости хранения"
 

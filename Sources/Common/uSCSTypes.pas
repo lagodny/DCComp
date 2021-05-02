@@ -16,7 +16,8 @@ type
     trtGlobalSat,
     trtAndroid,
     trtCicada,
-    trtWialonIPS
+    trtWialonIPS,
+    trtBCE
   );
 
   TSID = packed record

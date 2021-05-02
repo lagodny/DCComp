@@ -625,10 +625,10 @@ procedure TaOPCCinema.SetDate1(const Value: TDateTime);
 begin
   if FDate1 <> Value then
   begin
-    Active := false;
+    Active := False;
     FDate1 := Value;
-    if FDate1 > FDate2 then
-      FDate2 := FDate1 + 1;
+//    if FDate1 > FDate2 then
+//      FDate2 := FDate1 + 1;
   end;
 end;
 
@@ -636,10 +636,10 @@ procedure TaOPCCinema.SetDate2(const Value: TDateTime);
 begin
   if FDate2 <> Value then
   begin
-    Active := false;
+    Active := False;
     FDate2 := Value;
-    if FDate2 < FDate1 then
-      FDate1 := FDate2 - 1;
+//    if FDate2 < FDate1 then
+//      FDate1 := FDate2 - 1;
   end;
 end;
 
