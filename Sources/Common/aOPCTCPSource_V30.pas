@@ -6,7 +6,7 @@ uses
   Classes, SysUtils,
   System.Character,
 //  uDCLang,
-  aOPCSource,
+  uDataTypes, aOPCSource,
   uDCObjects, uUserMessage, aCustomOPCSource, aCustomOPCTCPSource;
 
 const
@@ -109,6 +109,10 @@ type
 
     function DelSensorValue(PhysID: string; Moment: TDateTime): string; override;
     function DelSensorValues(PhysID: string; Date1, Date2: TDateTime): string; override;
+
+    function RecalcSensor(PhysID: string; Date1, Date2: TDateTime; Script: string): string; override;
+
+    procedure InsertValues(PhysID: string; aBuffer: TSensorDataArr); override;
 
     function GetValue(PhysID: string): string; override;
     function GetValueText(PhysID: string): string;
@@ -858,7 +862,24 @@ end;
 
 procedure TaOPCTCPSource_V30.IncSensorValue(PhysID: string; aIncValue: Double; Moment: TDateTime);
 begin
-  LockAndDoCommandFmt('IncValue %s;%s;%s', [PhysID, FloatToStr(aIncValue, DotFS), FloatToStr(Moment, DotFS)]);
+  LockAndDoCommandFmt('IncValue %s;%s;%s', [PhysID, FloatToStr(aIncValue, DotFS), FloatToStr(DateToServer(Moment), DotFS)]);
+end;
+
+procedure TaOPCTCPSource_V30.InsertValues(PhysID: string; aBuffer: TSensorDataArr);
+begin
+  LockConnection;
+  try
+    try
+      DoConnect;
+      DoCommandFmt('InsertValues %s;%s', [PhysID, DataArrToString(aBuffer)]);
+    except
+      on e: EIdException do
+        if ProcessTCPException(e) then
+          raise;
+    end;
+  finally
+    UnLockConnection;
+  end;
 end;
 
 //function TaOPCTCPSource_V30.GetSensorProperties(id: string): TSensorProperties;
@@ -1239,6 +1260,25 @@ begin
     end;
   finally
     UnLockConnection;
+  end;
+end;
+
+function TaOPCTCPSource_V30.RecalcSensor(PhysID: string; Date1, Date2: TDateTime; Script: string): string;
+begin
+  Result := '';
+  LockConnection('RecalcSensor');
+  try
+    try
+      DoConnect;
+      DoCommandFmt('RecalcSensor %s;%s;%s;%s',
+        [PhysID, FloatToStr(DateToServer(Date1), OpcFS), FloatToStr(DateToServer(Date2), OpcFS), Script]);
+    except
+      on e: EIdException do
+        if ProcessTCPException(e) then
+          raise;
+    end;
+  finally
+    UnLockConnection('RecalcSensor');
   end;
 end;
 

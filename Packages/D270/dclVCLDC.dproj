@@ -7,7 +7,7 @@
         <TargetedPlatforms>37889</TargetedPlatforms>
         <AppType>Package</AppType>
         <FrameworkType>VCL</FrameworkType>
-        <ProjectVersion>19.1</ProjectVersion>
+        <ProjectVersion>19.2</ProjectVersion>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -102,20 +102,22 @@
         <BT_BuildType>Debug</BT_BuildType>
         <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;com-google-android-gms.play-services-ads-base.17.2.0.dex.jar;com-google-android-gms.play-services-ads-identifier.16.0.0.dex.jar;com-google-android-gms.play-services-ads-lite.17.2.0.dex.jar;com-google-android-gms.play-services-ads.17.2.0.dex.jar;com-google-android-gms.play-services-analytics-impl.16.0.8.dex.jar;com-google-android-gms.play-services-analytics.16.0.8.dex.jar;com-google-android-gms.play-services-base.16.0.1.dex.jar;com-google-android-gms.play-services-basement.16.2.0.dex.jar;com-google-android-gms.play-services-gass.17.2.0.dex.jar;com-google-android-gms.play-services-identity.16.0.0.dex.jar;com-google-android-gms.play-services-maps.16.1.0.dex.jar;com-google-android-gms.play-services-measurement-base.16.4.0.dex.jar;com-google-android-gms.play-services-measurement-sdk-api.16.4.0.dex.jar;com-google-android-gms.play-services-stats.16.0.1.dex.jar;com-google-android-gms.play-services-tagmanager-v4-impl.16.0.8.dex.jar;com-google-android-gms.play-services-tasks.16.0.1.dex.jar;com-google-android-gms.play-services-wallet.16.0.1.dex.jar;com-google-firebase.firebase-analytics.16.4.0.dex.jar;com-google-firebase.firebase-common.16.1.0.dex.jar;com-google-firebase.firebase-iid-interop.16.0.1.dex.jar;com-google-firebase.firebase-iid.17.1.1.dex.jar;com-google-firebase.firebase-measurement-connector.17.0.1.dex.jar;com-google-firebase.firebase-messaging.17.5.0.dex.jar;fmx.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar</EnabledSysJars>
         <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
+        <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android64)'!=''">
         <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;com-google-android-gms.play-services-ads-base.17.2.0.dex.jar;com-google-android-gms.play-services-ads-identifier.16.0.0.dex.jar;com-google-android-gms.play-services-ads-lite.17.2.0.dex.jar;com-google-android-gms.play-services-ads.17.2.0.dex.jar;com-google-android-gms.play-services-analytics-impl.16.0.8.dex.jar;com-google-android-gms.play-services-analytics.16.0.8.dex.jar;com-google-android-gms.play-services-base.16.0.1.dex.jar;com-google-android-gms.play-services-basement.16.2.0.dex.jar;com-google-android-gms.play-services-gass.17.2.0.dex.jar;com-google-android-gms.play-services-identity.16.0.0.dex.jar;com-google-android-gms.play-services-maps.16.1.0.dex.jar;com-google-android-gms.play-services-measurement-base.16.4.0.dex.jar;com-google-android-gms.play-services-measurement-sdk-api.16.4.0.dex.jar;com-google-android-gms.play-services-stats.16.0.1.dex.jar;com-google-android-gms.play-services-tagmanager-v4-impl.16.0.8.dex.jar;com-google-android-gms.play-services-tasks.16.0.1.dex.jar;com-google-android-gms.play-services-wallet.16.0.1.dex.jar;com-google-firebase.firebase-analytics.16.4.0.dex.jar;com-google-firebase.firebase-common.16.1.0.dex.jar;com-google-firebase.firebase-iid-interop.16.0.1.dex.jar;com-google-firebase.firebase-iid.17.1.1.dex.jar;com-google-firebase.firebase-measurement-connector.17.0.1.dex.jar;com-google-firebase.firebase-messaging.17.5.0.dex.jar;fmx.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar</EnabledSysJars>
-        <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;tb2k_d27;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;tb2k_d27;DC;$(DCC_UsePackage)</DCC_UsePackage>
+        <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
-        <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;tb2k_d27;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;tb2k_d27;DC;$(DCC_UsePackage)</DCC_UsePackage>
         <iOS_AppStore1024>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png</iOS_AppStore1024>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSSimulator)'!=''">
         <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_OSX64)'!=''">
-        <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;tb2k_d27;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;IndySystem;IndyProtocols;IndyCore;tb2k_d27;DC;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -123,7 +125,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UsePackage>vclimg;vcl;rtl;vclx;IndySystem;IndyProtocols;IndyCore;vcltouch;TeePro927;TeeUI927;Tee927;TeeLanguage927;JclContainers;Jcl;tb2k_d27;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcl;rtl;vclx;IndySystem;IndyProtocols;IndyCore;vcltouch;TeePro927;TeeUI927;Tee927;TeeLanguage927;JclContainers;Jcl;tb2k_d27;DC;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>vclimg;vcl;rtl;vclx;IndySystem;IndyProtocols;IndyCore;vcltouch;$(DCC_UsePackage)</DCC_UsePackage>
@@ -167,38 +169,20 @@
         <DCCReference Include="vcltouch.dcp"/>
         <DCCReference Include="JclContainers.dcp"/>
         <DCCReference Include="Jcl.dcp"/>
-        <DCCReference Include="dclDC.dcp"/>
         <DCCReference Include="TeePro927.dcp"/>
         <DCCReference Include="TeeUI927.dcp"/>
         <DCCReference Include="Tee927.dcp"/>
         <DCCReference Include="TeeLanguage927.dcp"/>
         <DCCReference Include="tb2k_d27.dcp"/>
         <DCCReference Include="SpTBXLibDsgn.dcp"/>
+        <DCCReference Include="dclDC.dcp"/>
+        <DCCReference Include="DC.dcp"/>
         <DCCReference Include="..\..\Sources\VCL\VCL.DCRegister.pas"/>
-        <DCCReference Include="..\..\Sources\VCL\aOPCLabel.pas"/>
-        <DCCReference Include="..\..\Sources\VCL\aOPCDataObject.pas"/>
-        <DCCReference Include="..\..\Sources\VCL\aOPCChart.pas"/>
-        <DCCReference Include="..\..\Sources\VCL\aOPCLineSeries.pas"/>
-        <DCCReference Include="..\..\Sources\VCL\aOPCStateLine.pas"/>
-        <DCCReference Include="..\..\Sources\VCL\uChoiceIntervalExt.pas">
-            <Form>ChoiceIntervalExt</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\Sources\VCL\Frames\uOPCFrame.pas">
-            <Form>aOPCFrame</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\..\Sources\VCL\aOPCImage.pas"/>
-        <DCCReference Include="..\..\Sources\VCL\aOPCImageList.pas"/>
         <DCCReference Include="..\..\Sources\VCL\uOPCGanttSeries.pas"/>
         <DCCReference Include="..\..\Sources\VCL\aOPCChartMessureTool.pas"/>
         <DCCReference Include="..\..\Sources\VCL\uDCTeeTools.pas"/>
         <DCCReference Include="..\..\Sources\VCL\Frames\uChartFrame.pas">
             <Form>ChartFrame</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\..\Sources\VCL\uCinemaControl.pas">
-            <Form>aOPCCinemaControl</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Debug">
@@ -224,7 +208,6 @@
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\_Dev\Comp\DC\Compiled\Delphi27.win32\Bin\dclVCLDC.bpl">File C:\_Dev\Comp\DC\Compiled\Delphi27.win32\Bin\dclVCLDC.bpl not found</Excluded_Packages>
                     <Excluded_Packages Name="c:\_Dev\Comp\FastReport\LibD27\dclfrxTee27.bpl">FastReport 6.0 Tee Components</Excluded_Packages>
                     <Excluded_Packages Name="c:\_Dev\Comp\FastReport\LibD27\dclfsTee27.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
                 </Excluded_Packages>
@@ -378,6 +361,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\drawable-xxhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon192">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

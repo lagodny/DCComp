@@ -34,9 +34,25 @@ type
 const
   cSensorDataRecSize = SizeOf(TSensorDataRec);
 
+function DataArrToString(aDataArr: TSensorDataArr): string;
+
 
 
 implementation
+
+uses
+  SynCommons;
+
+
+function DataArrToString(aDataArr: TSensorDataArr): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := Low(aDataArr) to High(aDataArr) do
+    Result := Result + UTF8ToString(DateTimeToIso8601(aDataArr[i].Time, True)) + ';' + DoubleToString(aDataArr[i].Value) + ';';
+end;
+
 
 
 

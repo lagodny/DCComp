@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.SysUtils,
   IniFiles, SyncObjs,
+  uDataTypes,
   aCustomOPCSource, uDCObjects, uUserMessage;
 
 const
@@ -235,6 +236,8 @@ type
     procedure IncSensorValue(PhysID: string; aIncValue: Double; Moment: TDateTime); virtual;
 
     function DelSensorValues(PhysID: string; Date1, Date2: TDateTime): string; virtual;
+    function RecalcSensor(PhysID: string; Date1, Date2: TDateTime; Script: string): string; virtual;
+    procedure InsertValues(PhysID: string; aBuffer: TSensorDataArr); virtual;
 
     function ExecSql(Sql: string): string; virtual;
     function LoadLookup(aName: string; var aTimeStamp: TDateTime): string; virtual;
@@ -649,6 +652,11 @@ end;
 
 function TaOPCSource.GetRemoteMachine: string;
 begin
+end;
+
+function TaOPCSource.RecalcSensor(PhysID: string; Date1, Date2: TDateTime; Script: string): string;
+begin
+
 end;
 
 procedure TaOPCSource.Reconnect;
@@ -1466,6 +1474,11 @@ end;
 procedure TaOPCSource.IncSensorValue(PhysID: string; aIncValue: Double; Moment: TDateTime);
 begin
   raise ENotImplemented.Create('IncSensorValue not Implemented');
+end;
+
+procedure TaOPCSource.InsertValues(PhysID: string; aBuffer: TSensorDataArr);
+begin
+
 end;
 
 function TaOPCSource.IsReal: Boolean;
