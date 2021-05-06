@@ -33,10 +33,9 @@ type
 
 const
   cSensorDataRecSize = SizeOf(TSensorDataRec);
+  cSensorValueSize = SizeOf(TSensorValue);
 
 function DataArrToString(aDataArr: TSensorDataArr): string;
-
-
 
 implementation
 
