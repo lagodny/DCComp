@@ -37,6 +37,7 @@ type
 implementation
 
 uses
+  System.SysUtils,
   TeeHyphen;
 
 { TDCTextColorBandTool }
@@ -74,48 +75,67 @@ var
   r: TRect;
   t: String;
   h: Integer;
+  aStrings: TStrings;
 begin
 //  r := BoundsRect();
 //  t := GetDisplayText(r);
 //  TextOut(ParentChart.Canvas.Handle, r.Left, r.Top, t, False);
 //  Exit;
 
-  r := BoundsRect();
-  InflateRect(r, -1, -1);
-  ParentChart.Canvas.BackMode:=cbmTransparent;
-  ParentChart.Canvas.Font.Assign(Font);
+  aStrings := TStringList.Create;
+  try
 
-  if TextOrientation = 0 then
-  begin
-    t := GetDisplayText(r);
-    ParentChart.Canvas.TextAlign := TA_CENTER;
-    ParentChart.Canvas.TextOut(r.Left + r.Width div 2, r.Top, t, True);
-//    DrawText(ParentChart.Canvas.Handle, PChar(t), Length(t), r, DT_WORDBREAK + DT_CENTER);
-  end
-  else
-  begin
-    t := Text;
-    h := Abs(ParentChart.Canvas.Font.Height);
+    r := BoundsRect();
+    InflateRect(r, -1, -1);
+    ParentChart.Canvas.BackMode:=cbmTransparent;
+    ParentChart.Canvas.Font.Assign(Font);
 
-    if r.Width > 3 then
+    if TextOrientation = 0 then
     begin
-      if (r.Width < h) then
+      t := GetDisplayText(r);
+      ParentChart.Canvas.TextAlign := TA_CENTER;
+      ParentChart.Canvas.TextOut(r.Left + r.Width div 2, r.Top, t, True);
+  //    DrawText(ParentChart.Canvas.Handle, PChar(t), Length(t), r, DT_WORDBREAK + DT_CENTER);
+    end
+    else
+    begin
+      t := Text;
+
+  //    if Length(t)>20 then
+  //      t := Copy(t, 1, 20) + #13#10 + Copy(t,21,Length(t));
+
+      h := Abs(ParentChart.Canvas.Font.Height);
+
+      if r.Width > 3 then
       begin
-        ParentChart.Canvas.Font.Height := -(r.Width+2);
-        h := Abs(ParentChart.Canvas.Font.Height);
+        if (r.Width < h) then
+        begin
+          ParentChart.Canvas.Font.Height := -(r.Width+2);
+          h := Abs(ParentChart.Canvas.Font.Height);
+        end;
+
+        if TextOrientation = -90 then
+        begin
+          HyphenParagraph(Text, aStrings, r.Height, ParentChart.Canvas);
+          t := Trim(aStrings.Text);
+          ParentChart.Canvas.RotateLabel(r.Left + (r.Width + aStrings.Count * h + 2) div 2, r.Top, t, TextOrientation)
+        end
+        else if TextOrientation = 90 then
+        begin
+          HyphenParagraph(Text, aStrings, r.Height, ParentChart.Canvas);
+          t := Trim(aStrings.Text);
+          ParentChart.Canvas.RotateLabel(r.Right - (r.Width + aStrings.Count * h + 2) div 2, r.Bottom, t, TextOrientation);
+        end;
       end;
-
-      if TextOrientation = -90 then
-        ParentChart.Canvas.RotateLabel(r.Left + (r.Width + h + 2) div 2, r.Top, t, TextOrientation)
-      else if TextOrientation = 90 then
-        ParentChart.Canvas.RotateLabel(r.Right - (r.Width + h + 2) div 2, r.Bottom, t, TextOrientation);
     end;
+
+
+    //ParentChart.Canvas.Font.Orientation := -900; //TextOrientation;
+
+    //TextOut(r.Left, r.Top, Text, False);
+  finally
+    aStrings.Free;
   end;
-
-
-  //ParentChart.Canvas.Font.Orientation := -900; //TextOrientation;
-
-  //TextOut(r.Left, r.Top, Text, False);
 end;
 
 function TDCTextColorBandTool.GetDisplayText(r: TRect): string;
