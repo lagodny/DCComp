@@ -266,7 +266,8 @@ const
      ok_scs_TrackerTeltonika,
      ok_scs_TrackerAndroid,
      ok_scs_TrackerCicada,
-     ok_scs_TrackerWialonIPS
+     ok_scs_TrackerWialonIPS,
+     ok_scs_TrackerBCE
    ];
 
 
