@@ -100,6 +100,9 @@ type
 
 implementation
 
+uses
+  System.Math;
+
 //uses
 //  uDCLang,
 //  uDCLocalizer;
@@ -180,7 +183,7 @@ begin
   FKind := ikInterval;
   FShiftKind := skToday;
   FDate2 := Now;
-  FDate1 := FDate2 - TimeShift;
+  FDate1 := Max(FDate2 - TimeShift, 1);
 end;
 
 procedure TOPCInterval.DoChanged;
@@ -417,7 +420,7 @@ begin
       SetInterval(aDate1, aDate2);
     end;
 
-    FTimeShift := aReg.ReadDateTime(aSectionName, 'TimeShift', FTimeShift);
+    TimeShift := aReg.ReadDateTime(aSectionName, 'TimeShift', FTimeShift);
     FTimeShiftUnit := TOPCIntervalTimeShiftUnit(
       aReg.ReadInteger(aSectionName, 'TimeShiftUnit', Ord(FTimeShiftUnit)));
 
@@ -455,26 +458,49 @@ end;
 
 procedure TOPCInterval.SetDate1(const Value: TDatetime);
 begin
-  if FDate2 < Value then
-    raise EIntervalException.Create(StrDate1MoreDate2Error);
+  if SameValue(FDate1, Value) then
+    Exit;
 
-  FDate1 := Value;
-  FTimeShift := FDate2 - FDate1;
-  FShiftKind := skNone;
+  if FLockCount > 0 then
+  begin
+    FDate1 := Max(1, Value);
+    DoChanged;
+  end
+  else
+  begin
+    if FDate2 < Value then
+      raise EIntervalException.Create(StrDate1MoreDate2Error);
 
-  DoChanged;
+    FDate1 := Max(1, Value);
+
+    FTimeShift := FDate2 - FDate1;
+    FShiftKind := skNone;
+
+    DoChanged;
+  end;
 end;
 
 procedure TOPCInterval.SetDate2(const Value: TDatetime);
 begin
-  if Value < FDate1 then
-    raise EIntervalException.Create(StrDate1MoreDate2Error);
+  if SameValue(FDate2, Value) then
+    Exit;
 
-  FDate2 := Value;
-  FTimeShift := FDate2 - FDate1;
-  FShiftKind := skNone;
+  if FLockCount > 0 then
+  begin
+    FDate2 := Max(1, Value);
+    DoChanged;
+  end
+  else
+  begin
+    if Value < FDate1 then
+      raise EIntervalException.Create(StrDate1MoreDate2Error);
 
-  DoChanged;
+    FDate2 := Max(Value, 1);
+    FTimeShift := FDate2 - FDate1;
+    FShiftKind := skNone;
+
+    DoChanged;
+  end;
 end;
 
 procedure TOPCInterval.SetEnableTime(const Value: Boolean);
@@ -489,6 +515,11 @@ end;
 
 procedure TOPCInterval.SetInterval(aDate1, aDate2: TDateTime);
 begin
+  if aDate1 < 1 then
+    aDate1 := 1;
+  if aDate2 < 1 then
+    aDate2 := 1;
+
   if aDate1 < aDate2 then
   begin
     FDate1 := aDate1;
@@ -516,14 +547,15 @@ end;
 
 procedure TOPCInterval.SetKind(const Value: TOPCIntervalKind);
 begin
-  if FKind <> Value then
-  begin
-    FKind := Value;
-    if Kind = ikShift then
-      ShiftKind := skNone;
+  if FKind = Value then
+    Exit;
 
-    DoChanged;
-  end;
+  FKind := Value;
+
+//  if Kind = ikShift then
+//    ShiftKind := skNone;
+
+  DoChanged;
 end;
 
 class procedure TOPCInterval.SetLastInterval(const Value: TOPCInterval);
@@ -535,70 +567,35 @@ begin
 end;
 
 procedure TOPCInterval.SetShiftKind(const Value: TShiftKind);
-//var
-//  dow: integer;
-//  d,m,y: word;
-//  m1,y1: word;
 begin
-  if FShiftKind <> Value then
-  begin
-    FShiftKind := Value;
-    DoChanged;
-  end;
+  if FShiftKind = Value then
+    Exit;
 
-  //  if FShiftKind = skNone then
-  //    exit;
-  //
-  //  // день недели по нашему : пн-0, вт-1 ... вс-6
-  //  dow := DayOfWeek(Now);
-  //  if dow = 1 then
-  //    dow := 6
-  //  else
-  //    dow := dow - 2;
-  //
-  //  case FShiftKind of
-  //    skToday: // сегодн€
-  //      SetInterval(trunc(Now),trunc(Now)+1);
-  //    skYesterday: // вчера
-  //      SetInterval(trunc(Now-1),trunc(Now));
-  //    skWeek: // с начала недели
-  //      SetInterval(Trunc(Now - dow), Trunc(Now)+1 );
-  //    skLastWeek: // предыдуща€ недел€
-  //      SetInterval(Trunc(Now - dow)-7, Trunc(Now - dow));
-  //    skMonth: // с начала мес€ца
-  //    begin
-  //      DecodeDate(Now, y, m,d);
-  //      SetInterval(EncodeDate(y,m,1), Trunc(Now)+1);
-  //    end;
-  //    skLastMonth: // прошлый мес€ц
-  //    begin
-  //      DecodeDate(Now, y, m,d);
-  //
-  //      if m = 1 then
-  //      begin
-  //        y1 := y - 1;
-  //        m1 := 12;
-  //      end
-  //      else
-  //      begin
-  //        y1 := y;
-  //        m1 := m - 1;
-  //      end;
-  //
-  //      SetInterval(EncodeDate(y1,m1,1), EncodeDate(y,m,1));
-  //    end;
-  //  end;
+  FShiftKind := Value;
+  DoChanged;
 end;
 
 procedure TOPCInterval.SetTimeShift(const Value: TDateTime);
 begin
-  if Value < 0 then
-    raise EIntervalException.Create(StrTimeShiftMastBeMoreZeroError);
+  if SameValue(FTimeShift, Value) then
+    Exit;
 
-  FTimeShift := Value;
-  FDate2 := Now;
-  FDate1 := FDate2 - TimeShift;
-  DoChanged;
+  if FLockCount > 0 then
+  begin
+    FTimeShift := Value;
+    DoChanged;
+  end
+  else
+  begin
+    if Value < 0 then
+      raise EIntervalException.Create(StrTimeShiftMastBeMoreZeroError);
+
+    FDate2 := Now;
+    FDate1 := Max(FDate2 - Value, 1);
+    FTimeShift := FDate2 - FDate1;
+
+    DoChanged;
+  end;
 end;
 
 procedure TOPCInterval.SetTimeShiftUnit(const Value: TOPCIntervalTimeShiftUnit);
