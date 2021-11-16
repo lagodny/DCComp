@@ -40,7 +40,10 @@ function DataArrToString(aDataArr: TSensorDataArr): string;
 implementation
 
 uses
-  SynCommons;
+  System.SysUtils,
+  System.DateUtils,
+  aOPCUtils;
+//  SynCommons;
 
 
 function DataArrToString(aDataArr: TSensorDataArr): string;
@@ -49,7 +52,8 @@ var
 begin
   Result := '';
   for i := Low(aDataArr) to High(aDataArr) do
-    Result := Result + UTF8ToString(DateTimeToIso8601(aDataArr[i].Time, True)) + ';' + DoubleToString(aDataArr[i].Value) + ';';
+    Result := Result + DateToIso8601(aDataArr[i].Time, False) + ';' + FloatToStr(aDataArr[i].Value, dotFS) + ';';
+//    Result := Result + UTF8ToString(DateTimeToIso8601(aDataArr[i].Time, True)) + ';' + DoubleToString(aDataArr[i].Value) + ';';
 end;
 
 

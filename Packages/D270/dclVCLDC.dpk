@@ -25,6 +25,8 @@ package dclVCLDC;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'DC VCL'}
+{$LIBSUFFIX AUTO}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
@@ -45,8 +47,8 @@ requires
   TeeLanguage927,
   tb2k_d27,
   SpTBXLibDsgn,
-  dclDC,
-  DC;
+  DC,
+  dclDC;
 
 contains
   VCL.DCRegister in '..\..\Sources\VCL\VCL.DCRegister.pas',

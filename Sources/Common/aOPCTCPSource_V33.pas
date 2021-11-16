@@ -24,16 +24,35 @@ implementation
 
 uses
   System.SysUtils,
-  SynCommons;
+  SynCrossPlatformJSON;
+//  SynCommons;
 
 { TaOPCTCPSource_V33 }
 
 procedure TaOPCTCPSource_V33.AddOrUpdateSCSTracker(aParams: TAddTrackerParamsDTO);
 var
   s: string;
+  j: TJSONVariantData;
 begin
-  //s :=  U2S(RecordSaveJSON(aParams, TypeInfo(TAddTrackerParamsDTO)));
-  s :=  UTF8DecodeToUnicodeString(RecordSaveJSON(aParams, TypeInfo(TAddTrackerParamsDTO)));
+  j.Init;
+  j.SetPath('Operation', aParams.Operation);
+  j.SetPath('ClientName', aParams.ClientName);
+  j.SetPath('ClientSID', aParams.ClientSID);
+  j.SetPath('TrackerName', aParams.TrackerName);
+  j.SetPath('TrackerType', aParams.TrackerType);
+  j.SetPath('TrackerModel', aParams.TrackerModel);
+  j.SetPath('TrackerLogin', aParams.TrackerLogin);
+  j.SetPath('GPS', aParams.GPS);
+  j.SetPath('Ignition', aParams.Ignition);
+  j.SetPath('CAN300', aParams.CAN300);
+  j.SetPath('FLCount', aParams.FLCount);
+  j.SetPath('DistanceTO', aParams.DistanceTO);
+  j.SetPath('DistanceTrip', aParams.DistanceTrip);
+  j.SetPath('Location', aParams.Location);
+  j.SetPath('LocationFileName', aParams.LocationFileName);
+  s := j.ToJSON;
+
+//  s :=  UTF8DecodeToUnicodeString(RecordSaveJSON(aParams, TypeInfo(TAddTrackerParamsDTO)));
   LockAndDoCommandFmt('AddOrUpdateSCSTracker %s', [s]);
 end;
 

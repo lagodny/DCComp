@@ -21,7 +21,7 @@ uses
   , NGImages
 {$ENDIF}
 {$IFDEF JPEG}
-  , Jpeg
+  , Vcl.Imaging.Jpeg
 {$ENDIF}
   , Vcl.Imaging.pngimage
   , aOPCDataObject, aOPCImageList;

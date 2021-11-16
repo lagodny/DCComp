@@ -71,3 +71,4 @@ __recovery/
 *.stat
 *.eof
 Test/FMX/Test1/Android/Debug
+Test/FMX/Migration/Android/Debug

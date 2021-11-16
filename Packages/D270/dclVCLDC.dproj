@@ -154,6 +154,8 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <DCC_Description>DC VCL</DCC_Description>
+        <DllSuffix>$(Auto)</DllSuffix>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -175,8 +177,8 @@
         <DCCReference Include="TeeLanguage927.dcp"/>
         <DCCReference Include="tb2k_d27.dcp"/>
         <DCCReference Include="SpTBXLibDsgn.dcp"/>
-        <DCCReference Include="dclDC.dcp"/>
         <DCCReference Include="DC.dcp"/>
+        <DCCReference Include="dclDC.dcp"/>
         <DCCReference Include="..\..\Sources\VCL\VCL.DCRegister.pas"/>
         <DCCReference Include="..\..\Sources\VCL\uOPCGanttSeries.pas"/>
         <DCCReference Include="..\..\Sources\VCL\aOPCChartMessureTool.pas"/>

@@ -1,0 +1,62 @@
+﻿package DCLibVCL;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Data collection library VCL'}
+{$LIBSUFFIX AUTO}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vclimg,
+  vcl,
+  vclx,
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  vcltouch,
+  JclContainers,
+  Jcl,
+  TeePro927,
+  TeeUI927,
+  Tee927,
+  TeeLanguage927,
+  tb2k_d27,
+  SpTBXLibDsgn,
+  DCPcrypt,
+  LA.Fundamentals.Utils,
+  LA.Fundamentals.Crypto,
+  LA.mORMot.Crossplatform,
+  DCLib;
+
+contains
+  VCL.DCRegister in '..\..\Sources\VCL\VCL.DCRegister.pas',
+  uOPCGanttSeries in '..\..\Sources\VCL\uOPCGanttSeries.pas',
+  aOPCChartMessureTool in '..\..\Sources\VCL\aOPCChartMessureTool.pas',
+  uDCTeeTools in '..\..\Sources\VCL\uDCTeeTools.pas',
+  uChartFrame in '..\..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame};
+
+end.

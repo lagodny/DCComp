@@ -1,0 +1,65 @@
+﻿package DCLib;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Data collection library (non visual)'}
+{$LIBSUFFIX AUTO}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  designIDE,
+  bindengine,
+  bindcomp,
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  JclContainers,
+  Jcl,
+  DCPcrypt,
+  LA.Fundamentals.Utils,
+  LA.Fundamentals.Crypto,
+  LA.mORMot.Crossplatform;
+
+contains
+  aOPCCollection in '..\..\Sources\Common\aOPCCollection.pas',
+  aOPCTagDictionary in '..\..\Sources\Common\aOPCTagDictionary.pas',
+  DC.StrUtils in '..\..\Sources\Common\DC.StrUtils.pas',
+  uDataLinkedClasses in '..\..\Sources\Common\uDataLinkedClasses.pas',
+  uDataTypes in '..\..\Sources\Common\uDataTypes.pas',
+  uDCSensors in '..\..\Sources\Common\uDCSensors.pas',
+  uDCStrResource in '..\..\Sources\Common\uDCStrResource.pas',
+  uExprEval in '..\..\Sources\Common\uExprEval.pas',
+  uSensorPropNames in '..\..\Sources\Common\uSensorPropNames.pas',
+  uOPCInterval in '..\..\Sources\Common\uOPCInterval.pas',
+  aOPCConsts in '..\..\Sources\Common\aOPCConsts.pas',
+  uOPCConst in '..\..\Sources\Common\uOPCConst.pas',
+  aDCReg in '..\..\Sources\Common\aDCReg.pas',
+  PLDesign in '..\..\Sources\Design\PLDesign.pas' {ProvidersEditor},
+  PathPeForm in '..\..\Sources\Design\PathPeForm.pas' {TreeForm};
+
+
+end.

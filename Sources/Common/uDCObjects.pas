@@ -110,6 +110,7 @@ type
     FSID: string;
     FUseParentSID: Boolean;
     FFullSID: string;
+    FStrParam: string;
     procedure SetOwner(const Value: TObject);
     procedure SetNameEn(const Value: string);
     procedure SetIDStr(const Value: string);
@@ -178,6 +179,8 @@ type
 
     property SensorCount: integer read GetSensorCount;
     property Level: integer read GetLevel;
+
+    property StrParam: string read FStrParam write FStrParam;
   end;
 
   // список не является владельцем, объекты не уничтожаются при уничтожении списка!!!

@@ -3,25 +3,25 @@
         <ProjectGuid>{95E2BE46-0EDC-4735-A004-ADDB4911AB17}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="Test\FMX\Test1\Project1.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="Test\FMX\Migration\TestMigration.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="Test\VCL\OPCChart\TestOPCChart.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="Packages\D270\DC.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="Packages\D270\dclDC.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Packages\D270\dclVCLDC.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Packages\D270\dclFMXDC.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Packages\D270\dclVCLDC.dproj">
+        <Projects Include="Packages\D270\DCLib.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Packages\D270\DCLibVCL.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Packages\D270\DCLibFMX.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -32,33 +32,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="Project1">
-        <MSBuild Projects="Test\FMX\Test1\Project1.dproj"/>
-    </Target>
-    <Target Name="Project1:Clean">
-        <MSBuild Projects="Test\FMX\Test1\Project1.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Project1:Make">
-        <MSBuild Projects="Test\FMX\Test1\Project1.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="TestMigration">
-        <MSBuild Projects="Test\FMX\Migration\TestMigration.dproj"/>
-    </Target>
-    <Target Name="TestMigration:Clean">
-        <MSBuild Projects="Test\FMX\Migration\TestMigration.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="TestMigration:Make">
-        <MSBuild Projects="Test\FMX\Migration\TestMigration.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="TestOPCChart">
-        <MSBuild Projects="Test\VCL\OPCChart\TestOPCChart.dproj"/>
-    </Target>
-    <Target Name="TestOPCChart:Clean">
-        <MSBuild Projects="Test\VCL\OPCChart\TestOPCChart.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="TestOPCChart:Make">
-        <MSBuild Projects="Test\VCL\OPCChart\TestOPCChart.dproj" Targets="Make"/>
-    </Target>
     <Target Name="DC">
         <MSBuild Projects="Packages\D270\DC.dproj"/>
     </Target>
@@ -77,15 +50,6 @@
     <Target Name="dclDC:Make">
         <MSBuild Projects="Packages\D270\dclDC.dproj" Targets="Make"/>
     </Target>
-    <Target Name="dclFMXDC">
-        <MSBuild Projects="Packages\D270\dclFMXDC.dproj"/>
-    </Target>
-    <Target Name="dclFMXDC:Clean">
-        <MSBuild Projects="Packages\D270\dclFMXDC.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="dclFMXDC:Make">
-        <MSBuild Projects="Packages\D270\dclFMXDC.dproj" Targets="Make"/>
-    </Target>
     <Target Name="dclVCLDC">
         <MSBuild Projects="Packages\D270\dclVCLDC.dproj"/>
     </Target>
@@ -95,14 +59,50 @@
     <Target Name="dclVCLDC:Make">
         <MSBuild Projects="Packages\D270\dclVCLDC.dproj" Targets="Make"/>
     </Target>
+    <Target Name="dclFMXDC">
+        <MSBuild Projects="Packages\D270\dclFMXDC.dproj"/>
+    </Target>
+    <Target Name="dclFMXDC:Clean">
+        <MSBuild Projects="Packages\D270\dclFMXDC.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dclFMXDC:Make">
+        <MSBuild Projects="Packages\D270\dclFMXDC.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DCLib">
+        <MSBuild Projects="Packages\D270\DCLib.dproj"/>
+    </Target>
+    <Target Name="DCLib:Clean">
+        <MSBuild Projects="Packages\D270\DCLib.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DCLib:Make">
+        <MSBuild Projects="Packages\D270\DCLib.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DCLibVCL">
+        <MSBuild Projects="Packages\D270\DCLibVCL.dproj"/>
+    </Target>
+    <Target Name="DCLibVCL:Clean">
+        <MSBuild Projects="Packages\D270\DCLibVCL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DCLibVCL:Make">
+        <MSBuild Projects="Packages\D270\DCLibVCL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DCLibFMX">
+        <MSBuild Projects="Packages\D270\DCLibFMX.dproj"/>
+    </Target>
+    <Target Name="DCLibFMX:Clean">
+        <MSBuild Projects="Packages\D270\DCLibFMX.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DCLibFMX:Make">
+        <MSBuild Projects="Packages\D270\DCLibFMX.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Project1;TestMigration;TestOPCChart;DC;dclDC;dclFMXDC;dclVCLDC"/>
+        <CallTarget Targets="DC;dclDC;dclVCLDC;dclFMXDC;DCLib;DCLibVCL;DCLibFMX"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Project1:Clean;TestMigration:Clean;TestOPCChart:Clean;DC:Clean;dclDC:Clean;dclFMXDC:Clean;dclVCLDC:Clean"/>
+        <CallTarget Targets="DC:Clean;dclDC:Clean;dclVCLDC:Clean;dclFMXDC:Clean;DCLib:Clean;DCLibVCL:Clean;DCLibFMX:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Project1:Make;TestMigration:Make;TestOPCChart:Make;DC:Make;dclDC:Make;dclFMXDC:Make;dclVCLDC:Make"/>
+        <CallTarget Targets="DC:Make;dclDC:Make;dclVCLDC:Make;dclFMXDC:Make;DCLib:Make;DCLibVCL:Make;DCLibFMX:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
