@@ -151,12 +151,14 @@ type
     function IndexOfOPCSource(aOPCSource: TaCustomOPCSource): Integer;
 
     function IndexOfConnectionID(aID: Integer): Integer;
-    function IndexOfConnectionName(aName: string): Integer;
+    function IndexOfConnectionName(const aName: string): Integer;
 
     function FindObjectByID(aConnectionID: integer; ID: integer): TDCObject;
     function FindObjectBySourceAndID(aOPCSource: TaCustomOPCSource; ID: integer): TDCObject;
 
-    function GetOPCSourceByConnectionName(aConnectionName: string): TaCustomOPCSource;
+    function GetOPCSourceByConnectionName(const aConnectionName: string): TaCustomOPCSource;
+    function GetConnectionByName(const aConnectionName: string): TOPCConnectionCollectionItem;
+
     procedure LoadSettings(aCustomIniFile: TCustomIniFile; aSectionName: string; aNotClearItems: Boolean = False);
     procedure SaveSettings(aCustomIniFile: TCustomIniFile; aSectionName: string);
 
@@ -1153,7 +1155,18 @@ begin
   Result := FindObjectByID(IndexOfOPCSource(aOPCSource), ID);
 end;
 
-function TaOPCConnectionList.GetOPCSourceByConnectionName(aConnectionName: string): TaCustomOPCSource;
+function TaOPCConnectionList.GetConnectionByName(const aConnectionName: string): TOPCConnectionCollectionItem;
+var
+  i: Integer;
+begin
+  i := IndexOfConnectionName(aConnectionName);
+  if i > -1 then
+    Result := Items[i]
+  else
+    Result := nil;
+end;
+
+function TaOPCConnectionList.GetOPCSourceByConnectionName(const aConnectionName: string): TaCustomOPCSource;
 var
   i: Integer;
 begin
@@ -1182,7 +1195,7 @@ begin
     Result := -1;
 end;
 
-function TaOPCConnectionList.IndexOfConnectionName(aName: string): Integer;
+function TaOPCConnectionList.IndexOfConnectionName(const aName: string): Integer;
 begin
   Result := 0;
   while (Result < Items.Count) and not AnsiSameText(Items[Result].Name, aName) do

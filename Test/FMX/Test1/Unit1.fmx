@@ -23,4 +23,24 @@ object Form1: TForm1
     Text = 'Button1'
     OnClick = Button1Click
   end
+  object aOPCLabel1: TaOPCLabel
+    OPCSource = aOPCTCPSource_V301
+    StairsOptions = []
+    PhysID = '1'
+    DisplayFormat = 'datehh:mm:ss'
+    ShowError = False
+    Position.X = 160.000000000000000000
+    Position.Y = 104.000000000000000000
+    Text = 'aOPCLabel1'
+  end
+  object aOPCTCPSource_V301: TaOPCTCPSource_V30
+    RemoteMachine = 'tdc.org.ua'
+    User = #1051#1072#1075#1086#1076#1085#1099#1081
+    Password = '314'
+    Port = 5152
+    MainHost = 'tdc.org.ua'
+    MainPort = 5152
+    Left = 88
+    Top = 144
+  end
 end

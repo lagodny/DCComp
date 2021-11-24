@@ -13,7 +13,6 @@ object CinemaControlForm: TCinemaControlForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
   Position = poScreenCenter
   ShowHint = True
   OnClose = FormClose
@@ -22,13 +21,4 @@ object CinemaControlForm: TCinemaControlForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object aOPCCinemaControl1: TaOPCCinemaControl
-    Left = 0
-    Top = 0
-    Width = 339
-    Height = 68
-    TabOrder = 0
-    TabStop = True
-    StepMode = smNextMoment
-  end
 end

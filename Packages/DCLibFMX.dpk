@@ -1,0 +1,47 @@
+﻿package DCLibFMX;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Data collection FMX'}
+{$LIBSUFFIX AUTO}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  fmx,
+  IndySystem,
+  FMXTee927,
+  DCLib;
+
+contains
+  FMX.DCChart in '..\Sources\FMX\FMX.DCChart.pas',
+  FMX.DCDataObject in '..\Sources\FMX\FMX.DCDataObject.pas',
+  FMX.DCLineSeries in '..\Sources\FMX\FMX.DCLineSeries.pas',
+  FMX.DCLabel in '..\Sources\FMX\FMX.DCLabel.pas',
+  FMX.DCText in '..\Sources\FMX\FMX.DCText.pas',
+  FMX.DCRegister in '..\Sources\FMX\FMX.DCRegister.pas';
+
+end.

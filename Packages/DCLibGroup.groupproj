@@ -1,15 +1,15 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{95E2BE46-0EDC-4735-A004-ADDB4911AB17}</ProjectGuid>
+        <ProjectGuid>{A184BCA4-FECD-4847-862C-DB79AD887173}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="Packages\D270\DCLib.dproj">
+        <Projects Include="DCLib.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Packages\D270\DCLibVCL.dproj">
+        <Projects Include="DCLibVCL.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Packages\D270\DCLibFMX.dproj">
+        <Projects Include="DCLibFMX.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -21,31 +21,31 @@
         </BorlandProject>
     </ProjectExtensions>
     <Target Name="DCLib">
-        <MSBuild Projects="Packages\D270\DCLib.dproj"/>
+        <MSBuild Projects="DCLib.dproj"/>
     </Target>
     <Target Name="DCLib:Clean">
-        <MSBuild Projects="Packages\D270\DCLib.dproj" Targets="Clean"/>
+        <MSBuild Projects="DCLib.dproj" Targets="Clean"/>
     </Target>
     <Target Name="DCLib:Make">
-        <MSBuild Projects="Packages\D270\DCLib.dproj" Targets="Make"/>
+        <MSBuild Projects="DCLib.dproj" Targets="Make"/>
     </Target>
     <Target Name="DCLibVCL">
-        <MSBuild Projects="Packages\D270\DCLibVCL.dproj"/>
+        <MSBuild Projects="DCLibVCL.dproj"/>
     </Target>
     <Target Name="DCLibVCL:Clean">
-        <MSBuild Projects="Packages\D270\DCLibVCL.dproj" Targets="Clean"/>
+        <MSBuild Projects="DCLibVCL.dproj" Targets="Clean"/>
     </Target>
     <Target Name="DCLibVCL:Make">
-        <MSBuild Projects="Packages\D270\DCLibVCL.dproj" Targets="Make"/>
+        <MSBuild Projects="DCLibVCL.dproj" Targets="Make"/>
     </Target>
     <Target Name="DCLibFMX">
-        <MSBuild Projects="Packages\D270\DCLibFMX.dproj"/>
+        <MSBuild Projects="DCLibFMX.dproj"/>
     </Target>
     <Target Name="DCLibFMX:Clean">
-        <MSBuild Projects="Packages\D270\DCLibFMX.dproj" Targets="Clean"/>
+        <MSBuild Projects="DCLibFMX.dproj" Targets="Clean"/>
     </Target>
     <Target Name="DCLibFMX:Make">
-        <MSBuild Projects="Packages\D270\DCLibFMX.dproj" Targets="Make"/>
+        <MSBuild Projects="DCLibFMX.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="DCLib;DCLibVCL;DCLibFMX"/>

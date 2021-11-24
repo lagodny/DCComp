@@ -10,10 +10,10 @@ uses
 
 type
   TForm1 = class(TForm)
-    aOPCTCPSource_V301: TaOPCTCPSource_V30;
-    aOPCLabel1: TaOPCLabel;
     CheckBox1: TCheckBox;
     Button1: TButton;
+    aOPCTCPSource_V301: TaOPCTCPSource_V30;
+    aOPCLabel1: TaOPCLabel;
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);

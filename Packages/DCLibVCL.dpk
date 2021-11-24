@@ -46,13 +46,17 @@ requires
   LA.mORMot.Crossplatform,
   DCLib,
   tb2k,
-  SpTBXLibDsgn;
+  SpTBXLibDsgn,
+  TeePro9,
+  TeeUI9,
+  Tee9,
+  TeeLanguage9;
 
 contains
-  VCL.DCRegister in '..\..\Sources\VCL\VCL.DCRegister.pas',
-  uOPCGanttSeries in '..\..\Sources\VCL\uOPCGanttSeries.pas',
-  aOPCChartMessureTool in '..\..\Sources\VCL\aOPCChartMessureTool.pas',
-  uDCTeeTools in '..\..\Sources\VCL\uDCTeeTools.pas',
-  uChartFrame in '..\..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame};
+  VCL.DCRegister in '..\Sources\VCL\VCL.DCRegister.pas',
+  uOPCGanttSeries in '..\Sources\VCL\uOPCGanttSeries.pas',
+  aOPCChartMessureTool in '..\Sources\VCL\aOPCChartMessureTool.pas',
+  uDCTeeTools in '..\Sources\VCL\uDCTeeTools.pas',
+  uChartFrame in '..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame};
 
 end.
