@@ -38,15 +38,17 @@ requires
   IndyProtocols,
   IndyCore,
   vcltouch,
-  JclContainers,
-  Jcl,
   DCPcrypt,
   LA.Fundamentals.Utils,
   LA.Fundamentals.Crypto,
   LA.mORMot.Crossplatform,
   DCLib,
   tb2k,
-  SpTBXLibDsgn;
+  SpTBXLibDsgn,
+  TeePro927,
+  TeeUI927,
+  Tee927,
+  TeeLanguage927;
 
 contains
   VCL.DCRegister in '..\..\Sources\VCL\VCL.DCRegister.pas',
