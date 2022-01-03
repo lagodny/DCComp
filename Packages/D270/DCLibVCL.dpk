@@ -45,10 +45,10 @@ requires
   DCLib,
   tb2k,
   SpTBXLibDsgn,
-  TeePro927,
-  TeeUI927,
-  Tee927,
-  TeeLanguage927;
+  TeePro928,
+  TeeUI928,
+  Tee928,
+  TeeLanguage928;
 
 contains
   VCL.DCRegister in '..\..\Sources\VCL\VCL.DCRegister.pas',

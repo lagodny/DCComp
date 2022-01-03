@@ -420,7 +420,7 @@ type
     procedure Release;
     procedure Rename(const AFileName: string; Reload: Boolean);
     function RenameSection(const OldName, NewName: string): Boolean;
-    function SectionExists(const Section: string): Boolean; {$IFDEF FPC} override; {$ENDIF}
+    function SectionExists(const Section: string): Boolean; override;
     procedure SetStrings(List: TStrings; ForceUpdate: Boolean = True);
     procedure UpdateFile; override;
     function ValueExist(const Section, Ident: string): Boolean;
@@ -545,9 +545,11 @@ var
   UpperCaseLookUp: array[Char] of Char;
   AnsiUpperCaseLookUp: array[Char] of Char;
 
-{$IFDEF DebugFIF}
+{$IFDEF COMPILER28_UP}
+{.$IFDEF DebugFIF}
   // uses the RTL version
 {$ELSE}
+
   // A SameText look-a-like based on Aleksandr Sharahov' function
   // CompareTextShaAsm3() found at the FastCode project.
 function SameText(const S1, S2: string): Boolean;

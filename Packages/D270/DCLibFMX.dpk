@@ -25,7 +25,7 @@
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Data collection library  FMX'}
+{$DESCRIPTION 'Data collection FMX'}
 {$LIBSUFFIX AUTO}
 {$IMPLICITBUILD ON}
 
@@ -33,8 +33,8 @@ requires
   rtl,
   fmx,
   IndySystem,
-  FMXTee927,
-  DCLib;
+  DCLib,
+  FMXTee928;
 
 contains
   FMX.DCChart in '..\..\Sources\FMX\FMX.DCChart.pas',
