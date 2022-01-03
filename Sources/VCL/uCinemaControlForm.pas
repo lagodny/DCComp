@@ -10,6 +10,7 @@ uses
 type
   TCinemaControlForm = class(TForm)
     aOPCCinemaControl1: TaOPCCinemaControl;
+    //aOPCCinemaControl1: TaOPCCinemaControl;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
