@@ -11,19 +11,24 @@ implementation
 
 uses
   aOPCLabel,
-  aOPCStateLine,
+  aOPCImage, aOPCImageList,
+  aOPCStateLine, aOPCShape,
   aOPCChart,
   uChartFrame,
-  uCinemaControl;
+  uCinemaControl,
+  aOPCVerUpdater;
 
 
 procedure Register;
 begin
   RegisterComponents('DC Controls', [TaOPCLabel]);
-  RegisterComponents('DC Controls', [TaOPCStateLine]);
+  RegisterComponents('DC Controls', [TaOPCImage]);
+  RegisterComponents('DC Controls', [TaOPCImageList]);
+  RegisterComponents('DC Controls', [TaOPCStateLine, TaOPCShape]);
   RegisterComponents('DC Controls', [TaOPCChart]);
   RegisterComponents('DC Controls', [TChartFrame]);
   RegisterComponents('DC Controls', [TaOPCCinemaControl]);
+  RegisterComponents('DC Controls', [TaOPCVerUpdater]);
 
 end;
 

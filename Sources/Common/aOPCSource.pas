@@ -217,7 +217,7 @@ type
 
     function GetPermissions(PhysIDs: string): string; virtual;
 
-    function GetValue(PhysID: string): string; virtual;
+    function GetValue(PhysID: string; aAsText: Boolean = False): string; virtual;
     function SendModBus(aSystemType: integer; aRequest: string;
       aRetByteCount: integer; aTimeOut: integer): string; virtual;
     function SendModBusEx(aConnectionName: string; aRequest: string;
@@ -230,6 +230,10 @@ type
     procedure FillSensorsValuesStream(var aValuesStream: TMemoryStream); virtual;
 
     function GetSensorValueOnMoment(PhysID: string; var Moment: TDateTime): string; virtual;
+    // возвращает показания датчиков на заданный момент времени Moment
+    // PhysIDs - список адресов через ; (точку с запятой)
+    // в ответе список показаний через ; (точку с запятой) в том же порядке
+    function GetSensorsValueOnMoment(PhysIDs: string; Moment: TDateTime): string; virtual;
 
     function DelSensorValue(PhysID: string; Moment: TDateTime): string; virtual;
     function SetSensorValue(PhysID, Value: string; Moment: TDateTime = 0): string; virtual;
@@ -276,8 +280,8 @@ type
     function SetThreadState(ConnectionName: string; NewState: Boolean): string; virtual; abstract;
     function SetThreadLock(ConnectionName: string; NewState: Boolean): string; virtual; abstract;
 
-    procedure GetFile(aFileName: string; var aStream: TMemoryStream); virtual; abstract;
-    procedure UploadFile(aFileName: string); virtual;
+    procedure GetFile(aFileName: string; var aStream: TStream); virtual; abstract;
+    procedure UploadFile(aFileName: string; aDestDir: string = ''); virtual;
 
     procedure DownloadSetup(aFileName: string; aStream: TStream); virtual;
     procedure LoadNameSpace(aCustomIniFile: TCustomIniFile; aSectionName: string = '');
@@ -815,7 +819,7 @@ begin
   DoUpdateDataLinksData;
 end;
 
-procedure TaOPCSource.UploadFile(aFileName: string);
+procedure TaOPCSource.UploadFile(aFileName: string; aDestDir: string = '');
 begin
 
 end;
@@ -1437,7 +1441,7 @@ begin
   Result := 'GetSensorValue Реализация только у наследников';
 end;
 
-function TaOPCSource.GetValue(PhysID: string): string;
+function TaOPCSource.GetValue(PhysID: string; aAsText: Boolean = False): string;
 begin
 end;
 
@@ -1649,6 +1653,11 @@ end;
 function TaOPCSource.GetSensorPropertiesEx(id: string): string;
 begin
 
+end;
+
+function TaOPCSource.GetSensorsValueOnMoment(PhysIDs: string; Moment: TDateTime): string;
+begin
+  Result := 'GetSensorsValueOnMoment Реализация только у наследников';
 end;
 
 function TaOPCSource.GetSensorsValues(PhysIDs: string): string;

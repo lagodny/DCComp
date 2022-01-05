@@ -17,9 +17,9 @@ uses
   uOPCSeriesTypes,
   uOPCFilter;
 
-//const
-//  cErrorSerieColor = clGray;
-//  //cErrorSerieColor = clNone;
+const
+  cErrorSerieColor = clGray;
+  //cErrorSerieColor = clNone;
 
 type
 //  TXY = record

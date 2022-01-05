@@ -13,7 +13,6 @@ object CinemaControlForm: TCinemaControlForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = True
   Position = poScreenCenter
   ShowHint = True
   OnClose = FormClose
@@ -31,9 +30,5 @@ object CinemaControlForm: TCinemaControlForm
     TabOrder = 0
     TabStop = True
     StepMode = smNextMoment
-    ExplicitLeft = 184
-    ExplicitTop = 32
-    ExplicitWidth = 341
-    ExplicitHeight = 71
   end
 end

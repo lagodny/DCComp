@@ -93,7 +93,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UsePackage>vclimg;vcl;rtl;vclx;IndySystem;IndyProtocols;IndyCore;vcltouch;JclContainers;Jcl;TeePro927;TeeUI927;Tee927;TeeLanguage927;tb2k_d27;DCPcrypt;LA.Fundamentals.Utils;LA.Fundamentals.Crypto;LA.mORMot.Crossplatform;LA.Test;tb2k;DCLib;TeePro9;TeeUI9;Tee9;TeeLanguage9;TeePro928;TeeUI928;Tee928;TeeLanguage928;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcl;rtl;vclx;IndySystem;IndyProtocols;IndyCore;vcltouch;JclContainers;Jcl;TeePro927;TeeUI927;Tee927;TeeLanguage927;tb2k_d27;DCPcrypt;LA.Fundamentals.Utils;LA.Fundamentals.Crypto;LA.mORMot.Crossplatform;LA.Test;tb2k;DCLib;TeePro9;TeeUI9;Tee9;TeeLanguage9;TeePro928;TeeUI928;Tee928;TeeLanguage928;JvCore;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>vclimg;vcl;rtl;vclx;IndySystem;IndyProtocols;IndyCore;vcltouch;$(DCC_UsePackage)</DCC_UsePackage>
@@ -143,6 +143,7 @@
         <DCCReference Include="TeeUI928.dcp"/>
         <DCCReference Include="Tee928.dcp"/>
         <DCCReference Include="TeeLanguage928.dcp"/>
+        <DCCReference Include="JvCore.dcp"/>
         <DCCReference Include="..\..\Sources\VCL\VCL.DCRegister.pas"/>
         <DCCReference Include="..\..\Sources\VCL\uOPCGanttSeries.pas"/>
         <DCCReference Include="..\..\Sources\VCL\aOPCChartMessureTool.pas"/>
@@ -151,6 +152,7 @@
             <Form>ChartFrame</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\..\Sources\Common\DC.Resources.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

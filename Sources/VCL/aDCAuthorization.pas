@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes,
-  FMX.Forms,
+//  FMX.Forms,
   aOPCSource;
 
 const
@@ -33,7 +33,7 @@ type
     property Permissions: string read FPermissions write SetPermissions;
     property EncryptedPassword: string read GetEncryptedPassword write SetEncryptedPassword;
 
-    function Execute(aParent: TCustomForm = nil; aShowInTaskBar: boolean = false): boolean;
+//    function Execute(aParent: TCustomForm = nil; aShowInTaskBar: boolean = false): boolean;
 
     function CheckPermissions: boolean;
     function Login: boolean;
@@ -97,91 +97,91 @@ begin
     Result[i] := Chr(Ord(Result[i]) xor ((i + EncryptKey) mod 255));
 end;
 
-function TaDCAuthorization.Execute(aParent: TCustomForm; aShowInTaskBar: boolean): boolean;
-var
-  //s: string;
-  i: integer;
-  UserChoice: TUserChoice;
-begin
-  Result := False;
-
-  UserChoice := TUserChoice.Create(Application);
-  try
-    UserChoice.OPCSource := OPCSource;
-    UserChoice.cbUser.Items.Text := OPCSource.GetUsers;
-    UserChoice.cbUser.ItemIndex := UserChoice.cbUser.Items.IndexOf(User);
-
-//    while not Result do
-//    begin
-      UserChoice.ePassword.Text := '';
-
+//function TaDCAuthorization.Execute(aParent: TCustomForm; aShowInTaskBar: boolean): boolean;
+//var
+//  //s: string;
+//  i: integer;
+//  UserChoice: TUserChoice;
+//begin
+//  Result := False;
+//
+//  UserChoice := TUserChoice.Create(Application);
+//  try
+//    UserChoice.OPCSource := OPCSource;
+//    UserChoice.cbUser.Items.Text := OPCSource.GetUsers;
+//    UserChoice.cbUser.ItemIndex := UserChoice.cbUser.Items.IndexOf(User);
+//
+////    while not Result do
+////    begin
+//      UserChoice.ePassword.Text := '';
+//
+////      UserChoice.ShowModal(
+////        procedure (ModalResult: TModalResult)
+////        begin
+////          if ModalResult = mrOK then
+////            ShowMessage('OK')
+////          else
+////            ShowMessage('Cancel');
+////          UserChoice.DisposeOf;
+////        end
+////      )
+//
 //      UserChoice.ShowModal(
 //        procedure (ModalResult: TModalResult)
 //        begin
-//          if ModalResult = mrOK then
-//            ShowMessage('OK')
+//          if ModalResult = mrOk then
+//          begin
+//            try
+//              User := UserChoice.cbUser.Selected.Text;
+//              Password := UserChoice.ePassword.Text;
+//              //Result :=
+//              OPCSource.Login(User, Password);
+////              if not Result then
+////                MessageDlg(
+////                  Format('У пользователя %s недостаточно прав для работы с системой!', [User]),
+////                  TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
+//            except
+//              on e: Exception do
+//                MessageDlg(e.Message, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
+//            end;
+//          end
 //          else
-//            ShowMessage('Cancel');
-//          UserChoice.DisposeOf;
+//          begin
+//            Permissions := '';
+//            //Break;
+//          end;
+//
+//          //UserChoice.DisposeOf;
+//
 //        end
-//      )
-
-      UserChoice.ShowModal(
-        procedure (ModalResult: TModalResult)
-        begin
-          if ModalResult = mrOk then
-          begin
-            try
-              User := UserChoice.cbUser.Selected.Text;
-              Password := UserChoice.ePassword.Text;
-              //Result :=
-              OPCSource.Login(User, Password);
-//              if not Result then
-//                MessageDlg(
-//                  Format('У пользователя %s недостаточно прав для работы с системой!', [User]),
-//                  TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
-            except
-              on e: Exception do
-                MessageDlg(e.Message, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
-            end;
-          end
-          else
-          begin
-            Permissions := '';
-            //Break;
-          end;
-
-          //UserChoice.DisposeOf;
-
-        end
-        );
-
-//      if UserChoice.ShowModal = mrOk then
-//      begin
-//        try
-//          User := UserChoice.cbUser.Selected.Text;
-//          Password := UserChoice.ePassword.Text;
-//          Result := OPCSource.Login(User, Password);
-//          if not Result then
-//            MessageDlg(
-//              Format('У пользователя %s недостаточно прав для работы с системой!', [User]),
-//              TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
-//        except
-//          on e: Exception do
-//            MessageDlg(e.Message, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
-//        end;
-//      end
-//      else
-//      begin
-//        Permissions := '';
-//        break;
-//      end;
-//    end;
-  finally
-    //UserChoice.Free;
-  end;
-
-end;
+//        );
+//
+////      if UserChoice.ShowModal = mrOk then
+////      begin
+////        try
+////          User := UserChoice.cbUser.Selected.Text;
+////          Password := UserChoice.ePassword.Text;
+////          Result := OPCSource.Login(User, Password);
+////          if not Result then
+////            MessageDlg(
+////              Format('У пользователя %s недостаточно прав для работы с системой!', [User]),
+////              TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
+////        except
+////          on e: Exception do
+////            MessageDlg(e.Message, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
+////        end;
+////      end
+////      else
+////      begin
+////        Permissions := '';
+////        break;
+////      end;
+////    end;
+//  finally
+//    //UserChoice.Free;
+//  end;
+//
+//end;
 
 function TaDCAuthorization.GetEncryptedPassword: string;
 begin

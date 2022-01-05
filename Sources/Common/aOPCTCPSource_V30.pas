@@ -51,6 +51,8 @@ type
 
     function LockAndGetStringsCommand(aCommand: string): string;
 
+    function LockAndGetResultCommandFmt(aCommand: string; const Args: array of TVarRec): string;
+
     function ExtractValue(var aValues: string;
       var aValue: string; var aErrorCode: integer; var aErrorStr: string; var aMoment: TDateTime): Boolean; override;
 
@@ -79,8 +81,8 @@ type
 
     procedure ChangePassword(aUser, aOldPassword, aNewPassword: string); override;
 
-    procedure GetFile(aFileName: string; var aStream: TMemoryStream); override;
-    procedure UploadFile(aFileName: string); override;
+    procedure GetFile(aFileName: string; var aStream: TStream); override;
+    procedure UploadFile(aFileName: string; aDestDir: string = ''); override;
 
     //function GetSensorProperties(id: string): TSensorProperties; override;
     function GetSensorPropertiesEx(id: string): string; override;
@@ -114,7 +116,7 @@ type
 
     procedure InsertValues(PhysID: string; aBuffer: TSensorDataArr); override;
 
-    function GetValue(PhysID: string): string; override;
+    function GetValue(PhysID: string; aAsText: Boolean = False): string; override;
     function GetValueText(PhysID: string): string;
 
     function SetSensorValue(PhysID, Value: string; Moment: TDateTime = 0): string; override;
@@ -124,6 +126,7 @@ type
     function GetSensorValueText(PhysID: String; var ErrorCode: integer; var ErrorString: String; var Moment: TDateTime): string;
 
     function GetSensorValueOnMoment(PhysID: String; var Moment: TDateTime): string; override;
+    function GetSensorsValueOnMoment(PhysIDs: string; Moment: TDateTime): string; override;
 
     function GetPermissions(PhysIDs: string): string; override;
 
@@ -155,6 +158,10 @@ type
     procedure GetSchedule(aSensorID: string; aStream: TStream);
 
     //procedure AddSCSTracker(aParams:
+
+    function Report(aParams: string): string;
+    function JSONReport(aParam: string): string;
+
 
   published
     property Encrypt: Boolean read FEncrypt write SetEncrypt default False;
@@ -641,7 +648,7 @@ begin
   Result := FEncrypt;
 end;
 
-procedure TaOPCTCPSource_V30.GetFile(aFileName: string; var aStream: TMemoryStream);
+procedure TaOPCTCPSource_V30.GetFile(aFileName: string; var aStream: TStream);
 var
   aSize: integer;
   aBlockSize: Integer;
@@ -812,7 +819,7 @@ begin
   Result := LockAndGetStringsCommand('GetUsers');
 end;
 
-function TaOPCTCPSource_V30.GetValue(PhysID: string): string;
+function TaOPCTCPSource_V30.GetValue(PhysID: string; aAsText: Boolean = False): string;
 var
   aStr: String;
   aErrorCode: Integer;
@@ -823,7 +830,12 @@ begin
   try
     try
       DoConnect;
-      DoCommandFmt('GetValue %s', [PhysID]);
+
+      if aAsText then
+        DoCommandFmt('GetValue %s;1', [PhysID])
+      else
+        DoCommandFmt('GetValue %s', [PhysID]);
+
       aStr := ReadLn;
       ExtractValue(aStr, Result, aErrorCode, aErrorString, aMoment);
     except
@@ -880,6 +892,11 @@ begin
   finally
     UnLockConnection;
   end;
+end;
+
+function TaOPCTCPSource_V30.JSONReport(aParam: string): string;
+begin
+  Result := LockAndGetResultCommandFmt('JSONReport %s', [aParam]);
 end;
 
 //function TaOPCTCPSource_V30.GetSensorProperties(id: string): TSensorProperties;
@@ -952,6 +969,27 @@ end;
 function TaOPCTCPSource_V30.GetSensorsReadError: string;
 begin
   Result := LockAndGetStringsCommand('GetSensorsReadError');
+end;
+
+function TaOPCTCPSource_V30.GetSensorsValueOnMoment(PhysIDs: string; Moment: TDateTime): string;
+var
+  p: integer;
+  Str: string;
+begin
+  LockConnection;
+  try
+    try
+      DoConnect;
+      DoCommandFmt('GetValuesOnMoment %s;%s', [DateTimeToStr(DateToServer(Moment), OpcFS), PhysIDs]);
+      Result := ReadLn; // значения через ; (точку с запятой)
+    except
+      on e: EIdException do
+        if ProcessTCPException(e) then
+          raise;
+    end;
+  finally
+    UnLockConnection;
+  end;
 end;
 
 function TaOPCTCPSource_V30.GetSensorsValues(PhysIDs: String): string;
@@ -1169,6 +1207,29 @@ begin
 //  end;
 end;
 
+function TaOPCTCPSource_V30.LockAndGetResultCommandFmt(aCommand: string;
+  const Args: array of TVarRec): string;
+begin
+  Result := '';
+  LockConnection;
+  try
+    try
+      DoConnect;
+      DoCommandFmt(aCommand, Args);
+      //CheckCommandResult;
+
+      // читаем данные
+      Result := ReadLn;
+    except
+      on e: EIdException do
+        if ProcessTCPException(e) then
+          raise;
+    end;
+  finally
+    UnLockConnection;
+  end;
+end;
+
 function TaOPCTCPSource_V30.LockAndGetStringsCommand(aCommand: string): string;
 var
   aByteCount: integer;
@@ -1285,6 +1346,11 @@ end;
 procedure TaOPCTCPSource_V30.ReloadRoles;
 begin
   LockAndDoCommand('ReloadRoles');
+end;
+
+function TaOPCTCPSource_V30.Report(aParams: string): string;
+begin
+  Result := HexToStr(LockAndGetResultCommandFmt('Report %s', [StrToHex(aParams, '')]), '');
 end;
 
 function TaOPCTCPSource_V30.GetUserObjectPermission(aObjectID: Integer; aObjectTable: TDCObjectTable): string;
@@ -1703,7 +1769,7 @@ begin
   end;
 end;
 
-procedure TaOPCTCPSource_V30.UploadFile(aFileName: string);
+procedure TaOPCTCPSource_V30.UploadFile(aFileName: string; aDestDir: string = '');
 var
   aStream: TFileStream;
 begin
@@ -1712,7 +1778,7 @@ begin
     aStream := TFileStream.Create(Trim(aFileName), fmOpenRead or fmShareDenyNone);
     try
       DoConnect;
-      DoCommandFmt('UploadFile %s', [aFileName]);
+      DoCommandFmt('UploadFile %s;%s', [aFileName, aDestDir]);
       WriteStream(aStream);
     finally
       aStream.Free;

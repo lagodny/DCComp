@@ -401,25 +401,31 @@ begin
     if LookupList = nil then
     begin
       try
-        aValue := StrToFloat(Value); // TryStrToFloat(Value); //StrToFloat(Value, OpcFS);
-        // нужно ли отсекать, а не округлять
-        if Trim then
+        if Value = '' then
+          Caption := Value
+
+        else
         begin
-          Precision := 1;
-          i := pos('.', DisplayFormat);
-          if i > 0 then
+          aValue := StrToFloat(Value); // TryStrToFloat(Value); //StrToFloat(Value, OpcFS);
+          // нужно ли отсекать, а не округлять
+          if Trim then
           begin
-            Inc(i);
-            while i <= Length(DisplayFormat) do
+            Precision := 1;
+            i := pos('.', DisplayFormat);
+            if i > 0 then
             begin
-              if CharInSet(DisplayFormat[i], ['0', '#']) then
-                Precision := Precision * 10;
               Inc(i);
+              while i <= Length(DisplayFormat) do
+              begin
+                if CharInSet(DisplayFormat[i], ['0', '#']) then
+                  Precision := Precision * 10;
+                Inc(i);
+              end;
             end;
+            aValue := Trunc(aValue * Precision) / Precision;
           end;
-          aValue := Trunc(aValue * Precision) / Precision;
+          Caption := FormatValue(aValue, DisplayFormat);
         end;
-        Caption := FormatValue(aValue, DisplayFormat);
       except
         Caption := Value
       end;

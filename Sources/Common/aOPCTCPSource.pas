@@ -49,7 +49,7 @@ type
 
     function SetSensorPropertiesEx(id: string; sl: TStrings): string; override;                  // +
 
-    function GetValue(PhysID: string): string; override;
+    function GetValue(PhysID: string; aAsText: Boolean = False): string; override;
 
     function GetUsers: string; override;
     function Login(const aUserName, aPassword: string): Boolean; override;
@@ -72,7 +72,9 @@ type
     function GetSensorValue(PhysID: String; var ErrorCode: integer; var ErrorString: String;
       var Moment: TDateTime): string; override;
     function GetSensorsValues(PhysIDs: String): string; override;                               // +
+
     function GetSensorValueOnMoment(PhysID: String; var Moment: TDateTime): string; override;   // +
+    function GetSensorsValueOnMoment(PhysIDs: String; Moment: TDateTime): string; override;     // +
 
     function GetPermissions(PhysIDs: string): string; override;
 
@@ -91,8 +93,8 @@ type
     function GetTimes(aSensorID: Integer; aDate1, aDate2: TDateTime): string; override;
     function GetStatistic(aSensorID: string; aDate1, aDate2: TDateTime): string; override;
 
-    procedure GetFile(aFileName: string; var aStream: TMemoryStream); override;                 // +
-    procedure UploadFile(aFileName: string); override;                                          // +
+    procedure GetFile(aFileName: string; var aStream: TStream); override;                 // +
+    procedure UploadFile(aFileName: string; aDestDir: string = ''); override;                                          // +
 
     procedure ChangePassword(aUser, aOldPassword, aNewPassword: string); override;              // +
     procedure DisconnectUser(aUserGUID: string); override;
@@ -193,7 +195,7 @@ end;
 //  end;
 //end;
 
-procedure TaOPCTCPSource.GetFile(aFileName: string; var aStream: TMemoryStream);
+procedure TaOPCTCPSource.GetFile(aFileName: string; var aStream: TStream);
 var
   Size: integer;
 begin
@@ -432,7 +434,7 @@ begin
   end;
 end;
 
-function TaOPCTCPSource.GetValue(PhysID: string): string;
+function TaOPCTCPSource.GetValue(PhysID: string; aAsText: Boolean = False): string;
 var
   p: integer;
   Str: string;
@@ -800,7 +802,7 @@ begin
   LoadFS;
 end;
 
-procedure TaOPCTCPSource.UploadFile(aFileName: string);
+procedure TaOPCTCPSource.UploadFile(aFileName: string; aDestDir: string = '');
 var
   //Answer: string;
   //Size: integer;
@@ -889,6 +891,27 @@ begin
     end;
   finally
     UnlockConnection;
+  end;
+end;
+
+function TaOPCTCPSource.GetSensorsValueOnMoment(PhysIDs: String; Moment: TDateTime): string;
+var
+  p: integer;
+  Str: string;
+begin
+  LockConnection;
+  try
+    try
+      DoConnect;
+      SendCommandFmt('GetValuesOnMoment %s;%s', [DateTimeToStr(DateToServer(Moment), OpcFS), PhysIDs]);
+      Result := ExtractParamsFromAnswer(ReadLn);
+    except
+      on e: EIdException do
+        if ProcessTCPException(e) then
+          raise;
+    end;
+  finally
+    UnLockConnection;
   end;
 end;
 
