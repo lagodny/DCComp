@@ -675,7 +675,7 @@ begin
   begin
     //FConnection.IOHandler.DefStringEncoding := TIdTextEncoding.ANSI;
     FConnection.IOHandler.DefStringEncoding := IndyTextEncoding_OSDefault;
-    FConnection.IOHandler.MaxLineLength := 100 * (16 * 1024);
+    FConnection.IOHandler.MaxLineLength := 10000 * (16 * 1024);
     //TIdIOHandlerSocket(FConnection.IOHandler).Binding.SetSockOpt(Id_SOL_SOCKET, Id_SO_RCVTIMEO, ReadTimeOut);
   end;
 
