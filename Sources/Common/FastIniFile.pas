@@ -545,7 +545,7 @@ var
   UpperCaseLookUp: array[Char] of Char;
   AnsiUpperCaseLookUp: array[Char] of Char;
 
-{$IFDEF COMPILER28_UP}
+{$IFDEF COMPILER27_UP}
 {.$IFDEF DebugFIF}
   // uses the RTL version
 {$ELSE}
