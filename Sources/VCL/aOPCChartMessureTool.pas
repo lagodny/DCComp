@@ -54,14 +54,25 @@ type
   //
   // end;
 
-  TaOPCMessureTool = class(TRectangleTool)
+  TDCCustomMessureTool = class(TRectangleTool)
+  protected
+    FAxis: TChartAxis;
+    procedure SetAxis(const Value: TChartAxis); virtual;
+
+    function CalcSeriesValue(aSeries: TFastLineSeries; x: Double; var aValue: Double): Boolean;
+    function GetSeriesValueStr(aSeries: TFastLineSeries; x: Double): string;
+  published
+    property Axis: TChartAxis read FAxis write SetAxis stored False;
+  end;
+
+  TaOPCMessureTool = class(TDCCustomMessureTool)
   private
     FLine: TaOPCMessureLine;
-    FAxis: TChartAxis;
     function NewColorLine: TaOPCMessureLine;
     procedure DragLine(Sender: TColorLineTool);
-    procedure SetAxis(const Value: TChartAxis);
   protected
+    procedure SetAxis(const Value: TChartAxis); override;
+
     procedure PaintLine;
     procedure SetParentChart(const Value: TCustomAxisPanel); override;
     procedure ChartEvent(AEvent: TChartToolEvent); override;
@@ -77,28 +88,23 @@ type
 
     class function Description: String; override;
     class function LongDescription: String; override;
-  published
-    property Axis: TChartAxis read FAxis write SetAxis stored False;
 
   end;
 
-  TaOPCMessureBandTool = class(TRectangleTool)
+  TaOPCMessureBandTool = class(TDCCustomMessureTool)
   private
     FBand: TaOPCMessureBand;
-    FAxis: TChartAxis;
     function NewBand: TaOPCMessureBand;
     procedure DragLine(Sender: TColorLineTool);
-    procedure SetAxis(const Value: TChartAxis);
   protected
+    procedure SetAxis(const Value: TChartAxis); override;
     // procedure PaintBand;
     procedure SetParentChart(const Value: TCustomAxisPanel); override;
     procedure ChartEvent(AEvent: TChartToolEvent); override;
 
     // procedure DrawText; overload; override;
-    Procedure DoDrawText(const AParent: TCustomAxisPanel); overload; override;
-    procedure ShapeDrawText(Panel: TCustomAxisPanel; R: TRect;
-      XOffset, NumLines: Integer);
-
+    procedure DoDrawText(const AParent: TCustomAxisPanel); overload; override;
+    procedure ShapeDrawText(Panel: TCustomAxisPanel; R: TRect; XOffset, NumLines: Integer);
   public
     property Band: TaOPCMessureBand read FBand;
 
@@ -107,8 +113,6 @@ type
 
     class function Description: String; override;
     class function LongDescription: String; override;
-  published
-    property Axis: TChartAxis read FAxis write SetAxis stored False;
   end;
 
 implementation
@@ -305,12 +309,9 @@ begin
       begin
         if ParentChart.Series[t] is TaOPCLineSeries then
         begin
-          vStr := TaOPCLineSeries(ParentChart.Series[t])
-            .GetSerieValueStr(FLine.Value);
+          vStr := TaOPCLineSeries(ParentChart.Series[t]).GetSerieValueStr(FLine.Value);
           Font.Color := ParentChart.Series[t].Color;
-          TextOut(X + XOffset, tmpTop + (t + 1) * tmpHeight, vStr,
-            Shape.TextFormat = ttfHtml);
-
+          TextOut(X + XOffset, tmpTop + (t + 1) * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
         end;
       end;
       Font.Color := saveColor;
@@ -332,6 +333,68 @@ end;
 // inherited;
 //
 // end;
+
+function TDCCustomMessureTool.CalcSeriesValue(aSeries: TFastLineSeries; x: Double; var aValue: Double): Boolean;
+var
+  i: Integer;
+  i1,i2: Integer;
+begin
+  i2 := -1;
+  // ищем врем€ больше заданного (возможен бинарный поиск, т.к. врем€ только возрастает)
+  for i := 0 to aSeries.XValues.Count - 1 do
+  begin
+    // нашли точное соотверствие
+    if aSeries.XValues[i] = x then
+    begin
+      aValue := aSeries.YValues[i];
+      Exit(True);
+    end;
+    // нашли индекс точки с большим временем
+    if aSeries.XValues[i] > x then
+    begin
+      i2 := i;
+      Break;
+    end;
+  end;
+
+  // все точки имеют ћ≈Ќ№Ў≈≈ врем€
+  if i2 = -1 then
+    Exit(False);
+
+  // все точки имеют ЅќЋ№Ў≈≈ врем€
+  if i2 = 0 then
+    Exit(False);
+
+  // мы что-то нашли
+  Result := True;
+  // результат где-то между i1 и i2
+  i1 := i2 - 1;
+  if (aSeries.Stairs) or (aSeries.YValues[i1] = aSeries.YValues[i2]) then
+    aValue := aSeries.YValues[i1]
+  else
+  begin
+    // y = y2 - (y2-y1)*(x2-x)/(x2-x1)
+    aValue := aSeries.YValues[i2] - (aSeries.YValues[i2] - aSeries.YValues[i1])*
+      (aSeries.XValues[i2] - x)/(aSeries.XValues[i2] - aSeries.XValues[i1]);
+  end;
+
+
+end;
+
+function TDCCustomMessureTool.GetSeriesValueStr(aSeries: TFastLineSeries; x: Double): string;
+var
+  v: Double;
+begin
+  if not CalcSeriesValue(aSeries, x, v) then
+    Result := ''
+  else
+    Result := FormatFloat(Axis.AxisValuesFormat, v);
+end;
+
+procedure TDCCustomMessureTool.SetAxis(const Value: TChartAxis);
+begin
+  FAxis := Value;
+end;
 
 procedure TaOPCMessureBandTool.ChartEvent(AEvent: TChartToolEvent);
 begin
@@ -479,25 +542,35 @@ begin
         Inc(xLeft, Self.Pen.Width);
 
       xRight := R.Right - Shape.Margins.Size.Right;
-      xCenter := 1 + ((R.Left + Shape.Margins.Size.Left + R.Right -
-        Shape.Margins.Size.Right) div 2);
+      xCenter := 1 + ((R.Left + Shape.Margins.Size.Left + R.Right - Shape.Margins.Size.Right) div 2);
 
       AssignFont(Shape.Font);
       tmpHeight := FontHeight;
 
       tmpTop := R.Top + Shape.Margins.Size.Top;
 
-      TextAlign := TA_LEFT;
-      TextOut(xLeft + XOffset, tmpTop, FormatDateTime('dd.mm.yyyy HH:MM:SS',
-        Band.StartValue), Shape.TextFormat = ttfHtml);
+      if Axis.IsDateTime then
+      begin
+        TextAlign := TA_LEFT;
+        TextOut(xLeft + XOffset, tmpTop, FormatDateTime('dd.mm.yyyy HH:MM:SS', Band.StartValue), Shape.TextFormat = ttfHtml);
 
-      TextAlign := ta_Center;
-      TextOut(xCenter, tmpTop, TimeView(Band.EndValue - Band.StartValue),
-        Shape.TextFormat = ttfHtml);
+        TextAlign := ta_Center;
+        TextOut(xCenter, tmpTop, TimeView(Band.EndValue - Band.StartValue), Shape.TextFormat = ttfHtml);
 
-      TextAlign := ta_Right;
-      TextOut(xRight, tmpTop, FormatDateTime('dd.mm.yyyy HH:MM:SS',
-        Band.EndValue), Shape.TextFormat = ttfHtml);
+        TextAlign := ta_Right;
+        TextOut(xRight, tmpTop, FormatDateTime('dd.mm.yyyy HH:MM:SS', Band.EndValue), Shape.TextFormat = ttfHtml);
+      end
+      else
+      begin
+        TextAlign := TA_LEFT;
+        TextOut(xLeft + XOffset, tmpTop, FormatFloat(Axis.AxisValuesFormat, Band.StartValue), Shape.TextFormat = ttfHtml);
+
+        TextAlign := ta_Center;
+        TextOut(xCenter, tmpTop, FormatFloat(Axis.AxisValuesFormat, Band.EndValue - Band.StartValue), Shape.TextFormat = ttfHtml);
+
+        TextAlign := ta_Right;
+        TextOut(xRight, tmpTop, FormatFloat(Axis.AxisValuesFormat, Band.EndValue), Shape.TextFormat = ttfHtml);
+      end;
 
 
       // aText :=
@@ -513,8 +586,12 @@ begin
       // True);
 
       saveColor := Font.Color;
+      var aLineCount: Integer := 1;
       for t := 0 to ParentChart.SeriesCount - 1 do
       begin
+        if not ParentChart.Series[t].Visible then
+          Continue;
+
         if ParentChart.Series[t] is TaOPCLineSeries then
         begin
           aSeries := TaOPCLineSeries(ParentChart.Series[t]);
@@ -523,29 +600,49 @@ begin
 
           vStr := aSeries.GetSerieValueStr(Band.StartValue);
           TextAlign := TA_LEFT;
-          TextOut(xLeft + XOffset, tmpTop + (t + 1) * tmpHeight, vStr,
+          TextOut(xLeft + XOffset, tmpTop + aLineCount * tmpHeight, vStr,
             Shape.TextFormat = ttfHtml);
 
           vStr := aSeries.GetSerieValueStr(Band.EndValue);
           TextAlign := ta_Right;
-          TextOut(xRight - XOffset, tmpTop + (t + 1) * tmpHeight, vStr,
+          TextOut(xRight - XOffset, tmpTop + aLineCount * tmpHeight, vStr,
             Shape.TextFormat = ttfHtml);
 
-          if aSeries.CalcSeriesValue(Band.StartValue, v1) and
-            aSeries.CalcSeriesValue(Band.EndValue, v2) then
+          if aSeries.CalcSeriesValue(Band.StartValue, v1) and aSeries.CalcSeriesValue(Band.EndValue, v2) then
           begin
             vStr := FormatFloat(aSeries.DisplayFormat, v2 - v1);
             TextAlign := ta_Center;
-            TextOut(xCenter, tmpTop + (t + 1) * tmpHeight, vStr,
-              Shape.TextFormat = ttfHtml);
+            TextOut(xCenter, tmpTop + aLineCount * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
           end
+        end
+        else if ParentChart.Series[t] is TFastLineSeries then
+        begin
+          var s := TFastLineSeries(ParentChart.Series[t]);
+          Font.Color := s.Color;
+          // Font.Color := ParentChart.Series[t].Color;
 
+          vStr := GetSeriesValueStr(s, Band.StartValue);
+          TextAlign := TA_LEFT;
+          TextOut(xLeft + XOffset, tmpTop + aLineCount * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
+
+          vStr := GetSeriesValueStr(s, Band.EndValue);
+          TextAlign := ta_Right;
+          TextOut(xRight - XOffset, tmpTop + aLineCount * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
+
+          if CalcSeriesValue(s, Band.StartValue, v1) and CalcSeriesValue(s, Band.EndValue, v2) then
+          begin
+            vStr := FormatFloat(Axis.AxisValuesFormat, v2 - v1); // FloatToStr(v2 - v1); //FormatFloat(aSeries.DisplayFormat, v2 - v1);
+            TextAlign := ta_Center;
+            TextOut(xCenter, tmpTop + aLineCount * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
+          end
         end;
+        Inc(aLineCount);
       end;
+
       Font.Color := saveColor;
 
-      if (ParentChart.SeriesCount + 1) * tmpHeight + 5 > Shape.Height then
-        Shape.Height := (ParentChart.SeriesCount + 1) * tmpHeight + 5;
+      //if aLineCount * tmpHeight + 5 > Shape.Height then
+        Shape.Height := aLineCount * tmpHeight + 5;
 
     finally
       if Shape.ClipText then

@@ -6,6 +6,7 @@ inherited ChartFrame: TChartFrame
   Touch.GestureManager = GestureManager1
   ExplicitWidth = 570
   ExplicitHeight = 283
+  PixelsPerInch = 96
   object Chart: TaOPCChart
     Left = 9
     Top = 26
@@ -157,6 +158,10 @@ inherited ChartFrame: TChartFrame
     Interval.TimeShiftUnit = tsuHour
     Interval.EnableTime = True
     ShowZero = True
+    ExplicitLeft = 6
+    ExplicitTop = 17
+    ExplicitWidth = 558
+    ExplicitHeight = 260
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = 0
     object Series1: TLineSeries
@@ -187,6 +192,8 @@ inherited ChartFrame: TChartFrame
     PopupMenu = SpTBXPopupMenu1
     Position = dpLeft
     OnRequestDock = tbDockTopRequestDock
+    ExplicitTop = 17
+    ExplicitHeight = 260
   end
   object tbDockRight: TSpTBXDock
     Left = 561
@@ -196,6 +203,8 @@ inherited ChartFrame: TChartFrame
     PopupMenu = SpTBXPopupMenu1
     Position = dpRight
     OnRequestDock = tbDockTopRequestDock
+    ExplicitTop = 17
+    ExplicitHeight = 260
   end
   object tbDockTop: TSpTBXDock
     Left = 0
@@ -327,7 +336,7 @@ inherited ChartFrame: TChartFrame
     object tbSeriesPopup: TSpTBXToolbar
       Left = 425
       Top = 0
-      DockPos = 218
+      DockPos = 425
       TabOrder = 1
       UpdateActions = False
       Caption = #1043#1088#1072#1092#1080#1082

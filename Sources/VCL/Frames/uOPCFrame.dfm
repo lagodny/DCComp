@@ -11,4 +11,5 @@ object aOPCFrame: TaOPCFrame
   ParentDoubleBuffered = False
   TabOrder = 0
   TabStop = True
+  PixelsPerInch = 96
 end
