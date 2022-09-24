@@ -63,7 +63,9 @@ const
   /// <summary>Ёта константа определ€ет, сколько времени надо ждать, пока будет обработано сообщение посланое потоку (0 -
   /// соответствует бесконечности).</summary>
 {$IFDEF DELPHI_2005_UP} {$ENDREGION} {$ENDIF}
-  InterValTimeOut = 20000;
+  // Alex **
+  //InterValTimeOut = 20000;
+  InterValTimeOut = 20000000;  // for debug
 
 resourcestring
 {$IFDEF DELPHI_2005_UP}{$REGION '“екст отображаемый в TThreadWindow по умолчанию'}{$ENDIF}
@@ -83,7 +85,7 @@ const
   UM_GetPropertyData = WM_USER + 2;
   UM_SetPropertyValue = WM_USER + 3;
 
-  IntBool: array [boolean] of LongInt = (0, 1);
+  IntBool: array [boolean] of NativeInt = (0, 1);
   IDVisible = 1;
   IdColor = 2;
   IdFontColor = 3;
@@ -98,7 +100,8 @@ const
   IdDefaultRect = 12;
 
 type
-  TPropertyData = packed record
+//  TPropertyData = packed record
+  TPropertyData = record
     RecordSize: integer;
     DataSize: integer;
     Data: Pointer;
@@ -106,20 +109,80 @@ type
 
   PRopertyData = ^TPropertyData;
 
-  TUMPropertyData = packed record
+  //TUMPropertyData = packed record
+  TUMPropertyData = record
     Msg: Cardinal;
-    IndexProp: Word;
-    Part: Word;
-    Value: PRopertyData;
-    Result: LongInt;
+
+    case Integer of
+      0: (
+        IndexProp: Word;
+        Part: Word;
+        WParamFiller1: TDWordFiller;
+        //WParam: WPARAM;
+
+        Value: PRopertyData;
+        //LParam: LPARAM;
+
+        Result: LRESULT);
+      1: (
+        WParamLo: Word;
+        WParamHi: Word;
+        WParamFiller: TDWordFiller;
+        LParamLo: Word;
+        LParamHi: Word;
+        LParamFiller: TDWordFiller;
+        ResultLo: Word;
+        ResultHi: Word;
+        ResultFiller: TDWordFiller);
+
+//    //LParamFiller: TDWordFiller;
+//    Value: PRopertyData;
+//
+//    //ResultFiller: TDWordFiller;
+//    Result: LRESULT; //LongInt;
+//
+//    procedure FromMsg(aMsg: TMessage);
+//    procedure ToMsg(var aMsg: TMessage);
   end;
 
-  TUMPropertyValue = packed record
+  //TUMPropertyValue = packed record
+  TUMPropertyValue = record
     Msg: Cardinal;
-    IndexProp: Word;
-    Part: Word;
-    Value: LongInt;
-    Result: LongInt;
+
+    case Integer of
+      0: (
+        IndexProp: Word;
+        Part: Word;
+        WParamFiller1: TDWordFiller;
+        //WParam: WPARAM;
+
+        Value: LPARAM; //LongInt;
+        //LParam: LPARAM;
+
+        Result: LRESULT);
+      1: (
+        WParamLo: Word;
+        WParamHi: Word;
+        WParamFiller: TDWordFiller;
+        LParamLo: Word;
+        LParamHi: Word;
+        LParamFiller: TDWordFiller;
+        ResultLo: Word;
+        ResultHi: Word;
+        ResultFiller: TDWordFiller);
+
+//    WParamFiller: TDWordFiller;
+//    IndexProp: Word;
+//    Part: Word;
+//
+//    //LParamFiller: TDWordFiller;
+//    Value: LPARAM; //LongInt;
+//
+//    //ResultFiller: TDWordFiller;
+//    Result: LRESULT;//LongInt;
+//
+////    procedure FromMsg(aMsg: TMessage);
+
   end;
 
 {$IFDEF DELPHI_2005_UP} {$REGION ' оординаты всех элементов окна относительно физических границ окна.'} {$ENDIF}
@@ -218,8 +281,8 @@ type
     fFont: hFont;
     fFontColor: Cardinal;
     fIcon: HIcon;
-    fIconSize: LongInt;
-    fIconIndex: LongInt;
+    fIconSize: NativeInt;
+    fIconIndex: NativeInt;
     fText: string;
     fCaption: string;
     fPercent: integer;
@@ -274,20 +337,20 @@ type
     procedure SetColor(const Value: Cardinal);
     procedure UpdateBrush(const Color: Cardinal; var Brush: HBrush);
     procedure SetBoundsRect(const Value: TRect);
+
 {$IFDEF DELPHI_2005_UP} {$REGION 'ƒл€ получени€ данных посылаетс€ сообщение содержащие адрес и размер данных.'} {$ENDIF}
     /// <summary>ƒл€ получени€ данных посылаетс€ сообщение содержащие адрес и размер данных.</summary>
     /// <remarks>ќбработчик сообщение помещает данные по указанному адресу ≈сли адрес и указатель нулевые, то выдел€етс€ пам€ть
     /// нужного размера, которую потом необходимо освободить</remarks>
 {$IFDEF DELPHI_2005_UP} {$ENDREGION} {$ENDIF}
-    procedure UMGetPropertyData(var Message: TUMPropertyData);
-      message UM_GetPropertyData;
+    procedure UMGetPropertyData(var Message: TUMPropertyData); message UM_GetPropertyData;
 {$IFDEF DELPHI_2005_UP} {$REGION 'ќтправка данных потоку окна.'} {$ENDIF}
     /// <summary>ќтправка данных потоку окна.</summary>
     /// <remarks>ѕосле отправки сообщени€ потоку, необходимо об€зательно дождатьс€ его обработки, дл€ этого можно использовать
     /// процедуру perform</remarks>
 {$IFDEF DELPHI_2005_UP} {$ENDREGION} {$ENDIF}
-    procedure UMSetPropertyValue(var Message: TUMPropertyValue);
-      message UM_SetPropertyValue;
+    procedure UMSetPropertyValue(var Message: TUMPropertyValue);  message UM_SetPropertyValue;
+
     procedure WMSHOWWINDOW(var Message: TWMSHOWWINDOW); message WM_SHOWWINDOW;
     procedure WMWINDOWPOSCHANGED(var Message: TWMWINDOWPOSCHANGED);
       message WM_WINDOWPOSCHANGED;
@@ -301,9 +364,9 @@ type
     procedure SetIcon(const Value: HIcon);
     procedure FreeIcon(var DestIcon: HIcon);
     procedure UpdateIcon(SourceIcon: HIcon; var DestIcon: HIcon);
-    procedure SetIconSize(const Value: LongInt);
+    procedure SetIconSize(const Value: NativeInt);
     procedure SetText(const Value: string);
-    procedure SetIconIndex(const Value: LongInt);
+    procedure SetIconIndex(const Value: NativeInt);
     procedure SetAlphaBlendValue(const Value: byte);
     procedure UpdateBlend(const WND: HWND; Value: byte);
     function GetText: string;
@@ -322,14 +385,13 @@ type
   protected
     procedure Stop;
     procedure Execute; override;
-    function MakeWParam(IndexProp, Part: Word): LongInt; // inline;
+    function MakeWParam(IndexProp, Part: Word): NativeUInt; // inline;
 {$IFDEF DELPHI_2005_UP} {$REGION 'ѕолучение данных из потока, в котором работает окно'} {$ENDIF}
     /// <summary>ѕолучение данных из потока, в котором работает окно</summary>
 {$IFDEF DELPHI_2005_UP} {$ENDREGION} {$ENDIF}
-    procedure GetPropertyData(IndexProp, Part: Word; var Buffer;
-      Size: LongInt); overload;
+    procedure GetPropertyData(IndexProp, Part: Word; var Buffer; Size: NativeInt); overload;
     procedure GetPropertyData(IndexProp, Part: Word; var S: string); overload;
-    procedure GetPropertyData(IndexProp, Part: Word; var I: LongInt); overload;
+    procedure GetPropertyData(IndexProp, Part: Word; var I: NativeInt); overload;
     procedure GetPropertyData(IndexProp, Part: Word; var B: boolean); overload;
 {$IFDEF DELPHI_2005_UP} {$REGION '≈сли при выполнении потока произошла кака€-то ошибка, то по окончании генерируем соответствующую ошибку'} {$ENDIF}
     /// <summary>≈сли при выполнении потока произошла кака€-то ошибка, то по окончании генерируем соответствующую
@@ -447,7 +509,10 @@ type
     /// <param name="WParam">ѕервый параметр сообщени€</param>
     /// <param name="LParam">¬торой параметр сообщени€</param>
 {$IFDEF DELPHI_2005_UP} {$ENDREGION} {$ENDIF}
-    function Perform(Msg: Cardinal; WParam, LParam: LongInt): LongInt;
+    // Alex ** (for 64 bit compatibility)
+    //function Perform(Msg: Cardinal; WParam, LParam: LongInt): LongInt;
+    function Perform(Msg: UINT; WParam: WPARAM; LParam: LPARAM): LRESULT;
+
 {$IFDEF DELPHI_2005_UP} {$REGION '¬иртуальный метод Change указывает, на то, что некотора€ часть окна изменилась и неплохо бы окошко перерисовать.'} {$ENDIF}
     /// <summary>¬иртуальный метод Change указывает, на то, что некотора€ часть окна изменилась и неплохо бы окошко
     /// перерисовать.</summary>
@@ -541,8 +606,8 @@ type
     property CaptionFontColor: Cardinal read fCaptionFontColor
       write SetCaptionFontColor;
     property Icon: HIcon read fIcon write SetIcon;
-    property IconIndex: LongInt read fIconIndex write SetIconIndex;
-    property IconSize: LongInt read fIconSize write SetIconSize;
+    property IconIndex: NativeInt read fIconIndex write SetIconIndex;
+    property IconSize: NativeInt read fIconSize write SetIconSize;
 
 {$IFDEF DELPHI_2005_UP} {$REGION '—тепень прозрачности окна. ≈сли 0, то свойство Visible становитс€ False'} {$ENDIF}
     /// <summary>—тепень прозрачности окна. ≈сли 0, то свойство Visible становитс€ False</summary>
@@ -680,21 +745,24 @@ end;
 {$IFDEF  WIN64}
 function Blend(Color1, Color2: Cardinal; BlendColor1: Byte): Cardinal;
 var
-  c1, c2: LongInt;
+  c1, c2: Integer;
   r, g, b, v1, v2: byte;
 begin
-  BlendColor1:= Round(2.55 * BlendColor1);
+//  Result := Color1;
+//  Exit;
+
+  BlendColor1:= Byte(Round(2.55 * BlendColor1));
   c1 := ColorToRGB(Color1);
   c2 := ColorToRGB(Color2);
   v1:= Byte(c1);
   v2:= Byte(c2);
-  r:= BlendColor1 * (v1 - v2) shr 8 + v2;
+  r:= Byte(BlendColor1 * (v1 - v2) shr 8 + v2);
   v1:= Byte(c1 shr 8);
   v2:= Byte(c2 shr 8);
-  g:= BlendColor1 * (v1 - v2) shr 8 + v2;
+  g:= Byte(BlendColor1 * (v1 - v2) shr 8 + v2);
   v1:= Byte(c1 shr 16);
   v2:= Byte(c2 shr 16);
-  b:= BlendColor1 * (v1 - v2) shr 8 + v2;
+  b:= Byte(BlendColor1 * (v1 - v2) shr 8 + v2);
   Result := (b shl 16) + (g shl 8) + r;
 end;
 {$ELSE}
@@ -1193,8 +1261,7 @@ begin
     if Message.Result = 0 then
       Dispatch(Message);
     if Message.Result = 0 then
-      Message.Result := DefWindowProc(fWND, Message.Msg, Message.WParam,
-        Message.LParam);
+      Message.Result := DefWindowProc(fWND, Message.Msg, Message.WParam, Message.LParam);
     fLastMessage := Message;
   finally
     fCallDispath := OldCallDispath;
@@ -1213,7 +1280,8 @@ begin
   end;
 end;
 
-function TThreadWindow.Perform(Msg: Cardinal; WParam, LParam: LongInt): LongInt;
+//function TThreadWindow.Perform(Msg: Cardinal; WParam, LParam: LongInt): LongInt;
+function TThreadWindow.Perform(Msg: UINT; WParam: WPARAM; LParam: LPARAM): LRESULT;
 var
   M: TMSG;
   procedure CallinThread;
@@ -1294,7 +1362,7 @@ end;
 
 procedure TThreadWindow.Change(var UpdateAreas: TUpdateAreas);
 var
-  Style: LongInt;
+  Style: NativeInt;
   S: string;
 begin
   if fPercent <> fOldPercent then
@@ -1459,7 +1527,7 @@ var
         InternalSetFont(fCaptionFont, 0, dSmCaptionFont);
       if fTimerFont = 0 then
         InternalSetFont(fTimerFont, 0, dTimeFont);
-      if LongInt(fIcon) = -1 then
+      if NativeInt(fIcon) = -1 then
         UpdateIcon(fIcon, fIcon);
       UpdateBoundsRect;
       UpdateBrush(fColor, fBrush);
@@ -1571,12 +1639,13 @@ begin
   end;
 end;
 
-function TThreadWindow.MakeWParam(IndexProp, Part: Word): LongInt;
+function TThreadWindow.MakeWParam(IndexProp, Part: Word): NativeUInt;
 begin
   Result := ((Part) shl (16)) or IndexProp;
 end;
 
 procedure TThreadWindow.UMGetPropertyData(var Message: TUMPropertyData);
+//procedure TThreadWindow.UMGetPropertyData(var m: TMessage);
   procedure CopyBuffer(var Buffer; Size: integer);
   begin
     if Message.Value^.DataSize <= 0 then
@@ -1591,7 +1660,9 @@ procedure TThreadWindow.UMGetPropertyData(var Message: TUMPropertyData);
 
 var
   R: TRect;
+  m: TMessage absolute Message;
 begin
+  //Message.FromMsg(m);
   if (Message.Value = nil) or
     (Message.Value^.RecordSize <> SizeOf(TPropertyData)) or
     ((Message.Value^.DataSize <= 0) and (Message.Value^.Data <> nil)) or
@@ -1600,6 +1671,7 @@ begin
     Message.Result := 0;
     exit;
   end;
+
   Message.Result := 1;
   case Message.IndexProp of
     IDVisible:
@@ -1655,13 +1727,21 @@ begin
   else
     Message.Result := 0;
   end;
+
+//  Message.ToMsg(m);
 end;
 
+// Alex ** 64 bit
 procedure TThreadWindow.UMSetPropertyValue(var Message: TUMPropertyValue);
+//procedure TThreadWindow.UMSetPropertyValue(var m: TMessage);
 var
   S: string;
-  I: LongInt;
+  I: NativeInt;
+//  Message: TUMPropertyValue;
+  m: TMessage absolute Message;
 begin
+//  m.Result := 1;
+//  Message.FromMsg(m);
   Message.Result := 1;
   I := Message.Value;
   case Message.IndexProp of
@@ -2190,10 +2270,9 @@ begin
   end;
 end;
 
-procedure TThreadWindow.GetPropertyData(IndexProp, Part: Word; var Buffer;
-  Size: LongInt);
+procedure TThreadWindow.GetPropertyData(IndexProp, Part: Word; var Buffer; Size: NativeInt);
 var
-  WParam: LongInt;
+  WParam: NativeUInt;
   Value: TPropertyData;
 begin
   WParam := ((Part) shl (16)) or IndexProp;
@@ -2204,12 +2283,12 @@ begin
   Value.Data := @Buffer;
   if Value.Data = nil then
     raise EThreadWindow.CreateFmt(ErrorParam, ['Buffer', 'nil']);
-  Perform(UM_GetPropertyData, WParam, LongInt(@Value));
+  Perform(UM_GetPropertyData, WParam, NativeInt(@Value));
 end;
 
 procedure TThreadWindow.GetPropertyData(IndexProp, Part: Word; var S: string);
 var
-  WParam: LongInt;
+  WParam: NativeUInt;
   Value: TPropertyData;
   Len: integer;
 begin
@@ -2217,7 +2296,7 @@ begin
   Value.RecordSize := SizeOf(Value);
   Value.DataSize := 0;
   Value.Data := nil;
-  Perform(UM_GetPropertyData, WParam, LongInt(@Value));
+  Perform(UM_GetPropertyData, WParam, NativeInt(@Value));
   S := '';
   if (Value.Data <> nil) then
   begin
@@ -2236,21 +2315,21 @@ begin
   end;
 end;
 
-procedure TThreadWindow.GetPropertyData(IndexProp, Part: Word; var I: integer);
+procedure TThreadWindow.GetPropertyData(IndexProp, Part: Word; var I: NativeInt);
 var
-  WParam: LongInt;
+  WParam: NativeUInt;
   Value: TPropertyData;
 begin
   WParam := ((Part) shl (16)) or IndexProp;
   Value.RecordSize := SizeOf(Value);
   Value.DataSize := SizeOf(I);
   Value.Data := @I;
-  Perform(UM_GetPropertyData, WParam, LongInt(@Value));
+  Perform(UM_GetPropertyData, WParam, NativeInt(@Value));
 end;
 
 procedure TThreadWindow.GetPropertyData(IndexProp, Part: Word; var B: boolean);
 var
-  I: LongInt;
+  I: NativeInt;
 begin
   GetPropertyData(IndexProp, Part, I);
   B := (I <> 0);
@@ -2258,7 +2337,7 @@ end;
 
 procedure TThreadWindow.SetText(const Value: string);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdText, 0), LongInt(PChar(Value)));
+  Perform(UM_SetPropertyValue, MakeWParam(IdText, 0), NativeInt(PChar(Value)));
 end;
 
 function TThreadWindow.GetText: string;
@@ -2271,12 +2350,12 @@ end;
 
 procedure TThreadWindow.SetCaption(const Value: string);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdText, 1), LongInt(PChar(Value)));
+  Perform(UM_SetPropertyValue, MakeWParam(IdText, 1), NativeInt(PChar(Value)));
 end;
 
 procedure TThreadWindow.SetCaptionColor(const Value: Cardinal);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdColor, 1), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdColor, 1), NativeInt(Value));
 end;
 
 function TThreadWindow.GetCaption: string;
@@ -2307,63 +2386,62 @@ end;
 
 procedure TThreadWindow.SetAlphaBlendValue(const Value: byte);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdAlphaBlendValue, 0),
-    LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdAlphaBlendValue, 0), NativeInt(Value));
 end;
 
 procedure TThreadWindow.SetBoundsRect(const Value: TRect);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdBoundsRect, 0), LongInt(@Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdBoundsRect, 0), NativeInt(@Value));
 end;
 
 procedure TThreadWindow.SetIcon(const Value: HIcon);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdIcon, 0), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdIcon, 0), NativeInt(Value));
 end;
 
-procedure TThreadWindow.SetIconIndex(const Value: LongInt);
+procedure TThreadWindow.SetIconIndex(const Value: NativeInt);
 begin
   Perform(UM_SetPropertyValue, MakeWParam(IdIconIndex, 0), Value);
 end;
 
-procedure TThreadWindow.SetIconSize(const Value: LongInt);
+procedure TThreadWindow.SetIconSize(const Value: NativeInt);
 begin
   Perform(UM_SetPropertyValue, MakeWParam(IdIconSize, 0), Value);
 end;
 
 procedure TThreadWindow.SetCanceled(const Value: boolean);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdCanceled, 0), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdCanceled, 0), NativeInt(Value));
 end;
 
 procedure TThreadWindow.SetColor(const Value: Cardinal);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdColor, 0), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdColor, 0), NativeInt(Value));
 end;
 
 procedure TThreadWindow.SetFont(const Value: hFont);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdFont, 0), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdFont, 0), NativeInt(Value));
 end;
 
 procedure TThreadWindow.SetCaptionFont(const Value: hFont);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdFont, 1), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdFont, 1), NativeInt(Value));
 end;
 
 procedure TThreadWindow.SetTimerFont(const Value: hFont);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdFont, 2), LongInt(PChar(Value)));
+  Perform(UM_SetPropertyValue, MakeWParam(IdFont, 2), NativeInt(PChar(Value)));
 end;
 
 procedure TThreadWindow.SetCaptionFontColor(const Value: Cardinal);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdFontColor, 1), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdFontColor, 1), NativeInt(Value));
 end;
 
 procedure TThreadWindow.SetFontColor(const Value: Cardinal);
 begin
-  Perform(UM_SetPropertyValue, MakeWParam(IdFontColor, 0), LongInt(Value));
+  Perform(UM_SetPropertyValue, MakeWParam(IdFontColor, 0), NativeInt(Value));
 end;
 
 procedure TThreadWindow.SetVisible(const Value: boolean);
@@ -2731,7 +2809,7 @@ var
 // –исуем иконку
   procedure PaintIcon;
   begin
-    if (fIcon <> 0) and (LongInt(fIcon) <> -1) and
+    if (fIcon <> 0) and (NativeInt(fIcon) <> -1) and
       (NotNullRect(fElementPos.IconRect)) then
       with fElementPos do
       begin
@@ -2869,6 +2947,36 @@ procedure TThreadWindow.WNDDestroy(var WND: HWND);
 begin
 
 end;
+
+//{ TUMPropertyData }
+//
+//procedure TUMPropertyData.FromMsg(aMsg: TMessage);
+//begin
+//  Msg := aMsg.Msg;
+//  IndexProp := aMsg.WParam and $FFFF;
+//  Part := (aMsg.WParam shr 16) and $FFFF;
+//  Value := PRopertyData(aMsg.LParam);
+//  Result := aMsg.Result;
+//end;
+//
+//procedure TUMPropertyData.ToMsg(var aMsg: TMessage);
+//begin
+//  aMsg.Msg := Msg;
+//  aMsg.WParam := MakeWParam(IndexProp, Part);
+//  aMsg.LParam := NativeInt(Value);
+//  aMsg.Result := Result;
+//end;
+//
+//{ TUMPropertyValue }
+//
+//procedure TUMPropertyValue.FromMsg(aMsg: TMessage);
+//begin
+//  Msg := aMsg.Msg;
+//  IndexProp := aMsg.WParam and $FFFF;
+//  Part := (aMsg.WParam shr 16) and $FFFF;
+//  Value := aMsg.LParam;
+//  Result := aMsg.Result;
+//end;
 
 initialization
 
