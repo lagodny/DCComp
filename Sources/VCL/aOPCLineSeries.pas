@@ -128,7 +128,10 @@ type
     // по времени расчитывает значение
     // возвращает True, если удалось расчитать значение
     function CalcSeriesValue(aTime: Double; var aValue: Double): Boolean;
+    function CalcSeriesValueAndDuration(aTime: Double; var aValue: Double; var aDuration: Double): Boolean;
+
     function GetSerieValueStr(aTime: Double): string;
+    function GetSerieValueAndDurationStr(aTime: Double; aShowOriginalValue: Boolean = False): string;
 
     procedure sAddXY(aRec: TXYS); overload;
     procedure sAddXY(x, y: double; s: double = 0); overload;
@@ -243,6 +246,66 @@ begin
   end;
 
 
+end;
+
+function TaOPCLineSeries.CalcSeriesValueAndDuration(aTime: Double; var aValue, aDuration: Double): Boolean;
+var
+  i: Integer;
+  i1,i2: Integer;
+begin
+  aDuration := 0;
+
+  i2 := -1;
+  // ищем врем€ больше заданного (возможен бинарный поиск, т.к. врем€ только возрастает)
+  for i := 0 to XValues.Count - 1 do
+  begin
+    // нашли точное соотверствие
+    if XValues[i] = aTime then
+    begin
+      aValue := YValues[i];
+      Result := True;
+      Exit;
+    end;
+    // нашли индекс точки с большим временем
+    if XValues[i] > aTime then
+    begin
+      i2 := i;
+      Break;
+    end;
+  end;
+
+  // все точки имеют ћ≈Ќ№Ў≈≈ врем€
+  if i2 = -1 then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  // все точки имеют ЅќЋ№Ў≈≈ врем€
+  if i2 = 0 then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  // мы что-то нашли
+  Result := True;
+  // результат где-то между i1 и i2
+  i1 := i2 - 1;
+  if (StairsOptions = []) or (YValues[i1] = YValues[i2]) then
+  begin
+    aValue := YValues[i1];
+    aDuration := XValues[i2]-XValues[i1];
+  end
+  else if (YValues[i1] <= YValues[i2]) and not (soIncrease in StairsOptions) then
+    aValue := YValues[i1]
+  else if (YValues[i1] >= YValues[i2]) and not (soDecrease in StairsOptions) then
+    aValue := YValues[i1]
+  else
+  begin
+    // y = y2 - (y2-y1)*(x2-x)/(x2-x1)
+    aValue := YValues[i2] - (YValues[i2]-YValues[i1])*(XValues[i2]-aTime)/(XValues[i2]-XValues[i1]);
+  end;
 end;
 
 procedure TaOPCLineSeries.CalcStatistic(aNewFunc: TStatisticalFunc; aNewPeriod: TDateTime);
@@ -814,6 +877,36 @@ begin
   end;
 
   Result := FSensorUnitName + h;
+end;
+
+function TaOPCLineSeries.GetSerieValueAndDurationStr(aTime: Double; aShowOriginalValue: Boolean): string;
+var
+  v, t: Double;
+begin
+  if not CalcSeriesValueAndDuration(aTime, v, t) then
+    Result := ''
+  else
+  begin
+    if Assigned(LookupList) then
+    begin
+      LookupList.Lookup(FloatToStr(v), Result);
+      if aShowOriginalValue then
+        Result := FloatToStr(v) + ' : ' + Result;
+    end
+    else
+      Result := FormatValue(v, DisplayFormat);
+  end;
+
+  if (Result <> '') then
+  begin
+    if (SensorUnitName <> '') then
+      Result := Result + ' ' + SensorUnitName;
+
+    if t <> 0 then
+      Result := Result + ' : ' + DeltaTimeToHuman(t);
+  end;
+
+  Result := Trim(Result);
 end;
 
 function TaOPCLineSeries.GetSerieValueStr(aTime: Double): string;

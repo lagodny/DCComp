@@ -5,6 +5,7 @@ object aOPCCinemaControl: TaOPCCinemaControl
   Height = 71
   TabOrder = 0
   TabStop = True
+  PixelsPerInch = 96
   object Panel: TPanel
     Left = 0
     Top = 0

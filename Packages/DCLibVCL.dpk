@@ -47,10 +47,11 @@ requires
   DCLib,
   tb2k,
   SpTBXLibDsgn,
-  TeePro9,
-  TeeUI9,
-  Tee9,
-  TeeLanguage9;
+  TeePro928,
+  TeeUI928,
+  Tee928,
+  TeeLanguage928,
+  JvCore;
 
 contains
   VCL.DCRegister in '..\Sources\VCL\VCL.DCRegister.pas',

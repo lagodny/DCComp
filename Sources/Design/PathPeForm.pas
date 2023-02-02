@@ -1,4 +1,4 @@
-unit PathPeForm;
+п»їunit PathPeForm;
 
 interface
 
@@ -84,7 +84,7 @@ begin
       for i := 0 to aList.Count - 1 do
       begin
         CurrStr := GetBufStart(PChar(aList[i]), ALevel);
-        // строим дерево
+        // СЃС‚СЂРѕРёРј РґРµСЂРµРІРѕ
         if ANode = nil then
           ANode := Owner.AddChild(nil, ExtractData(CurrStr))
         else if ANode.Level = ALevel then
@@ -109,7 +109,7 @@ begin
           NodeAtID := ANode;
 
         ANode.Data := Data;
-        if (Data.Strings[1] = '1') or (Data.Count = 2) then // это группа
+        if (Data.Strings[1] = '1') or (Data.Count = 2) then // СЌС‚Рѕ РіСЂСѓРїРїР°
           ANode.StateIndex := 1
         else
         begin
@@ -147,16 +147,16 @@ begin
   Data := TStringList(Node.Data);
   eID.Caption := Data.Strings[0];
 
-  if Data.Strings[1] = '0' then  // это датчик
+  if Data.Strings[1] = '0' then  // СЌС‚Рѕ РґР°С‚С‡РёРє
   begin
-    eKind.Caption := 'Датчик';
+    eKind.Caption := 'Р”Р°С‚С‡РёРє';
     eDisplayFormat.Caption := Data.Strings[2];
     eUnitName.Caption := Data.Strings[3];
     eSensorKind.Caption := Data.Strings[4];
     eStairs.Caption := Data.Strings[5];
   end
   else
-    eKind.Caption := 'Группа';
+    eKind.Caption := 'Р“СЂСѓРїРїР°';
 
   gbSensorProperty.Visible := (Data.Strings[1]='0');
 end;

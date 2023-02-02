@@ -1,16 +1,16 @@
 inherited ChartFrame: TChartFrame
-  Width = 570
+  Width = 881
   Height = 283
   ParentShowHint = False
   ShowHint = True
   Touch.GestureManager = GestureManager1
-  ExplicitWidth = 570
+  ExplicitWidth = 881
   ExplicitHeight = 283
   PixelsPerInch = 96
   object Chart: TaOPCChart
     Left = 9
     Top = 26
-    Width = 552
+    Width = 863
     Height = 248
     HelpContext = 1200
     BackImage.Mode = pbmTile
@@ -158,10 +158,7 @@ inherited ChartFrame: TChartFrame
     Interval.TimeShiftUnit = tsuHour
     Interval.EnableTime = True
     ShowZero = True
-    ExplicitLeft = 6
-    ExplicitTop = 17
-    ExplicitWidth = 558
-    ExplicitHeight = 260
+    ExplicitWidth = 552
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = 0
     object Series1: TLineSeries
@@ -178,11 +175,12 @@ inherited ChartFrame: TChartFrame
   object tbDockBottom: TSpTBXDock
     Left = 0
     Top = 274
-    Width = 570
+    Width = 881
     Height = 9
     PopupMenu = SpTBXPopupMenu1
     Position = dpBottom
     OnRequestDock = tbDockTopRequestDock
+    ExplicitWidth = 570
   end
   object tbDockLeft: TSpTBXDock
     Left = 0
@@ -192,27 +190,25 @@ inherited ChartFrame: TChartFrame
     PopupMenu = SpTBXPopupMenu1
     Position = dpLeft
     OnRequestDock = tbDockTopRequestDock
-    ExplicitTop = 17
-    ExplicitHeight = 260
   end
   object tbDockRight: TSpTBXDock
-    Left = 561
+    Left = 872
     Top = 26
     Width = 9
     Height = 248
     PopupMenu = SpTBXPopupMenu1
     Position = dpRight
     OnRequestDock = tbDockTopRequestDock
-    ExplicitTop = 17
-    ExplicitHeight = 260
+    ExplicitLeft = 561
   end
   object tbDockTop: TSpTBXDock
     Left = 0
     Top = 0
-    Width = 570
+    Width = 881
     Height = 26
     PopupMenu = SpTBXPopupMenu1
     OnRequestDock = tbDockTopRequestDock
+    ExplicitWidth = 570
     object tbChartActions: TSpTBXToolbar
       Left = 0
       Top = 0
@@ -334,7 +330,7 @@ inherited ChartFrame: TChartFrame
       end
     end
     object tbSeriesPopup: TSpTBXToolbar
-      Left = 425
+      Left = 517
       Top = 0
       DockPos = 425
       TabOrder = 1
@@ -498,7 +494,6 @@ inherited ChartFrame: TChartFrame
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1088#1077#1076#1072#1082#1090#1086#1088' '#1075#1088#1072#1092#1080#1082#1086#1074' Ctrl + E'
       ImageIndex = 49
       ShortCut = 16453
-      Visible = False
       OnExecute = aEditorExecute
     end
     object aSerieScale: TAction
@@ -650,6 +645,17 @@ inherited ChartFrame: TChartFrame
     object SpTBXItem22: TSpTBXItem
       Action = a3D
     end
+    object smiLineWidth: TSpTBXSubmenuItem
+      Caption = #1058#1086#1083#1097#1080#1085#1072' '#1075#1085#1072#1092#1080#1082#1086#1074
+      object miThin: TSpTBXItem
+        Caption = #1058#1086#1085#1082#1080#1081
+        OnClick = miThinClick
+      end
+      object miThick: TSpTBXItem
+        Caption = #1058#1086#1083#1089#1090#1099#1081
+        OnClick = miThickClick
+      end
+    end
     object SpTBXItem23: TSpTBXItem
       Action = aLegend
     end
@@ -665,6 +671,7 @@ inherited ChartFrame: TChartFrame
     end
     object SpTBXItem10: TSpTBXItem
       Action = aAllClient
+      Visible = False
     end
     object SpTBXSeparatorItem20: TSpTBXSeparatorItem
     end

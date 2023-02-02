@@ -1,4 +1,4 @@
-unit FMX.DCLineSeries;
+п»їunit FMX.DCLineSeries;
 
 interface
 
@@ -122,7 +122,7 @@ type
       SetStateLookupList;
     property OPCSource: TaCustomOPCSource read FOPCSource write SetOPCSource;
     property SensorUnitName: string read GetSensorUnitName write SetSensorUnitName;
-    // порядок дифференциала (1-интеграл,0-норамльное значение,-1-скорость, -2-ускорение...)
+    // РїРѕСЂСЏРґРѕРє РґРёС„С„РµСЂРµРЅС†РёР°Р»Р° (1-РёРЅС‚РµРіСЂР°Р»,0-РЅРѕСЂР°РјР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ,-1-СЃРєРѕСЂРѕСЃС‚СЊ, -2-СѓСЃРєРѕСЂРµРЅРёРµ...)
     property DifferentialOrder: integer read FDifferentialOrder write
       SetDifferentialOrder stored false;
     property IsState: boolean read FIsState write SetIsState default false;
@@ -181,20 +181,20 @@ begin
     if XValues.Count > 1 then
     begin
 
-      // если были ошибки, добавляем новую точку
+      // РµСЃР»Рё Р±С‹Р»Рё РѕС€РёР±РєРё, РґРѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ С‚РѕС‡РєСѓ
       if (FRec1.s <> Rec.s) or (FRec2.s <> Rec.s) then
       begin
         sAddXY(Rec)
       end
 
-      // сдвигаем предыдущую точку, если последние две и новая одинаковы
+      // СЃРґРІРёРіР°РµРј РїСЂРµРґС‹РґСѓС‰СѓСЋ С‚РѕС‡РєСѓ, РµСЃР»Рё РїРѕСЃР»РµРґРЅРёРµ РґРІРµ Рё РЅРѕРІР°СЏ РѕРґРёРЅР°РєРѕРІС‹
       else if (FRec1.y = Rec.y) and (FRec2.y = Rec.y) then
       begin
         XValues.Value[XValues.Count - 1] := Rec.x;
         FRec1 := Rec;
       end
 
-      // проверяем возможность линейной апроксимации предыдущей точки
+      // РїСЂРѕРІРµСЂСЏРµРј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р»РёРЅРµР№РЅРѕР№ Р°РїСЂРѕРєСЃРёРјР°С†РёРё РїСЂРµРґС‹РґСѓС‰РµР№ С‚РѕС‡РєРё
       else if (FRec1.x <> FRec2.x) then
       begin
         tmpY := FRec2.y +
@@ -213,7 +213,7 @@ begin
       else
         sAddXY(Rec);
 
-      // удаляем самую левую точку, если это возможно и необходимо
+      // СѓРґР°Р»СЏРµРј СЃР°РјСѓСЋ Р»РµРІСѓСЋ С‚РѕС‡РєСѓ, РµСЃР»Рё СЌС‚Рѕ РІРѕР·РјРѕР¶РЅРѕ Рё РЅРµРѕР±С…РѕРґРёРјРѕ
       if (XValues.Count > 3) and (XValue[1] < Interval.Date1) then
         Delete(0);
 
@@ -221,7 +221,7 @@ begin
     else
       sAddXY(Rec);
 
-    // если ось времени в нормальном состоянии, то обновим ее шкалу
+    // РµСЃР»Рё РѕСЃСЊ РІСЂРµРјРµРЅРё РІ РЅРѕСЂРјР°Р»СЊРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё, С‚Рѕ РѕР±РЅРѕРІРёРј РµРµ С€РєР°Р»Сѓ
     if not ParentChart.Zoomed then
     begin
       if (Interval.Kind = ikShift) then
@@ -287,7 +287,7 @@ procedure TaDCLineSeries.eAddXY(x, y: double);
   end;
 
 begin
-  if (XValues.Count > 0) then // это не первая точка в графике
+  if (XValues.Count > 0) then // СЌС‚Рѕ РЅРµ РїРµСЂРІР°СЏ С‚РѕС‡РєР° РІ РіСЂР°С„РёРєРµ
     AddXY(x, FRec1.y / Scale + Shift, CalcLabel(FRec1.y), Color);
 
   AddXY(x, y / Scale + Shift, CalcLabel(y), Color);
@@ -457,20 +457,20 @@ begin
     Clear;
     Stream := TMemoryStream.Create;
     try
-      // определимся с периодом выборки
+      // РѕРїСЂРµРґРµР»РёРјСЃСЏ СЃ РїРµСЂРёРѕРґРѕРј РІС‹Р±РѕСЂРєРё
       aDate1 := ParentChart.BottomAxis.Minimum;
       if ToNow then
         aDate2 := 0
       else
         aDate2 := ParentChart.BottomAxis.Maximum;
 
-      // выбираем показания и состояния датчика за период
+      // РІС‹Р±РёСЂР°РµРј РїРѕРєР°Р·Р°РЅРёСЏ Рё СЃРѕСЃС‚РѕСЏРЅРёСЏ РґР°С‚С‡РёРєР° Р·Р° РїРµСЂРёРѕРґ
       if ShowState then
         aOPCSource.FillHistory(Stream, PhysID, aDate1, aDate2, [dkValue, dkState])
       else
         aOPCSource.FillHistory(Stream, PhysID, aDate1, aDate2, [dkValue]);
 
-      // если нужны исходные данне, без преобразований, то загружаем коэффициенты и таблицу преобразований
+      // РµСЃР»Рё РЅСѓР¶РЅС‹ РёСЃС…РѕРґРЅС‹Рµ РґР°РЅРЅРµ, Р±РµР· РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№, С‚Рѕ Р·Р°РіСЂСѓР¶Р°РµРј РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ Рё С‚Р°Р±Р»РёС†Сѓ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№
       if aSourceValues then
       begin
         sl := TStringList.Create;
@@ -497,22 +497,22 @@ begin
       aStateValue := 0;
       if Stream.Size > 0 then
       begin
-        Stream.Read(aMoment, SizeOf(aMoment)); // момент времени
-        Stream.Read(readV, SizeOf(readV)); // значение
+        Stream.Read(aMoment, SizeOf(aMoment)); // РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
+        Stream.Read(readV, SizeOf(readV)); // Р·РЅР°С‡РµРЅРёРµ
         aValue2 := Extended(readV);
         if aSourceValues then
           aValue2 := BackTransform(aValue2);
 
         if ShowState then
         begin
-          Stream.Read(readV, SizeOf(readV)); // состояние
+          Stream.Read(readV, SizeOf(readV)); // СЃРѕСЃС‚РѕСЏРЅРёРµ
           aStateValue := Extended(readV);
         end;
 
         sAddXY(aMoment, aValue2, aStateValue);
         if Stream.Position = Stream.Size then
         begin
-          // если у нас всего одно значение, добавим еще парочку точек
+          // РµСЃР»Рё Сѓ РЅР°СЃ РІСЃРµРіРѕ РѕРґРЅРѕ Р·РЅР°С‡РµРЅРёРµ, РґРѕР±Р°РІРёРј РµС‰Рµ РїР°СЂРѕС‡РєСѓ С‚РѕС‡РµРє
           sAddXY(aDate1, aValue2, aStateValue);
           sAddXY(IfThen(aDate2 = 0, Now, aDate2), aValue2, aStateValue);
         end
@@ -522,15 +522,15 @@ begin
           begin
             aValue1 := aValue2;
 
-            Stream.Read(aMoment, SizeOf(aMoment)); // момент времени
-            Stream.Read(readV, SizeOf(readV)); // значение
+            Stream.Read(aMoment, SizeOf(aMoment)); // РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
+            Stream.Read(readV, SizeOf(readV)); // Р·РЅР°С‡РµРЅРёРµ
             aValue2 := Extended(readV);
 
             if aSourceValues then
               aValue2 := BackTransform(aValue2);
             if ShowState then
             begin
-              Stream.Read(readV, SizeOf(readV)); // состояние
+              Stream.Read(readV, SizeOf(readV)); // СЃРѕСЃС‚РѕСЏРЅРёРµ
               aStateValue := Extended(readV);
             end;
 
@@ -554,7 +554,7 @@ begin
       //TChart(ParentChart).AutoRepaint := true;
       //TChart(ParentChart).Repaint;
     end;
-    //OPCLog.WriteToLog(IntToStr(XValues.Count) +' точек за ' + IntToStr(GetTickCount - tc));
+    //OPCLog.WriteToLog(IntToStr(XValues.Count) +' С‚РѕС‡РµРє Р·Р° ' + IntToStr(GetTickCount - tc));
   end;
 end;
 
@@ -592,7 +592,7 @@ var
 begin
   h := '';
   for i := 1 to Abs(DifferentialOrder) do
-    h := h + 'ч*';
+    h := h + 'С‡*';
 
   if h <> '' then
   begin
@@ -690,27 +690,27 @@ var
     else
       aLookupList := LookupList;
 
-    if aStateValue = 0 then // нет ошибок
+    if aStateValue = 0 then // РЅРµС‚ РѕС€РёР±РѕРє
     begin
-      // если есть справочник, то поищем в нём
+      // РµСЃР»Рё РµСЃС‚СЊ СЃРїСЂР°РІРѕС‡РЅРёРє, С‚Рѕ РїРѕРёС‰РµРј РІ РЅС‘Рј
       if Assigned(aLookupList) then
       begin
-        // поищем в справочнике
+        // РїРѕРёС‰РµРј РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ
         aIndex := aLookupList.Items.IndexOfName(Trim(FloatToStr(aValue)));
         if aIndex >= 0 then
-          // нешли - берём из справочника
+          // РЅРµС€Р»Рё - Р±РµСЂС‘Рј РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°
           Result := aLookupList.Items.ValueFromIndex[aIndex]
         else
-          // покажем, что не нашли
+          // РїРѕРєР°Р¶РµРј, С‡С‚Рѕ РЅРµ РЅР°С€Р»Рё
           Result := Format('unknow: %d', [Trunc(aValue)]);
       end
       else
-        // преобразуем исходное значение согласно формату отображения
+        // РїСЂРµРѕР±СЂР°Р·СѓРµРј РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕРіР»Р°СЃРЅРѕ С„РѕСЂРјР°С‚Сѓ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
         Result := FormatValue(aValue, DisplayFormat);
     end
-    else // есть ошибки
+    else // РµСЃС‚СЊ РѕС€РёР±РєРё
     begin
-      Result := 'не задан справочник ошибок';
+      Result := 'РЅРµ Р·Р°РґР°РЅ СЃРїСЂР°РІРѕС‡РЅРёРє РѕС€РёР±РѕРє';
 
       aStates := StateLookupList;
       if not Assigned(aStates) and Assigned(OPCSource) then
@@ -721,22 +721,22 @@ var
     end;
   end;
 begin
-  if (XValues.Count > 0) // это не первая точка в графике
+  if (XValues.Count > 0) // СЌС‚Рѕ РЅРµ РїРµСЂРІР°СЏ С‚РѕС‡РєР° РІ РіСЂР°С„РёРєРµ
     and (
-      // это график состояний, всегда добавляем точку окончания
+      // СЌС‚Рѕ РіСЂР°С„РёРє СЃРѕСЃС‚РѕСЏРЅРёР№, РІСЃРµРіРґР° РґРѕР±Р°РІР»СЏРµРј С‚РѕС‡РєСѓ РѕРєРѕРЅС‡Р°РЅРёСЏ
       (IsState and (FRec1.s <> aRec.s)) or
-      // или это обычный график, тогда проверяем что это "лесенка"
+      // РёР»Рё СЌС‚Рѕ РѕР±С‹С‡РЅС‹Р№ РіСЂР°С„РёРє, С‚РѕРіРґР° РїСЂРѕРІРµСЂСЏРµРј С‡С‚Рѕ СЌС‚Рѕ "Р»РµСЃРµРЅРєР°"
       ((FRec1.y <> aRec.y) and not (
         ((FRec1.y < aRec.y) and (soIncrease in StairsOptions)) or
         ((FRec1.y > aRec.y) and (soDecrease in StairsOptions)))
       )) then
   begin
-    // добавляем  СТАРОЕ ЗНАЧЕНИЕ на НОВЫЙ МОМЕНТ времени, с целью
-    // показать длительность действия этого значения
+    // РґРѕР±Р°РІР»СЏРµРј  РЎРўРђР РћР• Р—РќРђР§Р•РќРР• РЅР° РќРћР’Р«Р™ РњРћРњР•РќРў РІСЂРµРјРµРЅРё, СЃ С†РµР»СЊСЋ
+    // РїРѕРєР°Р·Р°С‚СЊ РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ РґРµР№СЃС‚РІРёСЏ СЌС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
     AddXY(aRec.x, FRec1.y / Scale + Shift, CalcLabel(FRec1.y, FRec1.s), CalcColor0);
   end;
 
-  // добавляем новое значение
+  // РґРѕР±Р°РІР»СЏРµРј РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ
   AddXY(aRec.x, aRec.y / Scale + Shift, CalcLabel(aRec.y, aRec.s), CalcColor);
   FRec2 := FRec1;
   FRec1 := aRec;
@@ -807,7 +807,7 @@ begin
     tmpName := Name;
 
   if FIsState then
-    tmpName := tmpName + '(состояние)';
+    tmpName := tmpName + '(СЃРѕСЃС‚РѕСЏРЅРёРµ)';
 
   if DifferentialOrder < 0 then
   begin
@@ -822,7 +822,7 @@ begin
   end
   else if DifferentialOrder > 0 then
   begin
-    tmpName := Format('%s (интеграл %d-го порядка)', [tmpName,
+    tmpName := Format('%s (РёРЅС‚РµРіСЂР°Р» %d-РіРѕ РїРѕСЂСЏРґРєР°)', [tmpName,
       FDifferentialOrder]);
   end;
 
@@ -912,9 +912,9 @@ var
   xy: TXYArray;
   aOrder: integer;
 
-  // продифференцируем массив XY
-  // результат помещаем в этот же массив, последние aOrder
-  // значений в дальнейшем не используем
+  // РїСЂРѕРґРёС„С„РµСЂРµРЅС†РёСЂСѓРµРј РјР°СЃСЃРёРІ XY
+  // СЂРµР·СѓР»СЊС‚Р°С‚ РїРѕРјРµС‰Р°РµРј РІ СЌС‚РѕС‚ Р¶Рµ РјР°СЃСЃРёРІ, РїРѕСЃР»РµРґРЅРёРµ aOrder
+  // Р·РЅР°С‡РµРЅРёР№ РІ РґР°Р»СЊРЅРµР№С€РµРј РЅРµ РёСЃРїРѕР»СЊР·СѓРµРј
   procedure Differential;
   var
     i: integer;
@@ -943,9 +943,9 @@ var
     end;
   end;
 
-  // проинтегрируем массив XY
-  // результат помещаем в этот же массив, последние aOrder
-  // значений в дальнейшем не используем
+  // РїСЂРѕРёРЅС‚РµРіСЂРёСЂСѓРµРј РјР°СЃСЃРёРІ XY
+  // СЂРµР·СѓР»СЊС‚Р°С‚ РїРѕРјРµС‰Р°РµРј РІ СЌС‚РѕС‚ Р¶Рµ РјР°СЃСЃРёРІ, РїРѕСЃР»РµРґРЅРёРµ aOrder
+  // Р·РЅР°С‡РµРЅРёР№ РІ РґР°Р»СЊРЅРµР№С€РµРј РЅРµ РёСЃРїРѕР»СЊР·СѓРµРј
   procedure Integral;
   var
     i: integer;
@@ -979,12 +979,12 @@ begin
   if (FDifferentialOrder = Value) then
     exit;
 
-  // если были нормальные показания, то сохраним их и вид графика
+  // РµСЃР»Рё Р±С‹Р»Рё РЅРѕСЂРјР°Р»СЊРЅС‹Рµ РїРѕРєР°Р·Р°РЅРёСЏ, С‚Рѕ СЃРѕС…СЂР°РЅРёРј РёС… Рё РІРёРґ РіСЂР°С„РёРєР°
   if FDifferentialOrder = 0 then
   begin
-    //FSaveStairs := Stairs; // сохраняем вид графика
+    //FSaveStairs := Stairs; // СЃРѕС…СЂР°РЅСЏРµРј РІРёРґ РіСЂР°С„РёРєР°
     SetLength(FOriginalXY, XValues.Count);
-    for i := 0 to XValues.Count - 1 do // сохраняем показания
+    for i := 0 to XValues.Count - 1 do // СЃРѕС…СЂР°РЅСЏРµРј РїРѕРєР°Р·Р°РЅРёСЏ
     begin
       FOriginalXY[i].x := XValue[i];
       FOriginalXY[i].y := YValue[i];
@@ -992,14 +992,14 @@ begin
   end;
 
   Clear;
-  if Value = 0 then //мы вернулись к нормальным показаниям
+  if Value = 0 then //РјС‹ РІРµСЂРЅСѓР»РёСЃСЊ Рє РЅРѕСЂРјР°Р»СЊРЅС‹Рј РїРѕРєР°Р·Р°РЅРёСЏРј
   begin
     Stairs := false;
     for i := Low(FOriginalXY) to High(FOriginalXY) do
       sAddXY(FOriginalXY[i].x, FOriginalXY[i].y);
 
-    //Stairs := FSaveStairs;    // - вернемся к исходному виду графика
-    SetLength(FOriginalXY, 0); // - очистим массив (он нам уже не нужен)
+    //Stairs := FSaveStairs;    // - РІРµСЂРЅРµРјСЃСЏ Рє РёСЃС…РѕРґРЅРѕРјСѓ РІРёРґСѓ РіСЂР°С„РёРєР°
+    SetLength(FOriginalXY, 0); // - РѕС‡РёСЃС‚РёРј РјР°СЃСЃРёРІ (РѕРЅ РЅР°Рј СѓР¶Рµ РЅРµ РЅСѓР¶РµРЅ)
   end
   else
   begin
@@ -1012,7 +1012,7 @@ begin
 
     aOrder := Abs(Value);
     for i := 1 to aOrder do
-      if Value > 0 then //интеграл
+      if Value > 0 then //РёРЅС‚РµРіСЂР°Р»
         Integral
       else
         Differential;
@@ -1047,7 +1047,7 @@ begin
 end;
 
 initialization
-  TeeMsg_GalleryOPCLine := 'OPC линия';
+  TeeMsg_GalleryOPCLine := 'OPC Р»РёРЅРёСЏ';
 
   //  RegisterTeeSeries(TaDCLineSeries,TeeMsg_GalleryOPCLine,'OPC',1);//@TeeMsg_GalleryOPCLine);
   //RegisterTeeSeries(TaDCLineSeries, @TeeMsg_GalleryOPCLine);

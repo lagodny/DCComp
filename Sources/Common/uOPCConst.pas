@@ -1,9 +1,9 @@
-unit uOPCConst;
+п»їunit uOPCConst;
 
 interface
 
 const
-// имена свойств датчика
+// РёРјРµРЅР° СЃРІРѕР№СЃС‚РІ РґР°С‚С‡РёРєР°
   sSensorID = 'ID';
   sSensorName = 'Name';
   sSensorNameEn = 'NameEn';

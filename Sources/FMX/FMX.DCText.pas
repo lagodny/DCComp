@@ -1,4 +1,4 @@
-unit FMX.DCText;
+﻿unit FMX.DCText;
 
 interface
 

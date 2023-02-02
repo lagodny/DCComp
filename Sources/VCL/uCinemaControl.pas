@@ -441,7 +441,7 @@ begin
   try
     aInterval.Kind := ikInterval;
     aInterval.SetInterval(OPCCinema.Date1, OPCCinema.Date2);
-    Result := ShowIntervalForm(aInterval, 0);
+    Result := ShowIntervalForm(aInterval, 0, GetParentForm(Self));
     if Result then
     begin
       OPCCinema.Date1 := aInterval.Date1;

@@ -1,4 +1,4 @@
-unit FMX.DCChart;
+п»їunit FMX.DCChart;
 
 interface
 
@@ -73,7 +73,7 @@ begin
 
   FRealTime  := false;
   FShowState := true;
-  //FVisibleInterval := 1/2/24; //пол часа
+  //FVisibleInterval := 1/2/24; //РїРѕР» С‡Р°СЃР°
   BottomAxis.LabelStyle := talValue;
   BottomAxis.AutomaticMaximum := false;
   BottomAxis.AutomaticMinimum := false;
@@ -274,7 +274,7 @@ begin
 
   aZoomRect := ChartRect;
 
-  // отработаем случай с перестановкой осей
+  // РѕС‚СЂР°Р±РѕС‚Р°РµРј СЃР»СѓС‡Р°Р№ СЃ РїРµСЂРµСЃС‚Р°РЅРѕРІРєРѕР№ РѕСЃРµР№
   if (aVertAxis.PositionUnits = muPercent) then
   begin
     aZoomRect.Top := ChartRect.Top + Round(0.01 * ChartHeight * aVertAxis.StartPosition);

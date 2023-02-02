@@ -4,8 +4,9 @@ interface
 
 uses
   Classes, Windows, SysUtils, Types,
+  VCL.Controls,
   aOPCSource, aOPCLineSeries, uChoiceIntervalExt, uOPCInterval,
-  VCLTee.Chart, VCLTee.TeEngine;
+  VCLTee.Chart, VCLTee.TeEngine, VCLTee.TeCanvas;
 
 type
   TZoomKind = (zsTime, zsValue);
@@ -19,6 +20,7 @@ type
     FShowZero: Boolean;
     FInterval: TOPCInterval;
     FOnIntervalChanged: TNotifyEvent;
+    FZoomFactor: Double;
     function GetAutoScaleY: boolean;
     procedure SetAutoScaleY(const Value: boolean);
 //    procedure SetVisibleInterval(const Value: TDateTime);
@@ -27,7 +29,10 @@ type
     procedure SetShowState(const Value: boolean);
     procedure SetShowZero(const Value: Boolean);
     procedure SetInterval(const Value: TOPCInterval);
+    procedure SetZoomFactor(const Value: Double);
   protected
+    procedure ProcessMouseWheel(aCoef: Double);
+
     function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     //procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -38,6 +43,7 @@ type
 
     procedure ZoomByPoint(aPoint: TPoint; aZoomFactor: Extended; aZoomSet: TZoomSet);
   published
+    property ZoomFactor: Double read FZoomFactor write SetZoomFactor;
     property ShowState: boolean read FShowState write SetShowState default true;
     property AutoScaleY : boolean read GetAutoScaleY write SetAutoScaleY default true;
     property RealTime : Boolean read GetRealTime write SetRealTime default false;
@@ -74,6 +80,8 @@ begin
   BottomAxis.AutomaticMaximum := false;
   BottomAxis.AutomaticMinimum := false;
   BottomAxis.SetMinMax(Interval.Date1, Interval.Date2);
+
+  FZoomFactor := 1.5;
 end;
 
 destructor TaOPCChart.Destroy;
@@ -92,48 +100,53 @@ end;
 
 function TaOPCChart.DoMouseWheelDown(Shift: TShiftState;
   MousePos: TPoint): Boolean;
-var
-  aZoomSet: TZoomSet;
-  //aCtrlDown: boolean;
 begin
-  result:=inherited DoMouseWheelDown(Shift,MousePos);
-
-//  if not TeeUseMouseWheel then
-  if Panning.MouseWheel = pmwNone then
-  begin
-    aZoomSet := [];
-    if (GetAsyncKeyState(VK_CONTROL) and $8000) <> 0 then
-      aZoomSet := [zsTime, zsValue]
-    else if (GetAsyncKeyState(VK_SHIFT) and $8000) <> 0 then
-      aZoomSet := [zsValue]
-    else
-      aZoomSet := [zsTime];
-
-    ZoomByPoint(ScreenToClient(MousePos), CZoomFactor, aZoomSet);
-  end;
+  ProcessMouseWheel(ZoomFactor);
 end;
+//var
+//  aZoomSet: TZoomSet;
+//  //aCtrlDown: boolean;
+//begin
+//  result:=inherited DoMouseWheelDown(Shift,MousePos);
+//
+////  if not TeeUseMouseWheel then
+//  if Panning.MouseWheel = pmwNone then
+//  begin
+//    aZoomSet := [];
+//    if (GetAsyncKeyState(VK_CONTROL) and $8000) <> 0 then
+//      aZoomSet := [zsTime, zsValue]
+//    else if (GetAsyncKeyState(VK_SHIFT) and $8000) <> 0 then
+//      aZoomSet := [zsValue]
+//    else
+//      aZoomSet := [zsTime];
+//
+//    ZoomByPoint(ScreenToClient(MousePos), CZoomFactor, aZoomSet);
+//  end;
+//end;
 
-function TaOPCChart.DoMouseWheelUp(Shift: TShiftState;
-  MousePos: TPoint): Boolean;
-var
-  aZoomSet: TZoomSet;
+function TaOPCChart.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean;
 begin
-  result:=inherited DoMouseWheelUp(Shift,MousePos);
-
-//  if not TeeUseMouseWheel then
-  if Panning.MouseWheel = pmwNone then
-  begin
-    aZoomSet := [];
-    if (GetAsyncKeyState(VK_CONTROL) and $8000) <> 0 then
-      aZoomSet := [zsTime, zsValue]
-    else if (GetAsyncKeyState(VK_SHIFT) and $8000) <> 0 then
-      aZoomSet := [zsValue]
-    else
-      aZoomSet := [zsTime];
-
-    ZoomByPoint(ScreenToClient(MousePos), 1/CZoomFactor, aZoomSet);
-  end;
+  ProcessMouseWheel(1/ZoomFactor);
 end;
+//var
+//  aZoomSet: TZoomSet;
+//begin
+//  result:=inherited DoMouseWheelUp(Shift,MousePos);
+//
+////  if not TeeUseMouseWheel then
+//  if Panning.MouseWheel = pmwNone then
+//  begin
+//    aZoomSet := [];
+//    if (GetAsyncKeyState(VK_CONTROL) and $8000) <> 0 then
+//      aZoomSet := [zsTime, zsValue]
+//    else if (GetAsyncKeyState(VK_SHIFT) and $8000) <> 0 then
+//      aZoomSet := [zsValue]
+//    else
+//      aZoomSet := [zsTime];
+//
+//    ZoomByPoint(ScreenToClient(MousePos), 1/CZoomFactor, aZoomSet);
+//  end;
+//end;
 
 function TaOPCChart.GetAutoScaleY: boolean;
 begin
@@ -143,6 +156,34 @@ end;
 function TaOPCChart.GetRealTime: Boolean;
 begin
   Result := FRealTime
+end;
+
+procedure TaOPCChart.ProcessMouseWheel(aCoef: Double);
+begin
+  if Panning.MouseWheel = pmwNone then
+  begin
+    var p := ScreenToClient(Mouse.CursorPos);
+    var aVertRect := TeeRect(
+      0, LeftAxis.IStartPos,
+      LeftAxis.PosAxis + 10, LeftAxis.IEndPos);
+    var aHorRect := TeeRect(
+      BottomAxis.IStartPos, BottomAxis.PosAxis - 10,
+      BottomAxis.IEndPos, Height);
+    var aZoomSet: TZoomSet := [];
+
+    if (GetAsyncKeyState(VK_CONTROL) and $8000) <> 0 then
+      aZoomSet := [zsTime, zsValue]
+    else if (GetAsyncKeyState(VK_SHIFT) and $8000) <> 0 then
+      aZoomSet := [zsValue]
+    else if PointInRect(aVertRect, p) then
+      aZoomSet := [zsValue]
+    else if PointInRect(aHorRect, p) then
+      aZoomSet := [zsTime]
+    else
+      aZoomSet := [zsTime];
+
+    ZoomByPoint(p, aCoef, aZoomSet);
+  end;
 end;
 
 //procedure TaOPCChart.KeyDown(var Key: Word; Shift: TShiftState);
@@ -199,6 +240,11 @@ end;
 procedure TaOPCChart.SetShowZero(const Value: Boolean);
 begin
   SetBooleanProperty(FShowZero, Value);
+end;
+
+procedure TaOPCChart.SetZoomFactor(const Value: Double);
+begin
+  FZoomFactor := Value;
 end;
 
 //procedure TaOPCChart.SetVisibleInterval(const Value: TDateTime);

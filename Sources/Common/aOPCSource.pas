@@ -16,7 +16,14 @@ const
   сV30_ProtocolSet = [30, 31, 32];
 
 type
-  EThreadTerminated = class(Exception);
+  EDataLinkError = class(Exception)
+  end;
+
+  EDataLinkNotFound = class(Exception)
+  end;
+
+  EThreadTerminated = class(Exception)
+  end;
 
   ENotInhibitException = class(Exception)
   end;
@@ -280,7 +287,7 @@ type
     function SetThreadState(ConnectionName: string; NewState: Boolean): string; virtual; abstract;
     function SetThreadLock(ConnectionName: string; NewState: Boolean): string; virtual; abstract;
 
-    procedure GetFile(aFileName: string; var aStream: TStream); virtual; abstract;
+    procedure GetFile(aFileName: string; aStream: TStream); virtual; abstract;
     procedure UploadFile(aFileName: string; aDestDir: string = ''); virtual;
 
     procedure DownloadSetup(aFileName: string; aStream: TStream); virtual;

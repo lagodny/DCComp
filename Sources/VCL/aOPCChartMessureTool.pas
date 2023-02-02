@@ -1,4 +1,4 @@
-unit aOPCChartMessureTool;
+п»їunit aOPCChartMessureTool;
 
 {$I VCL.DC.inc}
 
@@ -309,7 +309,8 @@ begin
       begin
         if ParentChart.Series[t] is TaOPCLineSeries then
         begin
-          vStr := TaOPCLineSeries(ParentChart.Series[t]).GetSerieValueStr(FLine.Value);
+          //vStr := TaOPCLineSeries(ParentChart.Series[t]).GetSerieValueStr(FLine.Value);
+          vStr := TaOPCLineSeries(ParentChart.Series[t]).GetSerieValueAndDurationStr(FLine.Value, True);
           Font.Color := ParentChart.Series[t].Color;
           TextOut(X + XOffset, tmpTop + (t + 1) * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
         end;
@@ -340,16 +341,16 @@ var
   i1,i2: Integer;
 begin
   i2 := -1;
-  // ищем время больше заданного (возможен бинарный поиск, т.к. время только возрастает)
+  // РёС‰РµРј РІСЂРµРјСЏ Р±РѕР»СЊС€Рµ Р·Р°РґР°РЅРЅРѕРіРѕ (РІРѕР·РјРѕР¶РµРЅ Р±РёРЅР°СЂРЅС‹Р№ РїРѕРёСЃРє, С‚.Рє. РІСЂРµРјСЏ С‚РѕР»СЊРєРѕ РІРѕР·СЂР°СЃС‚Р°РµС‚)
   for i := 0 to aSeries.XValues.Count - 1 do
   begin
-    // нашли точное соотверствие
+    // РЅР°С€Р»Рё С‚РѕС‡РЅРѕРµ СЃРѕРѕС‚РІРµСЂСЃС‚РІРёРµ
     if aSeries.XValues[i] = x then
     begin
       aValue := aSeries.YValues[i];
       Exit(True);
     end;
-    // нашли индекс точки с большим временем
+    // РЅР°С€Р»Рё РёРЅРґРµРєСЃ С‚РѕС‡РєРё СЃ Р±РѕР»СЊС€РёРј РІСЂРµРјРµРЅРµРј
     if aSeries.XValues[i] > x then
     begin
       i2 := i;
@@ -357,17 +358,17 @@ begin
     end;
   end;
 
-  // все точки имеют МЕНЬШЕЕ время
+  // РІСЃРµ С‚РѕС‡РєРё РёРјРµСЋС‚ РњР•РќР¬РЁР•Р• РІСЂРµРјСЏ
   if i2 = -1 then
     Exit(False);
 
-  // все точки имеют БОЛЬШЕЕ время
+  // РІСЃРµ С‚РѕС‡РєРё РёРјРµСЋС‚ Р‘РћР›Р¬РЁР•Р• РІСЂРµРјСЏ
   if i2 = 0 then
     Exit(False);
 
-  // мы что-то нашли
+  // РјС‹ С‡С‚Рѕ-С‚Рѕ РЅР°С€Р»Рё
   Result := True;
-  // результат где-то между i1 и i2
+  // СЂРµР·СѓР»СЊС‚Р°С‚ РіРґРµ-С‚Рѕ РјРµР¶РґСѓ i1 Рё i2
   i1 := i2 - 1;
   if (aSeries.Stairs) or (aSeries.YValues[i1] = aSeries.YValues[i2]) then
     aValue := aSeries.YValues[i1]
@@ -516,7 +517,7 @@ var
     if aTime < 1 then
       Result := FormatDateTime('HH:MM:SS', aTime)
     else
-      Result := FormatFloat('# ##0.## д.', aTime);
+      Result := FormatFloat('# ##0.## Рґ.', aTime);
   end;
 
 begin

@@ -11,7 +11,6 @@ object OPCIntervalForm: TOPCIntervalForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
@@ -24,12 +23,30 @@ object OPCIntervalForm: TOPCIntervalForm
     ExplicitLeft = 8
     ExplicitTop = 8
     inherited gbInterval: TGroupBox
+      inherited lFrom: TLabel
+        Width = 7
+        Height = 13
+        ExplicitWidth = 7
+        ExplicitHeight = 13
+      end
+      inherited lTo: TLabel
+        Width = 12
+        Height = 13
+        ExplicitWidth = 12
+        ExplicitHeight = 13
+      end
       inherited tmFrom: TDateTimePicker
         Date = 43892.000000000000000000
       end
       inherited tmTo: TDateTimePicker
         Date = 43892.000000000000000000
       end
+    end
+    inherited cbPeriod: TComboBox
+      Height = 21
+    end
+    inherited cbHourDay: TComboBox
+      Height = 21
     end
   end
   object bOk: TButton

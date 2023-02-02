@@ -1,17 +1,16 @@
-unit aDCAuthorization;
+п»їunit aOPCAuthorization;
 
 interface
 
 uses
   System.Classes,
-//  FMX.Forms,
   aOPCSource;
 
 const
   EncryptKey = 77;
 
 type
-  TaDCAuthorization = class(TComponent)
+  TaOPCAuthorization = class(TComponent)
   private
     FUser: string;
     FPermissions: string;
@@ -53,13 +52,13 @@ type
 implementation
 
 uses
-  System.UITypes, System.SysUtils,
-  FMX.Dialogs,
-  uUserChoice;
+  System.UITypes, System.SysUtils;
+//  DC.VCL.PasswordForm,
+//  DC.VCL.ChangePasswordForm;
 
 { TaOPCAuthorization }
 
-function TaDCAuthorization.CheckPermissions: boolean;
+function TaOPCAuthorization.CheckPermissions: boolean;
 begin
   Result := false;
   try
@@ -76,19 +75,19 @@ begin
   end;
 end;
 
-constructor TaDCAuthorization.Create(aOwner: TComponent);
+constructor TaOPCAuthorization.Create(aOwner: TComponent);
 begin
   inherited;
 
 end;
 
-destructor TaDCAuthorization.Destroy;
+destructor TaOPCAuthorization.Destroy;
 begin
 
   inherited;
 end;
 
-function TaDCAuthorization.Encrypt(Value: string): string;
+function TaOPCAuthorization.Encrypt(Value: string): string;
 var
   i: integer;
 begin
@@ -97,7 +96,7 @@ begin
     Result[i] := Chr(Ord(Result[i]) xor ((i + EncryptKey) mod 255));
 end;
 
-//function TaDCAuthorization.Execute(aParent: TCustomForm; aShowInTaskBar: boolean): boolean;
+//function TaOPCAuthorization.Execute(aParent: TCustomForm; aShowInTaskBar: boolean): boolean;
 //var
 //  //s: string;
 //  i: integer;
@@ -138,7 +137,7 @@ end;
 //              OPCSource.Login(User, Password);
 ////              if not Result then
 ////                MessageDlg(
-////                  Format('У пользователя %s недостаточно прав для работы с системой!', [User]),
+////                  Format('РЈ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ %s РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЃРёСЃС‚РµРјРѕР№!', [User]),
 ////                  TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
 //            except
 //              on e: Exception do
@@ -164,7 +163,7 @@ end;
 ////          Result := OPCSource.Login(User, Password);
 ////          if not Result then
 ////            MessageDlg(
-////              Format('У пользователя %s недостаточно прав для работы с системой!', [User]),
+////              Format('РЈ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ %s РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЃРёСЃС‚РµРјРѕР№!', [User]),
 ////              TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
 ////        except
 ////          on e: Exception do
@@ -183,12 +182,12 @@ end;
 //
 //end;
 
-function TaDCAuthorization.GetEncryptedPassword: string;
+function TaOPCAuthorization.GetEncryptedPassword: string;
 begin
   Result := Encrypt(Password);
 end;
 
-function TaDCAuthorization.Login: boolean;
+function TaOPCAuthorization.Login: boolean;
 begin
   Result := false;
   try
@@ -198,14 +197,14 @@ begin
   end;
 end;
 
-procedure TaDCAuthorization.Notification(AComponent: TComponent; Operation: TOperation);
+procedure TaOPCAuthorization.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
   if (Operation = opRemove) and (AComponent = FOPCSource) then
     FOPCSource := nil;
 end;
 
-procedure TaDCAuthorization.ReadCommandLine;
+procedure TaOPCAuthorization.ReadCommandLine;
 var
   i: integer;
   ch: string;
@@ -220,7 +219,7 @@ begin
   end;
 end;
 
-procedure TaDCAuthorization.ReadCommandLineExt;
+procedure TaOPCAuthorization.ReadCommandLineExt;
 var
   s: TStringList;
   i: Integer;
@@ -230,13 +229,13 @@ begin
     for i := 1 to ParamCount do
       s.Add(UpperCase(ParamStr(i)));
 
-    // имя пользователя
+    // РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     if s.Values['USER'] <> '' then
       User := s.Values['USER']
     else if s.Values['U'] <> '' then
       User := s.Values['U'];
 
-    // пароль
+    // РїР°СЂРѕР»СЊ
     if s.Values['PASSWORD'] <> '' then
       Password := s.Values['PASSWORD']
     else if s.Values['P'] <> '' then
@@ -247,31 +246,31 @@ begin
 
 end;
 
-procedure TaDCAuthorization.SetEncryptedPassword(const Value: string);
+procedure TaOPCAuthorization.SetEncryptedPassword(const Value: string);
 begin
   Password := Encrypt(Value);
 end;
 
-procedure TaDCAuthorization.SetOPCSource(const Value: TaOPCSource);
+procedure TaOPCAuthorization.SetOPCSource(const Value: TaOPCSource);
 begin
   FOPCSource := Value;
   if Value <> nil then
     Value.FreeNotification(Self);
 end;
 
-procedure TaDCAuthorization.SetPassword(const Value: string);
+procedure TaOPCAuthorization.SetPassword(const Value: string);
 begin
   FPassword := Value;
   if FOPCSource <> nil then
     FOPCSource.Password := Value;
 end;
 
-procedure TaDCAuthorization.SetPermissions(const Value: string);
+procedure TaOPCAuthorization.SetPermissions(const Value: string);
 begin
   FPermissions := Value;
 end;
 
-procedure TaDCAuthorization.SetUser(const Value: string);
+procedure TaOPCAuthorization.SetUser(const Value: string);
 begin
   FUser := Value;
   if FOPCSource <> nil then

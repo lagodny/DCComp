@@ -1,4 +1,4 @@
-unit aOPCTagDictionary;
+﻿unit aOPCTagDictionary;
 
 interface
 

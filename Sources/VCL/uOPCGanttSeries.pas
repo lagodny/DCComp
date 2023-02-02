@@ -1,4 +1,4 @@
-unit uOPCGanttSeries;
+п»їunit uOPCGanttSeries;
 
 {$I VCL.DC.inc}
 
@@ -159,14 +159,14 @@ begin
     {
     if XValues.Count > 1 then
     begin
-      // удаляем самую левую точку, если это возможно и необходимо
+      // СѓРґР°Р»СЏРµРј СЃР°РјСѓСЋ Р»РµРІСѓСЋ С‚РѕС‡РєСѓ, РµСЃР»Рё СЌС‚Рѕ РІРѕР·РјРѕР¶РЅРѕ Рё РЅРµРѕР±С…РѕРґРёРјРѕ
       if (XValues.Count > 3) and (XValue[1] < Interval.Date1) then
         Delete(0);
 
     end;
     }
 
-    // если ось времени в нормальном состоянии, то обновим ее шкалу
+    // РµСЃР»Рё РѕСЃСЊ РІСЂРµРјРµРЅРё РІ РЅРѕСЂРјР°Р»СЊРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё, С‚Рѕ РѕР±РЅРѕРІРёРј РµРµ С€РєР°Р»Сѓ
     if not ParentChart.Zoomed then
     begin
       if (Interval.Kind = ikShift) then
@@ -303,11 +303,11 @@ begin
   try
     Screen.Cursor := crHourGlass;
 
-    // 1. готовим почву - чистимся
+    // 1. РіРѕС‚РѕРІРёРј РїРѕС‡РІСѓ - С‡РёСЃС‚РёРјСЃСЏ
     Clear;
     ClearRecs;
 
-    // 2. если нужны исходные данне, без преобразований, то загружаем коэффициенты и таблицу преобразований
+    // 2. РµСЃР»Рё РЅСѓР¶РЅС‹ РёСЃС…РѕРґРЅС‹Рµ РґР°РЅРЅРµ, Р±РµР· РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№, С‚Рѕ Р·Р°РіСЂСѓР¶Р°РµРј РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ Рё С‚Р°Р±Р»РёС†Сѓ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№
       if aSourceValues then
       begin
         sl := TStringList.Create;
@@ -329,7 +329,7 @@ begin
         end;
       end;
 
-    // 3. определимся с периодом выборки
+    // 3. РѕРїСЂРµРґРµР»РёРјСЃСЏ СЃ РїРµСЂРёРѕРґРѕРј РІС‹Р±РѕСЂРєРё
     aDate1 := ParentChart.BottomAxis.Minimum;
     if ToNow then
       aDate2 := 0
@@ -337,22 +337,22 @@ begin
       aDate2 := ParentChart.BottomAxis.Maximum;
 
 
-    // получаем данные
+    // РїРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ
 
-    // вариант с фильтром
+    // РІР°СЂРёР°РЅС‚ СЃ С„РёР»СЊС‚СЂРѕРј
     if (Filter.Expression <> '') then
     begin
 
-      // привязываем датчик к фильтру
+      // РїСЂРёРІСЏР·С‹РІР°РµРј РґР°С‚С‡РёРє Рє С„РёР»СЊС‚СЂСѓ
       Filter.DataLink := DataLink;
       Filter.DataLink.OPCSource := OPCSource;
 
-      // загружаем данные: наш датчик + датчики из фильтра
+      // Р·Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ: РЅР°С€ РґР°С‚С‡РёРє + РґР°С‚С‡РёРєРё РёР· С„РёР»СЊС‚СЂР°
       Filter.Evaluator.Cinema.Date1 := aDate1;
       Filter.Evaluator.Cinema.Date2 := aDate2;
       Filter.Evaluator.Cinema.Active := True;
 
-      // проходим по выборке
+      // РїСЂРѕС…РѕРґРёРј РїРѕ РІС‹Р±РѕСЂРєРµ
       aCalc1 := 0;
       //aCalc2 := 0;
       aMoment := aDate1;
@@ -361,10 +361,10 @@ begin
       aValue2 := StrToFloat(Filter.DataLink.Value);
       while not Filter.Evaluator.Cinema.Eof do
       begin
-        // устанавливаемся на позицию
+        // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРјСЃСЏ РЅР° РїРѕР·РёС†РёСЋ
         Filter.Evaluator.Cinema.CurrentMoment := aMoment;
 
-        // расчитываем фильтр
+        // СЂР°СЃС‡РёС‚С‹РІР°РµРј С„РёР»СЊС‚СЂ
         aCalc2 := Filter.Evaluator.Calc;
         if (aCalc1 = 0) and (aCalc2 = 0) then
         begin
@@ -375,11 +375,11 @@ begin
 
         else if (aCalc1 <> 0) and (aCalc2 = 0) then
         begin
-          // дорисовываем нормальные данные
+          // РґРѕСЂРёСЃРѕРІС‹РІР°РµРј РЅРѕСЂРјР°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ
           aStateValue := 0;
           aValue2 := StrToFloat(Filter.DataLink.Value);
           sAddXY(aMoment, aValue2, aStateValue);
-          // начинаем пустышку
+          // РЅР°С‡РёРЅР°РµРј РїСѓСЃС‚С‹С€РєСѓ
           sAddNullXY(aMoment, aValue2);
           aStateValue := cState_IsFiltered;
         end
@@ -387,30 +387,30 @@ begin
         else
         begin
           aStateValue := 0;
-          // расчитываем датчик
+          // СЂР°СЃС‡РёС‚С‹РІР°РµРј РґР°С‚С‡РёРє
           aValue2 := StrToFloat(Filter.DataLink.Value);
-          // добавляем точку на график
+          // РґРѕР±Р°РІР»СЏРµРј С‚РѕС‡РєСѓ РЅР° РіСЂР°С„РёРє
           sAddXY(aMoment, aValue2, aStateValue);
         end;
 
         aCalc1 := aCalc2;
 
-        // вычисляем следующую позицию
+        // РІС‹С‡РёСЃР»СЏРµРј СЃР»РµРґСѓСЋС‰СѓСЋ РїРѕР·РёС†РёСЋ
         aMoment := Filter.Evaluator.Cinema.GetNextMoment;
         if aMoment = 0 then
           Break;
       end;
 
-      // выключаем фильтр
+      // РІС‹РєР»СЋС‡Р°РµРј С„РёР»СЊС‚СЂ
       Filter.Active := False;
     end
 
-    // вариант без фильтрации
+    // РІР°СЂРёР°РЅС‚ Р±РµР· С„РёР»СЊС‚СЂР°С†РёРё
     else
     begin
       Stream := TMemoryStream.Create;
       try
-        // выбираем показания и состояния датчика за период
+        // РІС‹Р±РёСЂР°РµРј РїРѕРєР°Р·Р°РЅРёСЏ Рё СЃРѕСЃС‚РѕСЏРЅРёСЏ РґР°С‚С‡РёРєР° Р·Р° РїРµСЂРёРѕРґ
         if ShowState then
           aOPCSource.FillHistory(Stream, PhysID, aDate1, aDate2, [dkValue, dkState])
         else
@@ -419,18 +419,18 @@ begin
       aStateValue := 0;
       if Stream.Size > 0 then
       begin
-        Stream.Read(aMoment, SizeOf(aMoment)); // момент времени
-        Stream.Read(aValue2, SizeOf(aValue2)); // значение
+        Stream.Read(aMoment, SizeOf(aMoment)); // РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
+        Stream.Read(aValue2, SizeOf(aValue2)); // Р·РЅР°С‡РµРЅРёРµ
         if aSourceValues then
           aValue2 := BackTransform(aValue2);
 
         if ShowState then
-          Stream.Read(aStateValue, SizeOf(aStateValue)); // состояние
+          Stream.Read(aStateValue, SizeOf(aStateValue)); // СЃРѕСЃС‚РѕСЏРЅРёРµ
 
         sAddXY(aMoment, aValue2, aStateValue);
         if Stream.Position = Stream.Size then
         begin
-          // если у нас всего одно значение, добавим еще парочку точек
+          // РµСЃР»Рё Сѓ РЅР°СЃ РІСЃРµРіРѕ РѕРґРЅРѕ Р·РЅР°С‡РµРЅРёРµ, РґРѕР±Р°РІРёРј РµС‰Рµ РїР°СЂРѕС‡РєСѓ С‚РѕС‡РµРє
           sAddXY(aDate1, aValue2, aStateValue);
           sAddXY(IfThen(aDate2 = 0, Now, aDate2), aValue2, aStateValue);
         end
@@ -440,12 +440,12 @@ begin
           begin
             //aValue1 := aValue2;
 
-            Stream.Read(aMoment, SizeOf(aMoment)); // момент времени
-            Stream.Read(aValue2, SizeOf(aValue2)); // значение
+            Stream.Read(aMoment, SizeOf(aMoment)); // РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
+            Stream.Read(aValue2, SizeOf(aValue2)); // Р·РЅР°С‡РµРЅРёРµ
             if aSourceValues then
               aValue2 := BackTransform(aValue2);
             if ShowState then
-              Stream.Read(aStateValue, SizeOf(aStateValue)); // состояние
+              Stream.Read(aStateValue, SizeOf(aStateValue)); // СЃРѕСЃС‚РѕСЏРЅРёРµ
 
             sAddXY(aMoment, aValue2, aStateValue);
 
@@ -546,7 +546,7 @@ procedure TaOPCGanttSeries.sAddNullXY(x, y: Double);
 var
   aRec: TXYS;
 begin
-  // добавляем новое значение
+  // РґРѕР±Р°РІР»СЏРµРј РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ
   aRec := GetXYSRec(x, y, 0);
   AddNullXY(aRec.x, aRec.y / Scale + Shift);
 
@@ -593,18 +593,18 @@ procedure TaOPCGanttSeries.sAddXY(aRec: TXYS);
   begin
     aLookupList := LookupList;
 
-    if aStateValue = 0 then // нет ошибок
+    if aStateValue = 0 then // РЅРµС‚ РѕС€РёР±РѕРє
     begin
-      // если есть справочник, то поищем в нём
+      // РµСЃР»Рё РµСЃС‚СЊ СЃРїСЂР°РІРѕС‡РЅРёРє, С‚Рѕ РїРѕРёС‰РµРј РІ РЅС‘Рј
       if Assigned(aLookupList) then
         aLookupList.Lookup(FloatToStr(aValue), Result)
       else
-        // преобразуем исходное значение согласно формату отображения
+        // РїСЂРµРѕР±СЂР°Р·СѓРµРј РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕРіР»Р°СЃРЅРѕ С„РѕСЂРјР°С‚Сѓ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
         Result := FormatValue(aValue, DisplayFormat);
     end
-    else // есть ошибки
+    else // РµСЃС‚СЊ РѕС€РёР±РєРё
     begin
-      Result := 'не задан справочник ошибок';
+      Result := 'РЅРµ Р·Р°РґР°РЅ СЃРїСЂР°РІРѕС‡РЅРёРє РѕС€РёР±РѕРє';
 
       aStates := StateLookupList;
       if not Assigned(aStates) and Assigned(OPCSource) then
@@ -615,18 +615,18 @@ procedure TaOPCGanttSeries.sAddXY(aRec: TXYS);
     end;
   end;
 begin
-  // первая точка, но уже нужно что-то рисовать
+  // РїРµСЂРІР°СЏ С‚РѕС‡РєР°, РЅРѕ СѓР¶Рµ РЅСѓР¶РЅРѕ С‡С‚Рѕ-С‚Рѕ СЂРёСЃРѕРІР°С‚СЊ
   if (FRec1.x = 0) and RecIsActive(aRec) then
     AddGanttColor(aRec.x, aRec.x, aRec.y / Scale + Shift, CalcLabel(aRec.y, aRec.s), Color)
 
-  // были активны - нужно дорисовать начатое
+  // Р±С‹Р»Рё Р°РєС‚РёРІРЅС‹ - РЅСѓР¶РЅРѕ РґРѕСЂРёСЃРѕРІР°С‚СЊ РЅР°С‡Р°С‚РѕРµ
   else if RecIsActive(FRec1) then
   begin
     EndValues[EndValues.Count-1] := aRec.x;
     Repaint;
   end
 
-  // стали активны - новая полоса
+  // СЃС‚Р°Р»Рё Р°РєС‚РёРІРЅС‹ - РЅРѕРІР°СЏ РїРѕР»РѕСЃР°
   else if RecIsActive(aRec) then
     AddGanttColor(aRec.x, aRec.x, aRec.y / Scale + Shift, CalcLabel(aRec.y, aRec.s), Color);
 
@@ -636,15 +636,15 @@ begin
 //    AddGanttColor(FRec1.x, aRec.x, FRec1.y / Scale + Shift, CalcLabel(FRec1.y, FRec1.s), CalcColor);
 
 {
-  if (XValues.Count > 0) // это не первая точка в графике
+  if (XValues.Count > 0) // СЌС‚Рѕ РЅРµ РїРµСЂРІР°СЏ С‚РѕС‡РєР° РІ РіСЂР°С„РёРєРµ
     and (FRec1.s <> aRec.s) then
   begin
-    // добавляем  СТАРОЕ ЗНАЧЕНИЕ на НОВЫЙ МОМЕНТ времени, с целью
-    // показать длительность действия этого значения
+    // РґРѕР±Р°РІР»СЏРµРј  РЎРўРђР РћР• Р—РќРђР§Р•РќРР• РЅР° РќРћР’Р«Р™ РњРћРњР•РќРў РІСЂРµРјРµРЅРё, СЃ С†РµР»СЊСЋ
+    // РїРѕРєР°Р·Р°С‚СЊ РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ РґРµР№СЃС‚РІРёСЏ СЌС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
     AddXY(aRec.x, FRec1.y / Scale + Shift, CalcLabel(FRec1.y, FRec1.s), CalcColor0);
   end;
 
-  // добавляем новое значение
+  // РґРѕР±Р°РІР»СЏРµРј РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ
   AddXY(aRec.x, aRec.y / Scale + Shift, CalcLabel(aRec.y, aRec.s), CalcColor);
 
   FRec2 := FRec1;

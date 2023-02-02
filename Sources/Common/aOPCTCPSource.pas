@@ -93,7 +93,7 @@ type
     function GetTimes(aSensorID: Integer; aDate1, aDate2: TDateTime): string; override;
     function GetStatistic(aSensorID: string; aDate1, aDate2: TDateTime): string; override;
 
-    procedure GetFile(aFileName: string; var aStream: TStream); override;                 // +
+    procedure GetFile(aFileName: string; aStream: TStream); override;                 // +
     procedure UploadFile(aFileName: string; aDestDir: string = ''); override;                                          // +
 
     procedure ChangePassword(aUser, aOldPassword, aNewPassword: string); override;              // +
@@ -195,7 +195,7 @@ end;
 //  end;
 //end;
 
-procedure TaOPCTCPSource.GetFile(aFileName: string; var aStream: TStream);
+procedure TaOPCTCPSource.GetFile(aFileName: string; aStream: TStream);
 var
   Size: integer;
 begin

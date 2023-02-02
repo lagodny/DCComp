@@ -1,4 +1,4 @@
-unit uChartFrame;
+п»їunit uChartFrame;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   aOPCDataObject, aOPCLabel,
   uOPCSeriesTypes, aOPCLineSeries, uOPCGanttSeries,
   uDCTeeTools,
-  uDCObjects,
+  uDCObjects, aOPCLookupList,
   aOPCConnectionList, aOPCLog, aOPCUtils, Vcl.ImgList;
 
 type
@@ -170,6 +170,9 @@ type
     SpTBXItem19: TSpTBXItem;
     Series1: TLineSeries;
     SpTBXItem25: TSpTBXItem;
+    smiLineWidth: TSpTBXSubmenuItem;
+    miThin: TSpTBXItem;
+    miThick: TSpTBXItem;
     procedure ChartBeforeDrawAxes(Sender: TObject);
     procedure ChartDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -224,6 +227,8 @@ type
     procedure aAddMessureBandExecute(Sender: TObject);
     procedure aDelToolExecute(Sender: TObject);
     procedure aDelSensorValuesExecute(Sender: TObject);
+    procedure miThinClick(Sender: TObject);
+    procedure miThickClick(Sender: TObject);
   private
 
     FMouseDownX: Integer;
@@ -241,9 +246,12 @@ type
     FAllClient: Boolean;
     FSavePosition: TSavePosition;
     FClickedTool: TTeeCustomTool;
+    FSeriesWidth: Integer;
 
     procedure StorePosition;
     procedure RestorePosition;
+
+    procedure SetSeriesWidth(aWidth: Integer);
 
     procedure SetShowFullSeriesName(const Value: boolean);
     procedure ClickSeries(Sender: TCustomChart;
@@ -310,7 +318,8 @@ type
     function AddSerie(aDataLink: TaCustomDataLink; aDelIfExist: Boolean): TaOPCLineSeries; virtual;
 
     function AddSerieByParam(aPhysID: TPhysID; aStairs: TDCStairsOptionsSet;
-      OPCSource: TaCustomOPCSource; aTitle: string; aColor: TColor; aDelIfExist: Boolean; aFilter: string): TaOPCLineSeries;
+      OPCSource: TaCustomOPCSource; aTitle: string; aColor: TColor; aDelIfExist: Boolean;
+      aFilter: string; aLookupList: TaOPCLookupList = nil; aDisplayFormat: string = ''): TaOPCLineSeries;
     function AddGantSerieByParam(aPhysID: TPhysID; OPCSource: TaCustomOPCSource;
       aTitle: string; aColor: TColor; aDelIfExist: Boolean; aFilter: string): TaOPCGanttSeries;
 
@@ -324,6 +333,8 @@ type
     //property ClickedSerie: TaOPCLineSeries read FClickedSerie write SetClickedSerie;
     property ClickedSerie: TCustomSeries read FClickedSerie write SetClickedSerie;
     property ClickedTool: TTeeCustomTool read FClickedTool write SetClickedTool;
+  published
+    property SeriesWidth: Integer read FSeriesWidth write SetSeriesWidth;
   end;
 
 implementation
@@ -332,16 +343,31 @@ uses
   StrUtils,
   aOPCSeries,
   aOPCChartMessureTool,
-  uDataLinkedClasses,
-  aOPCLookupList;
-//  uAppStorage,
-//  uKeys;
-
+  uDataLinkedClasses;
 
 {$R *.dfm}
 
 const
   cIntervalHelpContext = 0;
+
+const
+  cDayColors: array of TColor = [
+    clRed,
+    clGreen,
+    $2300B0, // С‚РµРјРЅРѕ СЃРёРЅРёР№
+    $FFC11E, // РѕСЂР°РЅР¶РµРІС‹Р№
+    $FE9E76, // СЂРѕР·РѕРІС‹Р№
+    $A854A5, // С„РёРѕР»РµРЅРѕРІС‹Р№
+    $64C7FF, // РіРѕР»СѓР±РѕР№
+    $A771FE // СЃРІРµС‚Р»Рѕ С„РёРѕР»РµС‚РѕРІС‹Р№
+
+//    $0260E8,
+//    $45D09E,
+//    $FFC11E,
+//    $F85C50,
+//    $EF2FA2,
+//    $3F0B81
+  ];
 
 procedure TChartFrame.a3DExecute(Sender: TObject);
 begin
@@ -395,7 +421,7 @@ begin
   if FAllClient then
   begin
     aAllClient.ImageIndex := 69;
-    aAllClient.Caption := 'Развернуть';
+    aAllClient.Caption := 'Р Р°Р·РІРµСЂРЅСѓС‚СЊ';
     RestorePosition;
   end
   else
@@ -404,7 +430,7 @@ begin
     Align := alClient;
     FAllClient := True;
     aAllClient.ImageIndex := 70;
-    aAllClient.Caption := 'Свернуть';
+    aAllClient.Caption := 'РЎРІРµСЂРЅСѓС‚СЊ';
   end;
 end;
 
@@ -476,10 +502,10 @@ begin
   Chart.UndoZoom;
   Chart.BottomAxis.SetMinMax(Interval.Date1, Interval.Date2);
 
-  // ищем график
+  // РёС‰РµРј РіСЂР°С„РёРє
   r := FindSerieByParam(aPhysID, OPCSource); // BlinkSerie(aDataLink);
 
-  // создаем, если такого нет (моргать не нужно)
+  // СЃРѕР·РґР°РµРј, РµСЃР»Рё С‚Р°РєРѕРіРѕ РЅРµС‚ (РјРѕСЂРіР°С‚СЊ РЅРµ РЅСѓР¶РЅРѕ)
   if not Assigned(r) then
   begin
     Result := CreateOPCGanttSerieByParam(aPhysID, OPCSource, 0, nil, aColor);
@@ -491,7 +517,7 @@ begin
 
   end
 
-  // удаляем, если нужно
+  // СѓРґР°Р»СЏРµРј, РµСЃР»Рё РЅСѓР¶РЅРѕ
   else if aDelIfExist then
   begin
     ClickedSerie := r;
@@ -499,7 +525,7 @@ begin
     Exit;
   end
 
-  // или моргаем если не нужно удалять
+  // РёР»Рё РјРѕСЂРіР°РµРј РµСЃР»Рё РЅРµ РЅСѓР¶РЅРѕ СѓРґР°Р»СЏС‚СЊ
   else
   begin
     BlinkSeries(r);
@@ -527,14 +553,14 @@ begin
   Chart.UndoZoom;
   Chart.BottomAxis.SetMinMax(Interval.Date1, Interval.Date2);
 
-  // ищем график
+  // РёС‰РµРј РіСЂР°С„РёРє
   aSerie := FindSerie(aDataLink); // BlinkSerie(aDataLink);
 
-  // создаем, если такого нет (моргать не нужно)
+  // СЃРѕР·РґР°РµРј, РµСЃР»Рё С‚Р°РєРѕРіРѕ РЅРµС‚ (РјРѕСЂРіР°С‚СЊ РЅРµ РЅСѓР¶РЅРѕ)
   if not Assigned(aSerie) then
     Result := CreateOPCSerie(aDataLink)
 
-  // удаляем, если нужно
+  // СѓРґР°Р»СЏРµРј, РµСЃР»Рё РЅСѓР¶РЅРѕ
   else if aDelIfExist then
   begin
     ClickedSerie := aSerie;
@@ -542,7 +568,7 @@ begin
     Exit;
   end
 
-  // или моргаем если не нужно удалять
+  // РёР»Рё РјРѕСЂРіР°РµРј РµСЃР»Рё РЅРµ РЅСѓР¶РЅРѕ СѓРґР°Р»СЏС‚СЊ
   else
   begin
     BlinkSeries(aSerie);
@@ -561,8 +587,8 @@ begin
 end;
 
 function TChartFrame.AddSerieByParam(aPhysID: TPhysID; aStairs: TDCStairsOptionsSet;
-  OPCSource: TaCustomOPCSource; aTitle: string; aColor: TColor; aDelIfExist: Boolean;
-  aFilter: string): TaOPCLineSeries;
+      OPCSource: TaCustomOPCSource; aTitle: string; aColor: TColor; aDelIfExist: Boolean;
+      aFilter: string; aLookupList: TaOPCLookupList = nil; aDisplayFormat: string = ''): TaOPCLineSeries;
 var
   //  aSerie: TaOPCLineSeries;
   r: TCustomSeries;
@@ -572,21 +598,26 @@ begin
   Chart.UndoZoom;
   Chart.BottomAxis.SetMinMax(Interval.Date1, Interval.Date2);
 
-  // ищем график
+  // РёС‰РµРј РіСЂР°С„РёРє
   r := FindSerieByParam(aPhysID, OPCSource); // BlinkSerie(aDataLink);
 
-  // создаем, если такого нет (моргать не нужно)
+  // СЃРѕР·РґР°РµРј, РµСЃР»Рё С‚Р°РєРѕРіРѕ РЅРµС‚ (РјРѕСЂРіР°С‚СЊ РЅРµ РЅСѓР¶РЅРѕ)
   if not Assigned(r) then
   begin
     Result := CreateOPCSerieByParam(aPhysID, OPCSource, aStairs, 0, nil, aColor);
     Result.ShortName := aTitle;
     Result.FullName := aTitle;
+    Result.DisplayFormat := aDisplayFormat;
     if aFilter <> '' then
       Result.Filter.Expression := aFilter;
-
+    if Assigned(aLookupList) then
+    begin
+      Result.LookupList := aLookupList;
+      Result.Marks.Visible := True;
+    end;
   end
 
-  // удаляем, если нужно
+  // СѓРґР°Р»СЏРµРј, РµСЃР»Рё РЅСѓР¶РЅРѕ
   else if aDelIfExist then
   begin
     ClickedSerie := r;
@@ -594,7 +625,7 @@ begin
     Exit;
   end
 
-  // или моргаем если не нужно удалять
+  // РёР»Рё РјРѕСЂРіР°РµРј РµСЃР»Рё РЅРµ РЅСѓР¶РЅРѕ СѓРґР°Р»СЏС‚СЊ
   else
   begin
     BlinkSeries(r);
@@ -802,7 +833,7 @@ begin
           v := Chart.Series[i].Clicked(P.X, P.Y);
           if v <> -1 then
           begin
-            // все кроме Line
+            // РІСЃРµ РєСЂРѕРјРµ Line
             if not (Chart.Series[i] is TaOPCLineSeries) then
             begin
               CanShow := true;
@@ -822,7 +853,7 @@ begin
             if vi < 0 then
               Exit;
 
-            // если есть возможность определим точно x (время)
+            // РµСЃР»Рё РµСЃС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РѕРїСЂРµРґРµР»РёРј С‚РѕС‡РЅРѕ x (РІСЂРµРјСЏ)
             if vi < (Serie.Count - 1) then
             begin
               x1 := Serie.XValue[vi];
@@ -894,7 +925,7 @@ begin
 
                 if TaOPCLineSeries(Serie).Shift <> 0 then
                   yStr := yStr + #13#10 +
-                    'значение после сдвига = ' +
+                    'Р·РЅР°С‡РµРЅРёРµ РїРѕСЃР»Рµ СЃРґРІРёРіР° = ' +
                     FormatValue(y, Serie.ValueFormat) + ' ' + Serie.SensorUnitName
 
               end;
@@ -904,11 +935,11 @@ begin
 
             CanShow := true;
             HintStr := Serie.Title + #13#10 +
-              'время = ' + DateTimeToStr(x) + #13#10 +
-              'значение = ' + yStr;
+              'РІСЂРµРјСЏ = ' + DateTimeToStr(x) + #13#10 +
+              'Р·РЅР°С‡РµРЅРёРµ = ' + yStr;
             //            if Serie.Shift <> 0 then
             //              HintStr := HintStr + #13#10 +
-            //                'значение после сдвига = ' +
+            //                'Р·РЅР°С‡РµРЅРёРµ РїРѕСЃР»Рµ СЃРґРІРёРіР° = ' +
             HintPos.X := Mouse.CursorPos.X + 16;
             HintPos.Y := Mouse.CursorPos.Y + 16;
             CursorRect := Rect(p.X, p.Y, p.X + 1, P.y + 1);
@@ -968,7 +999,7 @@ begin
       Exit;
 
     sNewScale := FloatToStr(s.Scale);
-    if InputQuery('Укажите масштаб', ClickedSerie.Title, sNewScale) then
+    if InputQuery('РЈРєР°Р¶РёС‚Рµ РјР°СЃС€С‚Р°Р±', ClickedSerie.Title, sNewScale) then
     begin
       if FormatSettings.DecimalSeparator = '.' then
         sNewScale := ReplaceStr(sNewScale, ',', '.')
@@ -991,7 +1022,7 @@ begin
       Exit;
 
     sNewShift := FloatToStr(s.Shift);
-    if InputQuery('Укажите величину сдвига', ClickedSerie.Title, sNewShift) then
+    if InputQuery('РЈРєР°Р¶РёС‚Рµ РІРµР»РёС‡РёРЅСѓ СЃРґРІРёРіР°', ClickedSerie.Title, sNewShift) then
     begin
       if FormatSettings.DecimalSeparator = '.' then
         sNewShift := ReplaceStr(sNewShift, ',', '.')
@@ -1067,12 +1098,12 @@ begin
     s := TaOPCLineSeries(ClickedSerie);
     aMessage := Format(
       '%s'#13#13 +
-      'Интервал: %s ч.'#13#13 +
-      'Минимум : %s %s'#13 +
-      'Максимум: %s %s'#13 +
-      'Среднее : %s %s'#13 +
-      'Средневзвешенное : %s %s'#13 +
-      'Интеграл         : %s %s*ч'#13,
+      'РРЅС‚РµСЂРІР°Р»: %s С‡.'#13#13 +
+      'РњРёРЅРёРјСѓРј : %s %s'#13 +
+      'РњР°РєСЃРёРјСѓРј: %s %s'#13 +
+      'РЎСЂРµРґРЅРµРµ : %s %s'#13 +
+      'РЎСЂРµРґРЅРµРІР·РІРµС€РµРЅРЅРѕРµ : %s %s'#13 +
+      'РРЅС‚РµРіСЂР°Р»         : %s %s*С‡'#13,
       [
       ClickedSerie.Title,
         FormatFloat('# ##0.##', (ClickedSerie.XValues.Last - ClickedSerie.XValues.First) * 24),
@@ -1087,12 +1118,12 @@ begin
   begin
     aMessage := Format(
       '%s'#13#13 +
-      'Интервал: %s ч.'#13#13 +
-      'Минимум : %s '#13 +
-      'Максимум: %s '#13 +
-      'Среднее : %s '#13 +
-      'Средневзвешенное : %s '#13 +
-      'Интеграл         : %s *ч'#13,
+      'РРЅС‚РµСЂРІР°Р»: %s С‡.'#13#13 +
+      'РњРёРЅРёРјСѓРј : %s '#13 +
+      'РњР°РєСЃРёРјСѓРј: %s '#13 +
+      'РЎСЂРµРґРЅРµРµ : %s '#13 +
+      'РЎСЂРµРґРЅРµРІР·РІРµС€РµРЅРЅРѕРµ : %s '#13 +
+      'РРЅС‚РµРіСЂР°Р»         : %s *С‡'#13,
       [
       ClickedSerie.Title,
         FormatFloat('# ##0.##', (ClickedSerie.XValues.Last - ClickedSerie.XValues.First) * 24),
@@ -1208,9 +1239,9 @@ begin
     Chart.LeftAxis.AxisValuesFormat := '# ### ##0';
 
   TimeDif := Chart.BottomAxis.Maximum - Chart.BottomAxis.Minimum;
-  if TimeDif <= 5 / 24 / 60 then //1 минута
+  if TimeDif <= 5 / 24 / 60 then //1 РјРёРЅСѓС‚Р°
     Chart.BottomAxis.DateTimeFormat := 'hh:mm:ss'
-  else if TimeDif <= 1 then //1 суток
+  else if TimeDif <= 1 then //1 СЃСѓС‚РѕРє
     Chart.BottomAxis.DateTimeFormat := 'hh:mm'
   else
     Chart.BottomAxis.DateTimeFormat := 'dd.mm.yy';
@@ -1259,7 +1290,7 @@ begin
   begin
     P := Chart.ScreenToClient(Mouse.CursorPos);
 
-    // проверяем необходимость вызвать контекстное меню для графика
+    // РїСЂРѕРІРµСЂСЏРµРј РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РІС‹Р·РІР°С‚СЊ РєРѕРЅС‚РµРєСЃС‚РЅРѕРµ РјРµРЅСЋ РґР»СЏ РіСЂР°С„РёРєР°
     for i := Chart.SeriesCount - 1 downto 0 do
     begin
 //      if not (Chart.SeriesList.Items[i] is TaOPCLineSeries) then
@@ -1282,7 +1313,7 @@ begin
       end;
     end;
 
-    // проверяем необходимость вызвать контекстное меню для Инструмента
+    // РїСЂРѕРІРµСЂСЏРµРј РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РІС‹Р·РІР°С‚СЊ РєРѕРЅС‚РµРєСЃС‚РЅРѕРµ РјРµРЅСЋ РґР»СЏ РРЅСЃС‚СЂСѓРјРµРЅС‚Р°
     for i := Chart.Tools.Count - 1 downto 0 do
     begin
       if Chart.Tools.Items[i] is TaOPCMessureBandTool then
@@ -1495,8 +1526,8 @@ begin
 
     if not (LegendClicked and Chart.Legend.CheckBoxes) then
     begin
-      if (Shift = [ssLeft]) then // просто шедчёк левой кнопкой
-      begin // выдвинем на передний план
+      if (Shift = [ssLeft]) then // РїСЂРѕСЃС‚Рѕ С€РµРґС‡С‘Рє Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№
+      begin // РІС‹РґРІРёРЅРµРј РЅР° РїРµСЂРµРґРЅРёР№ РїР»Р°РЅ
         while Sender.SeriesList[Sender.SeriesCount - 1] <> Series do
           Sender.SeriesDown(Series);
       end
@@ -1504,11 +1535,11 @@ begin
       else if Supports(ClickedSerie, IaOPCSeries, s) then
       begin
         if (Shift = [ssLeft, ssCtrl]) and Assigned(ClickedSerie) then // + Ctrl
-          s.Shift := 0 // сброс сдвига
+          s.Shift := 0 // СЃР±СЂРѕСЃ СЃРґРІРёРіР°
         else if (Shift = [ssLeft, ssAlt]) and Assigned(ClickedSerie) then // + Alt
         begin
           if ClickedSerie.YValues.Count > 0 then
-            s.Shift := -ClickedSerie.YValues[0]; // начинаем с нуля
+            s.Shift := -ClickedSerie.YValues[0]; // РЅР°С‡РёРЅР°РµРј СЃ РЅСѓР»СЏ
         end;
       end;
     end;
@@ -1596,7 +1627,7 @@ var
 begin
   if not Assigned(aSource) then
   begin
-    ShowMessage('Нет подключения');
+    ShowMessage('РќРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёСЏ');
     Abort;
   end;
 
@@ -1651,7 +1682,7 @@ begin
 
   Result.UpdateRealTime;
 
-  Result.Pen.Width := 0;
+  Result.Pen.Width := 0; // FSeriesWidth;
 end;
 
 function TChartFrame.CreateOPCSerie(aDataLink: TaCustomDataLink): TaOPCLineSeries;
@@ -1668,7 +1699,7 @@ begin
 
   if not Assigned(TaOPCDataLink(aDataLink).RealSource) then
   begin
-    ShowMessage('Нет подключения');
+    ShowMessage('РќРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёСЏ');
     Abort;
   end;
 
@@ -1711,6 +1742,7 @@ begin
 //  Result.ShortName := aDataLink.Name;
 //  Result.FullName := aDataLink.DataPoint.Name + '.' + aDataLink.Name;
   Result.ShowFullName := False; //ShowFullSeriesName;
+  Result.LinePen.Width := SeriesWidth;
 
   Result.OPCSource := TaOPCDataLink(aDataLink).RealSource;
   Result.ConnectionName := TaOPCDataLink(aDataLink).RealSource.Name;
@@ -1736,7 +1768,7 @@ var
 begin
   if not Assigned(aSource) then
   begin
-    ShowMessage('Нет подключения');
+    ShowMessage('РќРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёСЏ');
     Abort;
   end;
 
@@ -1745,7 +1777,9 @@ begin
   Result.StairsOptions := aStairsOptions;
 
   if aColor <> clNone then
-    Result.SeriesColor := aColor;
+    Result.SeriesColor := aColor
+  else
+    Result.SeriesColor := cDayColors[Chart.SeriesCount mod High(cDayColors)];
 
   Result.Tag := aTag;
 
@@ -1774,6 +1808,7 @@ begin
   Result.Marks.Style := smsLabel;
   Result.Marks.Font.Name := Chart.Title.Font.Name;
   Result.ShowFullName := False;
+  Result.LinePen.Width := SeriesWidth;
 
   Result.OPCSource := aSource;
   Result.ConnectionName := aSource.Name;
@@ -1881,6 +1916,16 @@ end;
 procedure TChartFrame.lIntervalClick(Sender: TObject);
 begin
   aIntervalExecute(Sender);
+end;
+
+procedure TChartFrame.miThickClick(Sender: TObject);
+begin
+  SetSeriesWidth(1);
+end;
+
+procedure TChartFrame.miThinClick(Sender: TObject);
+begin
+  SetSeriesWidth(0);
 end;
 
 procedure TChartFrame.RestoreFrom(aStore: TCustomIniFile; aSectionName: string);
@@ -2033,6 +2078,17 @@ end;
 procedure TChartFrame.SetOPCSource(const Value: TaCustomMultiOPCSource);
 begin
 
+end;
+
+procedure TChartFrame.SetSeriesWidth(aWidth: Integer);
+begin
+  if FSeriesWidth <> aWidth then
+  begin
+    FSeriesWidth := aWidth;
+    for var i := 0 to Chart.SeriesCount - 1 do
+      if Chart.Series[i] is TaOPCLineSeries then
+        TaOPCLineSeries(Chart.Series[i]).Pen.Width := aWidth;  //Width := aWidth;
+  end;
 end;
 
 procedure TChartFrame.SetShowFullSeriesName(const Value: boolean);

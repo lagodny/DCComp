@@ -1,4 +1,4 @@
-unit uDataLinkedClasses;
+п»їunit uDataLinkedClasses;
 
 interface
 
@@ -29,14 +29,14 @@ type
   end;
 
   TDataLinkWriteKind = (
-    dlwkNone = 0,               // запись невозможна
-    dlwkOnCurrentMoment = 1,    // только на текущий момент времени
-    dlwkOnMoment = 3            // на любой момент времени (будущее и прошлое)
+    dlwkNone = 0,               // Р·Р°РїРёСЃСЊ РЅРµРІРѕР·РјРѕР¶РЅР°
+    dlwkOnCurrentMoment = 1,    // С‚РѕР»СЊРєРѕ РЅР° С‚РµРєСѓС‰РёР№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
+    dlwkOnMoment = 3            // РЅР° Р»СЋР±РѕР№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё (Р±СѓРґСѓС‰РµРµ Рё РїСЂРѕС€Р»РѕРµ)
     );
 
 
-  // Link к датчику, с дополнительными возможностями
-  // может вычитывать и записывать свои параметры
+  // Link Рє РґР°С‚С‡РёРєСѓ, СЃ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹РјРё РІРѕР·РјРѕР¶РЅРѕСЃС‚СЏРјРё
+  // РјРѕР¶РµС‚ РІС‹С‡РёС‚С‹РІР°С‚СЊ Рё Р·Р°РїРёСЃС‹РІР°С‚СЊ СЃРІРѕРё РїР°СЂР°РјРµС‚СЂС‹
   TDataLinkExtInfo = class(TaOPCDataLink)
   private
     FName: string;
@@ -48,9 +48,9 @@ type
     FSectionName: string;
 
     FIsShifted: Boolean;
-    FShiftTime: TDateTime;        // время, на которое у нас есть значение
-    FShiftValue: Extended;        // само значение
-    FDefValue: string;            // значение, которое будет использовано, если не указан PhysID
+    FShiftTime: TDateTime;        // РІСЂРµРјСЏ, РЅР° РєРѕС‚РѕСЂРѕРµ Сѓ РЅР°СЃ РµСЃС‚СЊ Р·РЅР°С‡РµРЅРёРµ
+    FShiftValue: Extended;        // СЃР°РјРѕ Р·РЅР°С‡РµРЅРёРµ
+    FDefValue: string;            // Р·РЅР°С‡РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ, РµСЃР»Рё РЅРµ СѓРєР°Р·Р°РЅ PhysID
 
     FStoredShiftParams: TDataLinkShift;
     FWriteKind: TDataLinkWriteKind;
@@ -69,10 +69,11 @@ type
     procedure SetSectionName(const Value: string);
     function GetShiftKindStr: string;
     function GetAsInteger: Integer;
+    function GetFullName: string;
   protected
     procedure AssignTo(Dest: TPersistent); override;
   public
-    ShiftParams: TDataLinkShift; // параметры вычисления относительного значения
+    ShiftParams: TDataLinkShift; // РїР°СЂР°РјРµС‚СЂС‹ РІС‹С‡РёСЃР»РµРЅРёСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
 
     procedure Load(aIniFile: TCustomIniFile; aSection: string); virtual;
     procedure Save(aIniFile: TCustomIniFile; aSection: string;
@@ -84,6 +85,7 @@ type
     function GetValueFloat(aShifted: Boolean): Extended;
 
     property Name: string read FName write SetName;
+    property FullName: string read GetFullName;
     property SensorUnitName: string read FSensorUnitName write SetSensorUnitName;
     property DisplayFormat: string read FDisplayFormat write SetDisplayFormat;
     property RefTableName: string read FRefTableName write SetRefTableName;
@@ -92,10 +94,10 @@ type
     property LookupList: TaOPCLookupList read FLookupList write SetLookupList;
     property SectionName: string read FSectionName write SetSectionName;
 
-    // DataLink может возвращать относительное значение
+    // DataLink РјРѕР¶РµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     property IsShifted: Boolean read FIsShifted write FIsShifted;
 
-    // DataLink доступен для записи
+    // DataLink РґРѕСЃС‚СѓРїРµРЅ РґР»СЏ Р·Р°РїРёСЃРё
     property WriteKind: TDataLinkWriteKind read FWriteKind write FWriteKind;
 
     property AsBool: boolean read GetAsBool;
@@ -113,10 +115,10 @@ type
   TDataLinkExtInfoList = class(TObjectList<TDataLinkExtInfo>)
   end;
 
-  // класс - прослойка между объектами НАБЛЮДЕНИЯ (TCustomDataPoint) и
-  //         объектами ВИЗУАЛИЗАЦИИ (это могут быть объекты любого класса,
-  //         они агрегируют TDataPointLink и работают через него)
-  // через такие линки объекты визуализации получают сигнал об изменениях
+  // РєР»Р°СЃСЃ - РїСЂРѕСЃР»РѕР№РєР° РјРµР¶РґСѓ РѕР±СЉРµРєС‚Р°РјРё РќРђР‘Р›Р®Р”Р•РќРРЇ (TCustomDataPoint) Рё
+  //         РѕР±СЉРµРєС‚Р°РјРё Р’РР—РЈРђР›РР—РђР¦РР (СЌС‚Рѕ РјРѕРіСѓС‚ Р±С‹С‚СЊ РѕР±СЉРµРєС‚С‹ Р»СЋР±РѕРіРѕ РєР»Р°СЃСЃР°,
+  //         РѕРЅРё Р°РіСЂРµРіРёСЂСѓСЋС‚ TDataPointLink Рё СЂР°Р±РѕС‚Р°СЋС‚ С‡РµСЂРµР· РЅРµРіРѕ)
+  // С‡РµСЂРµР· С‚Р°РєРёРµ Р»РёРЅРєРё РѕР±СЉРµРєС‚С‹ РІРёР·СѓР°Р»РёР·Р°С†РёРё РїРѕР»СѓС‡Р°СЋС‚ СЃРёРіРЅР°Р» РѕР± РёР·РјРµРЅРµРЅРёСЏС…
   TDataPointLink = class
   private
     FDataPoint: TCustomDataPoint;
@@ -126,11 +128,11 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    // объект DataPoint вызывает ChangeData, когда его данные изменились
+    // РѕР±СЉРµРєС‚ DataPoint РІС‹Р·С‹РІР°РµС‚ ChangeData, РєРѕРіРґР° РµРіРѕ РґР°РЅРЅС‹Рµ РёР·РјРµРЅРёР»РёСЃСЊ
     procedure ChangeData(Sender: TObject);
-    // объект, который является источником данных
+    // РѕР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ СЏРІР»СЏРµС‚СЃСЏ РёСЃС‚РѕС‡РЅРёРєРѕРј РґР°РЅРЅС‹С…
     property DataPoint: TCustomDataPoint read GetDataPoint write SetDataPoint;
-    // событие вызывается при изменении данных объекта DataPoint
+    // СЃРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РёР·РјРµРЅРµРЅРёРё РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р° DataPoint
     property OnChangeData: TNotifyEvent read FOnChangeData write FOnChangeData;
   end;
 
@@ -138,18 +140,18 @@ type
   end;
 
 
-  // РОДИТЕЛЬСКИЙ класс наблюдаемых объектов : авто, комбайн, метео/насосная станция
+  // Р РћР”РРўР•Р›Р¬РЎРљРР™ РєР»Р°СЃСЃ РЅР°Р±Р»СЋРґР°РµРјС‹С… РѕР±СЉРµРєС‚РѕРІ : Р°РІС‚Рѕ, РєРѕРјР±Р°Р№РЅ, РјРµС‚РµРѕ/РЅР°СЃРѕСЃРЅР°СЏ СЃС‚Р°РЅС†РёСЏ
   TCustomDataPoint = class(TPersistent)
   private
     FSectionName: string;
     FParentID: integer;
     FName: string;
 
-    // если true, обновление визуальных объектов (FDataPointLinks) не выполняется
+    // РµСЃР»Рё true, РѕР±РЅРѕРІР»РµРЅРёРµ РІРёР·СѓР°Р»СЊРЅС‹С… РѕР±СЉРµРєС‚РѕРІ (FDataPointLinks) РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
     FLocked: boolean;
-    // список датчиков объекта
+    // СЃРїРёСЃРѕРє РґР°С‚С‡РёРєРѕРІ РѕР±СЉРµРєС‚Р°
     FDataLinks: TDataLinkExtInfoList;
-    // список ссылок на визульные объекты, связанные с этим объектом
+    // СЃРїРёСЃРѕРє СЃСЃС‹Р»РѕРє РЅР° РІРёР·СѓР»СЊРЅС‹Рµ РѕР±СЉРµРєС‚С‹, СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ СЌС‚РёРј РѕР±СЉРµРєС‚РѕРј
     FDataPointLinks: TDataPointLinkList;
 
     FLastChangeTime: TDateTime;
@@ -257,7 +259,7 @@ type
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnSourceChanged: TNotifyEvent read FOnSourceChanged write FOnSourceChanged;
 
-    // список связующих объектов (другими словами датчиков)
+    // СЃРїРёСЃРѕРє СЃРІСЏР·СѓСЋС‰РёС… РѕР±СЉРµРєС‚РѕРІ (РґСЂСѓРіРёРјРё СЃР»РѕРІР°РјРё РґР°С‚С‡РёРєРѕРІ)
     property DataLinks: TDataLinkExtInfoList read FDataLinks;
 
     property SectionName: string read FSectionName write SetSectionName;
@@ -415,21 +417,29 @@ begin
     Result := FormatValue(AsFloatShift, DisplayFormat);
 end;
 
+function TDataLinkExtInfo.GetFullName: string;
+begin
+  if Assigned(DataPoint) then
+    Result := DataPoint.Name + '.' + Name
+  else
+    Result := Name;
+end;
+
 function TDataLinkExtInfo.GetShiftKindStr: string;
 begin
   case ShiftParams.Kind of
     dlskAbsolute:
       Result := '';
     dlskBeginDay:
-      Result := 'с начала дня';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РґРЅСЏ';
     dlskBeginWeek:
-      Result := 'с начала недели';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РЅРµРґРµР»Рё';
     dlskBeginMonth:
-      Result := 'с начала месяца';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РјРµСЃСЏС†Р°';
     dlskBeginYear:
-      Result := 'с начала года';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РіРѕРґР°';
     dlskMoment:
-      Result := 'с '+DateTimeToStr(ShiftParams.Time);
+      Result := 'СЃ '+DateTimeToStr(ShiftParams.Time);
   end;
 end;
 
@@ -453,13 +463,13 @@ begin
   else
   begin
     case ShiftParams.Kind of
-      dlskAbsolute:   // абсолютное значение
+      dlskAbsolute:   // Р°Р±СЃРѕР»СЋС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
         aShiftTime := 0;
-      dlskBeginDay:   // с начала дня
+      dlskBeginDay:   // СЃ РЅР°С‡Р°Р»Р° РґРЅСЏ
         aShiftTime := Trunc(DataPoint.Date);
-      dlskBeginWeek:  // с начала недели
+      dlskBeginWeek:  // СЃ РЅР°С‡Р°Р»Р° РЅРµРґРµР»Рё
       begin
-        // день недели по нашему : пн-0, вт-1 ... вс-6
+        // РґРµРЅСЊ РЅРµРґРµР»Рё РїРѕ РЅР°С€РµРјСѓ : РїРЅ-0, РІС‚-1 ... РІСЃ-6
         dow := DayOfWeek(DataPoint.Date);
         if dow = 1 then
           dow := 6
@@ -468,23 +478,23 @@ begin
 
         aShiftTime := Trunc(DataPoint.Date - dow);
       end;
-      dlskBeginMonth: // с начала месяца
+      dlskBeginMonth: // СЃ РЅР°С‡Р°Р»Р° РјРµСЃСЏС†Р°
       begin
         DecodeDate(DataPoint.Date, y, m, d);
         aShiftTime := EncodeDate(y, m, 1);
       end;
-      dlskBeginYear: // с начала года
+      dlskBeginYear: // СЃ РЅР°С‡Р°Р»Р° РіРѕРґР°
       begin
         DecodeDate(DataPoint.Date, y, m, d);
         aShiftTime := EncodeDate(y, 1, 1);
       end;
-      dlskMoment:   // на заданный момент времени
+      dlskMoment:   // РЅР° Р·Р°РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
         aShiftTime := ShiftParams.Time;
       else
         raise Exception.Create('Unknown ShiftParams.Kind');
     end;
 
-    // расчитатываем значение на дату, если дата изменилась
+    // СЂР°СЃС‡РёС‚Р°С‚С‹РІР°РµРј Р·РЅР°С‡РµРЅРёРµ РЅР° РґР°С‚Сѓ, РµСЃР»Рё РґР°С‚Р° РёР·РјРµРЅРёР»Р°СЃСЊ
     if aShiftTime <> FShiftTime then
     begin
       if Assigned(RealSource)
@@ -684,16 +694,16 @@ begin
   if FDataPoint = Value then
     exit;
 
-  // удаляем из списка линков старого объекта
+  // СѓРґР°Р»СЏРµРј РёР· СЃРїРёСЃРєР° Р»РёРЅРєРѕРІ СЃС‚Р°СЂРѕРіРѕ РѕР±СЉРµРєС‚Р°
   if Assigned(FDataPoint) then
     FDataPoint.FDataPointLinks.Remove(Self);
 
-  // добавляем в спискоа линков нового объекта
+  // РґРѕР±Р°РІР»СЏРµРј РІ СЃРїРёСЃРєРѕР° Р»РёРЅРєРѕРІ РЅРѕРІРѕРіРѕ РѕР±СЉРµРєС‚Р°
   if Assigned(Value) then
     Value.FDataPointLinks.Add(Self);
 
   FDataPoint := Value;
-  // сообщим клиентам, что изменился источник данных DataPoint
+  // СЃРѕРѕР±С‰РёРј РєР»РёРµРЅС‚Р°Рј, С‡С‚Рѕ РёР·РјРµРЅРёР»СЃСЏ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… DataPoint
   ChangeData(Value);
 end;
 
@@ -847,7 +857,7 @@ function TCustomDataPoint.DataLinkIsActive(aName: string): Boolean;
 var
   aDataLink: TDataLinkExtInfo;
 begin
-  aDataLink := DataLinkByName(aName);// 'Уровень топлива');
+  aDataLink := DataLinkByName(aName);// 'РЈСЂРѕРІРµРЅСЊ С‚РѕРїР»РёРІР°');
   Result := Assigned(aDataLink) and (aDataLink.PhysID <> '');
 end;
 
@@ -920,7 +930,7 @@ var
   i: Integer;
 begin
   Result := nil;
-  // вернем первый попавшийся
+  // РІРµСЂРЅРµРј РїРµСЂРІС‹Р№ РїРѕРїР°РІС€РёР№СЃСЏ
   for i := 0 to FDataLinks.Count - 1 do
   begin
     if Assigned(FDataLinks[i].OPCSource) then
@@ -938,7 +948,7 @@ var
   i: Integer;
 begin
   Result := nil;
-  // вернем первый попавшийся
+  // РІРµСЂРЅРµРј РїРµСЂРІС‹Р№ РїРѕРїР°РІС€РёР№СЃСЏ
   for i := 0 to FDataLinks.Count - 1 do
   begin
     if Assigned(FDataLinks[i].RealSource) then
@@ -1058,7 +1068,7 @@ function TCustomDataPoint.NewDataLink(aSectionName: string;
   aShifted: Boolean; aShiftKind: TDataLinkShiftKind;
   aWriteKind: TDataLinkWriteKind): TDataLinkExtInfo;
 begin
-  // создаём DataLink
+  // СЃРѕР·РґР°С‘Рј DataLink
   Result := TDataLinkExtInfo.Create(Self);
   Result.SectionName := aSectionName;
   //  Result.PhysID := aID;
@@ -1074,7 +1084,7 @@ begin
   if FDataLinks.Count = 0 then
     Result.OnRequest := ChangeData;
 
-  // добавляем в список для удобства групповой обработки (удаление, формирование списков)
+  // РґРѕР±Р°РІР»СЏРµРј РІ СЃРїРёСЃРѕРє РґР»СЏ СѓРґРѕР±СЃС‚РІР° РіСЂСѓРїРїРѕРІРѕР№ РѕР±СЂР°Р±РѕС‚РєРё (СѓРґР°Р»РµРЅРёРµ, С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃРїРёСЃРєРѕРІ)
   FDataLinks.Add(Result);
 end;
 
@@ -1178,7 +1188,7 @@ begin
       FDataLinks[i].OPCSource := Value;
 
     FLastChangeTime := -1;
-    // Alex - события
+    // Alex - СЃРѕР±С‹С‚РёСЏ
     //Events.Reset;
 
     if Assigned(FOnSourceChanged) then

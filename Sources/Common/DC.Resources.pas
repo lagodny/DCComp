@@ -1,4 +1,4 @@
-unit DC.Resources;
+﻿unit DC.Resources;
 
 interface
 

@@ -1,4 +1,4 @@
-unit aDCReg;
+п»їunit aDCReg;
 
 interface
 
@@ -54,35 +54,35 @@ uses
 
 procedure Register;
 begin
-  // обработчик команд
+  // РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґ
   RegisterComponents('DC', [TaDCCommandHandlers]);
 
-//  // список подключений
+//  // СЃРїРёСЃРѕРє РїРѕРґРєР»СЋС‡РµРЅРёР№
 //  RegisterComponents('DC', [TaOPCConnectionList]);
 //
-//  // источники данных
+//  // РёСЃС‚РѕС‡РЅРёРєРё РґР°РЅРЅС‹С…
   RegisterComponents('DC', [TaOPCTCPSource]);
   RegisterComponents('DC', [TaOPCTCPSource_V30]);
   RegisterComponents('DC', [TaOPCTCPSource_V31]);
   RegisterComponents('DC', [TaOPCTCPSource_V32]);
 
 //
-  // просмотрщик истории
+  // РїСЂРѕСЃРјРѕС‚СЂС‰РёРє РёСЃС‚РѕСЂРёРё
   RegisterComponents('DC', [TaOPCCinema]);
 //  RegisterComponents('DC', [TaOPCCinemaControl]);
 //
-  // авторизация
+  // Р°РІС‚РѕСЂРёР·Р°С†РёСЏ
 //  RegisterComponents('DC', [TaDCAuthorization]);
 
-  // справочник
+  // СЃРїСЂР°РІРѕС‡РЅРёРє
   RegisterComponents('DC', [TaOPCLookupList]);
 //
-//  // невизуальный доступ к тегам
+//  // РЅРµРІРёР·СѓР°Р»СЊРЅС‹Р№ РґРѕСЃС‚СѓРї Рє С‚РµРіР°Рј
 //
-  // провайдер
+  // РїСЂРѕРІР°Р№РґРµСЂ
   RegisterComponents('DC', [TaOPCProvider]);
 
-  // список провайдеров
+  // СЃРїРёСЃРѕРє РїСЂРѕРІР°Р№РґРµСЂРѕРІ
   RegisterComponents('DC', [TaOPCProviderList]);
   RegisterClass(TaOPCProviderItem);
   RegisterNoIcon([TaOPCProviderItem]);
@@ -90,7 +90,7 @@ begin
 //  RegisterComponents('DC', [TaOPCTagDictionary]);
 //  RegisterComponents('DC', [TaOPCProvider]);
 //
-//  // компоненты визуализации
+//  // РєРѕРјРїРѕРЅРµРЅС‚С‹ РІРёР·СѓР°Р»РёР·Р°С†РёРё
 //  RegisterComponents('DC', [TaOPCLabel]);
 //  RegisterComponents('DC', [TaOPCBlinkLabel]);
 //
@@ -109,11 +109,11 @@ begin
 //
 //  RegisterComponents('DC', [TaOPCChart]);
 //
-//  // редакторы компонентов
+//  // СЂРµРґР°РєС‚РѕСЂС‹ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
 //  RegisterComponentEditor(TaOPCImageList, TaOPCImageListEditor);
   RegisterComponentEditor(TaOPCProviderList, TaOPCProviderListEditor);
 //
-//  // категория свойств DC
+//  // РєР°С‚РµРіРѕСЂРёСЏ СЃРІРѕР№СЃС‚РІ DC
 //  RegisterPropertiesInCategory('DC', TaCustomOPCDataObject,
 //    ['PhysID', 'Value', 'ErrorCode', 'ErrorString', 'LookupList', 'StairsOptions','*OPCSource']);
 //
@@ -122,11 +122,11 @@ end;
 
 
 const
-  SOpen = '&Открыть...';
-  SSave = '&Сохранить..';
-  SSaveImages = 'Сохранить рисунки...';
+  SOpen = '&РћС‚РєСЂС‹С‚СЊ...';
+  SSave = '&РЎРѕС…СЂР°РЅРёС‚СЊ..';
+  SSaveImages = 'РЎРѕС…СЂР°РЅРёС‚СЊ СЂРёСЃСѓРЅРєРё...';
 
-  SplEdit = 'Редактировать...';
+  SplEdit = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ...';
 
 {  TaOPCImageListEditor  }
 
@@ -230,7 +230,7 @@ const
 procedure TaOPCProviderListEditor.ExecuteVerb(Index: Integer);
 begin
   case Index of
-    0: // настройка списка провейдеров
+    0: // РЅР°СЃС‚СЂРѕР№РєР° СЃРїРёСЃРєР° РїСЂРѕРІРµР№РґРµСЂРѕРІ
     begin
       ShowProvidersEditor(Designer, TaOPCProviderList(Component),GetPLDesignerClass);
     end;

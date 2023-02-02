@@ -1,4 +1,4 @@
-unit FMX.DCRegister;
+﻿unit FMX.DCRegister;
 
 interface
 

@@ -1,11 +1,11 @@
-{$INCLUDE dcDataTypes.inc}
+п»ї{$INCLUDE dcDataTypes.inc}
 
 unit uDataTypes;
 
 interface
 
 type
-  // тип данных, в котором храним показания датчиков
+  // С‚РёРї РґР°РЅРЅС‹С…, РІ РєРѕС‚РѕСЂРѕРј С…СЂР°РЅРёРј РїРѕРєР°Р·Р°РЅРёСЏ РґР°С‚С‡РёРєРѕРІ
   {$IFDEF VALUE_IS_DOUBLE}
   TSensorValue = Double;
   {$ELSE}
@@ -15,20 +15,22 @@ type
   PSensorValue = ^TSensorValue;
 
 
-  // запись, в которой храним показания в файле данных
+  // Р·Р°РїРёСЃСЊ, РІ РєРѕС‚РѕСЂРѕР№ С…СЂР°РЅРёРј РїРѕРєР°Р·Р°РЅРёСЏ РІ С„Р°Р№Р»Рµ РґР°РЅРЅС‹С…
   TSensorDataRec = packed record
     Time: TDateTime;
     Value: TSensorValue;
+    procedure InitFromHex(const aHex: string);
+    function ToHex: string;
   end;
   PSensorDataRec = ^TSensorDataRec;
 
-  // данные на момент времени + информация об ошибке
+  // РґР°РЅРЅС‹Рµ РЅР° РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё + РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± РѕС€РёР±РєРµ
   TSensorHistDataRec = packed record
     Time: TDateTime;
     Value, Error: TSensorValue;
   end;
 
-  // массив записей
+  // РјР°СЃСЃРёРІ Р·Р°РїРёСЃРµР№
   TSensorDataArr = array of TSensorDataRec;
 
 const
@@ -58,5 +60,24 @@ end;
 
 
 
+
+{ TSensorDataRec }
+
+procedure TSensorDataRec.InitFromHex(const aHex: string);
+var
+  a: Array [0..SizeOf(TSensorDataRec) - 1] of Byte absolute Self;
+begin
+  for var i := 0 to High(a) do
+    a[i] := StrToInt('$'+Copy(aHex, i*2 + 1, 2));
+end;
+
+function TSensorDataRec.ToHex: string;
+var
+  a: Array [0..SizeOf(TSensorDataRec) - 1] of Byte absolute Self;
+begin
+  Result := '';
+  for var i := 0 to High(a) do
+    Result := Result + IntToHex(a[i], 2);
+end;
 
 end.

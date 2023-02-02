@@ -1,9 +1,9 @@
-unit uSensorPropNames;
+п»їunit uSensorPropNames;
 
 interface
 
 const
-  // имена свойств объектов (Групп)
+  // РёРјРµРЅР° СЃРІРѕР№СЃС‚РІ РѕР±СЉРµРєС‚РѕРІ (Р“СЂСѓРїРї)
   sID = 'ID';
   sParentID = 'ParentID';
   sName = 'Name';
@@ -11,13 +11,13 @@ const
   sFullName = 'FullName';
   sKind = 'Kind';
 
-  // имена свойств оборудования (Equipment)
+  // РёРјРµРЅР° СЃРІРѕР№СЃС‚РІ РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЏ (Equipment)
   sDevPath = 'Path';
   sDevData = 'Data';
   sDevInfo = 'DevInfo';
   sDevCommands = 'DevCommands';
 
-  // имена свойств датчика
+  // РёРјРµРЅР° СЃРІРѕР№СЃС‚РІ РґР°С‚С‡РёРєР°
   sSensorID = 'ID';
   sSensorSID = 'SID';
   sSensorUseParentSID = 'UseParentSID';

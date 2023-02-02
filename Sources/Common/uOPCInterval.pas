@@ -1,4 +1,4 @@
-unit uOPCInterval;
+п»їunit uOPCInterval;
 
 interface
 
@@ -108,8 +108,8 @@ uses
 //  uDCLocalizer;
 
 resourcestring
-  StrDate1MoreDate2Error = 'Date1 не может быть меньше Date2';
-  StrTimeShiftMastBeMoreZeroError = 'TimeShift должно быть >= 0';
+  StrDate1MoreDate2Error = 'Date1 РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ Date2';
+  StrTimeShiftMastBeMoreZeroError = 'TimeShift РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ >= 0';
 
   resToday = 'Today';
   resYesterday = 'Yesterday';
@@ -178,7 +178,7 @@ end;
 constructor TOPCInterval.Create;
 begin
   FEnableTime := True;
-  FTimeShift := 0.5; //12 часов
+  FTimeShift := 0.5; //12 С‡Р°СЃРѕРІ
   FTimeShiftUnit := tsuHour;
   FKind := ikInterval;
   FShiftKind := skToday;
@@ -346,34 +346,34 @@ begin
         Result := ShiftKindToStr(ShiftKind);
 
 //      skToday:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skToday); //'Сегодня';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skToday); //'РЎРµРіРѕРґРЅСЏ';
 //      skYesterday:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skYesterday); //'Вчера';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skYesterday); //'Р’С‡РµСЂР°';
 //      skWeek:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skWeek); //'С начала недели';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skWeek); //'РЎ РЅР°С‡Р°Р»Р° РЅРµРґРµР»Рё';
 //      skLastWeek:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skLastWeek); //'Прошлая неделя';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skLastWeek); //'РџСЂРѕС€Р»Р°СЏ РЅРµРґРµР»СЏ';
 //      skMonth:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skMonth); //'С начала месяца';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skMonth); //'РЎ РЅР°С‡Р°Р»Р° РјРµСЃСЏС†Р°';
 //      skLastMonth:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skLastMonth); //'Прошлый месяц';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skLastMonth); //'РџСЂРѕС€Р»С‹Р№ РјРµСЃСЏС†';
 //      skTomorrow:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skTomorrow); //'Завтра';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skTomorrow); //'Р—Р°РІС‚СЂР°';
 //      skNextWeek:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skNextWeek); //'Следующая неделя';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skNextWeek); //'РЎР»РµРґСѓСЋС‰Р°СЏ РЅРµРґРµР»СЏ';
 //      skNext12Hours:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skNext12Hours); //'Следующие 12 часов';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skNext12Hours); //'РЎР»РµРґСѓСЋС‰РёРµ 12 С‡Р°СЃРѕРІ';
 //      skNextDay:
-//        Result := TDCLocalizer.GetStringRes(idxInterval_skNextDay); //'Седующий день';
+//        Result := TDCLocalizer.GetStringRes(idxInterval_skNextDay); //'РЎРµРґСѓСЋС‰РёР№ РґРµРЅСЊ';
     end;
   end
   else
   begin
     if TimeShiftUnit = tsuHour then
-      Result := Format(resNLastHours, //'последние %s ч.',
+      Result := Format(resNLastHours, //'РїРѕСЃР»РµРґРЅРёРµ %s С‡.',
         [FormatFloat('0.##', TimeShift * 24)])
     else
-      Result := Format(resNLastDays, //'последние %s д.',
+      Result := Format(resNLastDays, //'РїРѕСЃР»РµРґРЅРёРµ %s Рґ.',
         [FormatFloat('0.##', TimeShift)])
   end;
 end;
@@ -437,7 +437,7 @@ end;
 
 function TOPCInterval.ruDayOfWeek(const DateTime: TDateTime): Word;
 begin
-  // день недели по нашему : пн-0, вт-1 ... вс-6
+  // РґРµРЅСЊ РЅРµРґРµР»Рё РїРѕ РЅР°С€РµРјСѓ : РїРЅ-0, РІС‚-1 ... РІСЃ-6
   Result := DayOfWeek(DateTime);
   if Result = 1 then
     Result := 6
@@ -609,29 +609,29 @@ begin
     skNone:
       Result := '...';
     skToday:
-      Result := resToday; //'Сегодня';
+      Result := resToday; //'РЎРµРіРѕРґРЅСЏ';
     skYesterday:
-      Result := resYesterday; //'Вчера';
+      Result := resYesterday; //'Р’С‡РµСЂР°';
     skWeek:
-      Result := resBeginningWeek; //'С начала недели';
+      Result := resBeginningWeek; //'РЎ РЅР°С‡Р°Р»Р° РЅРµРґРµР»Рё';
     skLastWeek:
-      Result := resLastWeek; //'Прошлая неделя';
+      Result := resLastWeek; //'РџСЂРѕС€Р»Р°СЏ РЅРµРґРµР»СЏ';
     skMonth:
-      Result := resBeginningMonth; //'С начала месяца';
+      Result := resBeginningMonth; //'РЎ РЅР°С‡Р°Р»Р° РјРµСЃСЏС†Р°';
     skLastMonth:
-      Result := resLastMonth; //'Прошлый месяц';
+      Result := resLastMonth; //'РџСЂРѕС€Р»С‹Р№ РјРµСЃСЏС†';
     skTomorrow:
-      Result := resTomorrow; //'Завтра';
+      Result := resTomorrow; //'Р—Р°РІС‚СЂР°';
     skNextWeek:
-      Result := resNextWeek; //'Следующая неделя';
+      Result := resNextWeek; //'РЎР»РµРґСѓСЋС‰Р°СЏ РЅРµРґРµР»СЏ';
     skNext12Hours:
-      Result := resNext12Hours; //'Следующие 12 часов';
+      Result := resNext12Hours; //'РЎР»РµРґСѓСЋС‰РёРµ 12 С‡Р°СЃРѕРІ';
     skNextDay:
-      Result := resNextDay; //'Седующий день';
+      Result := resNextDay; //'РЎРµРґСѓСЋС‰РёР№ РґРµРЅСЊ';
     skYear:
-      Result := resYear; //'Этот год';
+      Result := resYear; //'Р­С‚РѕС‚ РіРѕРґ';
     skLastYear:
-      Result := resLastYear; //'Прошлый год';
+      Result := resLastYear; //'РџСЂРѕС€Р»С‹Р№ РіРѕРґ';
 
   end;
 end;

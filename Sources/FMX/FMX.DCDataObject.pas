@@ -1,4 +1,4 @@
-unit FMX.DCDataObject;
+п»їunit FMX.DCDataObject;
 
 interface
 
@@ -97,7 +97,7 @@ type
     property Moment: TDateTime read GetMoment;
   published
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
-    // публикуем события родителя
+    // РїСѓР±Р»РёРєСѓРµРј СЃРѕР±С‹С‚РёСЏ СЂРѕРґРёС‚РµР»СЏ
     property OnClick;
     property OnDblClick;
     property OnDragDrop;
@@ -237,9 +237,9 @@ end;
 
 function TaCustomOPCDataObject.StoredValue: boolean;
 begin
-  // сохраняем значение только если
-  // (не задан источник данных или адрес)
-  // и (не задан графический источник данных)
+  // СЃРѕС…СЂР°РЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ С‚РѕР»СЊРєРѕ РµСЃР»Рё
+  // (РЅРµ Р·Р°РґР°РЅ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… РёР»Рё Р°РґСЂРµСЃ)
+  // Рё (РЅРµ Р·Р°РґР°РЅ РіСЂР°С„РёС‡РµСЃРєРёР№ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…)
   Result := (not Assigned(OPCSource) or not(PhysID <> '')) and not Assigned(GraphicOPCSource);
 end;
 
@@ -269,7 +269,7 @@ begin
   else if Hints.Count > 0 then
   begin
     try
-      // если есть однозначное соответствие - возвращаем его
+      // РµСЃР»Рё РµСЃС‚СЊ РѕРґРЅРѕР·РЅР°С‡РЅРѕРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ - РІРѕР·РІСЂР°С‰Р°РµРј РµРіРѕ
       i := Hints.IndexOfName(Value);
       if i >= 0 then
       begin
@@ -277,8 +277,8 @@ begin
         exit;
       end;
 
-      // иначе ищем промежуточное значение
-      // (записи должны быть упорядочены)
+      // РёРЅР°С‡Рµ РёС‰РµРј РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
+      // (Р·Р°РїРёСЃРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓРїРѕСЂСЏРґРѕС‡РµРЅС‹)
       // TStringList(Hints).Sorted := true;
 
       v := StrToFloat(Value);
@@ -292,7 +292,7 @@ begin
           if (LastKey >= Key) then
           begin
             IsFound := true;
-            Result := 'значения для отображения подсказок должны быть отсортированы в порядке возрастания';
+            Result := 'Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РїРѕРґСЃРєР°Р·РѕРє РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅС‹ РІ РїРѕСЂСЏРґРєРµ РІРѕР·СЂР°СЃС‚Р°РЅРёСЏ';
             break;
           end;
 

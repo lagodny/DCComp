@@ -19,16 +19,18 @@ type
     constructor Create(AOwner: TComponent); override;
   end;
 
-  function ShowIntervalForm(aInterval: TOPCInterval; aHelpContext: THelpContext): boolean;
+  function ShowIntervalForm(aInterval: TOPCInterval; aHelpContext: THelpContext; aPopupParent: TCustomForm): boolean;
 
 implementation
 
-function ShowIntervalForm(aInterval: TOPCInterval; aHelpContext: THelpContext): boolean;
+function ShowIntervalForm(aInterval: TOPCInterval; aHelpContext: THelpContext; aPopupParent: TCustomForm): boolean;
 begin
+  //TOpenDialog.Create(nil).Execute()
   with TOPCIntervalForm.Create(nil) do
   begin
     try
       HelpContext := aHelpContext;
+      PopupParent := aPopupParent;
       OPCIntervalFrame.SetInterval(aInterval);
       if ShowModal = mrOk then
       begin

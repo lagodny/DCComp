@@ -1,4 +1,4 @@
-unit uDCTeeTools;
+﻿unit uDCTeeTools;
 
 {$I VCL.DC.inc}
 

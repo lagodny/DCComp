@@ -1,4 +1,4 @@
-unit uDCStrResource;
+﻿unit uDCStrResource;
 
 interface
 

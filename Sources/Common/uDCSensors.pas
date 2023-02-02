@@ -1,4 +1,4 @@
-unit uDCSensors;
+п»їunit uDCSensors;
 
 interface
 
@@ -53,9 +53,9 @@ type
   end;
 
   TDataLinkWriteKind = (
-    dlwkNone = 0, // запись невозможна
-    dlwkOnCurrentMoment = 1, // только на текущий момент времени
-    dlwkOnMoment = 3 // на любой момент времени (будущее и прошлое)
+    dlwkNone = 0, // Р·Р°РїРёСЃСЊ РЅРµРІРѕР·РјРѕР¶РЅР°
+    dlwkOnCurrentMoment = 1, // С‚РѕР»СЊРєРѕ РЅР° С‚РµРєСѓС‰РёР№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
+    dlwkOnMoment = 3 // РЅР° Р»СЋР±РѕР№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё (Р±СѓРґСѓС‰РµРµ Рё РїСЂРѕС€Р»РѕРµ)
     );
 
   TSensorDataLink = class(TaOPCDataLink)
@@ -64,10 +64,10 @@ type
     //FLookupList: TaOPCLookupList;
 
     FIsShifted: Boolean;
-    FShiftTime: TDateTime; // время, на которое у нас есть значение
-    FShiftValue: Extended; // само значение
+    FShiftTime: TDateTime; // РІСЂРµРјСЏ, РЅР° РєРѕС‚РѕСЂРѕРµ Сѓ РЅР°СЃ РµСЃС‚СЊ Р·РЅР°С‡РµРЅРёРµ
+    FShiftValue: Extended; // СЃР°РјРѕ Р·РЅР°С‡РµРЅРёРµ
     FDefValue: string;
-      // значение, которое будет использовано, если не указан PhysID
+      // Р·РЅР°С‡РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ, РµСЃР»Рё РЅРµ СѓРєР°Р·Р°РЅ PhysID
 
     FWriteKind: TDataLinkWriteKind;
     FSensor: TSensor;
@@ -99,7 +99,7 @@ type
 
     procedure AssignTo(Dest: TPersistent); override;
   public
-    ShiftParams: TDataLinkShift; // параметры вычисления относительного значения
+    ShiftParams: TDataLinkShift; // РїР°СЂР°РјРµС‚СЂС‹ РІС‹С‡РёСЃР»РµРЅРёСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
 
     function GetValueFloat(aShifted: Boolean): Extended;
 
@@ -111,10 +111,10 @@ type
 
     property LookupList: TaOPCLookupList read GetLookupList write SetLookupList;
 
-    // DataLink может возвращать относительное значение
+    // DataLink РјРѕР¶РµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     property IsShifted: Boolean read FIsShifted write FIsShifted;
 
-    // DataLink доступен для записи
+    // DataLink РґРѕСЃС‚СѓРїРµРЅ РґР»СЏ Р·Р°РїРёСЃРё
     property WriteKind: TDataLinkWriteKind read FWriteKind write FWriteKind;
 
     property AsBool: boolean read GetAsBool;
@@ -253,13 +253,13 @@ begin
   else
   begin
     case ShiftParams.Kind of
-      dlskAbsolute: // абсолютное значение
+      dlskAbsolute: // Р°Р±СЃРѕР»СЋС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
         aShiftTime := 0;
-      dlskBeginDay: // с начала дня
+      dlskBeginDay: // СЃ РЅР°С‡Р°Р»Р° РґРЅСЏ
         aShiftTime := Trunc(Moment);
-      dlskBeginWeek: // с начала недели
+      dlskBeginWeek: // СЃ РЅР°С‡Р°Р»Р° РЅРµРґРµР»Рё
         begin
-          // день недели по нашему : пн-0, вт-1 ... вс-6
+          // РґРµРЅСЊ РЅРµРґРµР»Рё РїРѕ РЅР°С€РµРјСѓ : РїРЅ-0, РІС‚-1 ... РІСЃ-6
           dow := DayOfWeek(Moment);
           if dow = 1 then
             dow := 6
@@ -268,21 +268,21 @@ begin
 
           aShiftTime := Trunc(Moment - dow);
         end;
-      dlskBeginMonth: // с начала месяца
+      dlskBeginMonth: // СЃ РЅР°С‡Р°Р»Р° РјРµСЃСЏС†Р°
         begin
           DecodeDate(Moment, y, m, d);
           aShiftTime := EncodeDate(y, m, 1);
         end;
-      dlskBeginYear: // с начала года
+      dlskBeginYear: // СЃ РЅР°С‡Р°Р»Р° РіРѕРґР°
         begin
           DecodeDate(Moment, y, m, d);
           aShiftTime := EncodeDate(y, 1, 1);
         end;
-      dlskMoment: // на заданный момент времени
+      dlskMoment: // РЅР° Р·Р°РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё
         aShiftTime := ShiftParams.Time;
     end;
 
-    // расчитатываем значение на дату, если дата изменилась
+    // СЂР°СЃС‡РёС‚Р°С‚С‹РІР°РµРј Р·РЅР°С‡РµРЅРёРµ РЅР° РґР°С‚Сѓ, РµСЃР»Рё РґР°С‚Р° РёР·РјРµРЅРёР»Р°СЃСЊ
     if aShiftTime <> FShiftTime then
     begin
       if Assigned(RealSource)
@@ -386,15 +386,15 @@ begin
     dlskAbsolute:
       Result := '';
     dlskBeginDay:
-      Result := 'с начала дня';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РґРЅСЏ';
     dlskBeginWeek:
-      Result := 'с начала недели';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РЅРµРґРµР»Рё';
     dlskBeginMonth:
-      Result := 'с начала месяца';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РјРµСЃСЏС†Р°';
     dlskBeginYear:
-      Result := 'с начала года';
+      Result := 'СЃ РЅР°С‡Р°Р»Р° РіРѕРґР°';
     dlskMoment:
-      Result := 'с ' + DateTimeToStr(ShiftParams.Time);
+      Result := 'СЃ ' + DateTimeToStr(ShiftParams.Time);
   end;
 end;
 

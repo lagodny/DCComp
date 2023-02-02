@@ -1,4 +1,4 @@
-{*******************************************************}
+п»ї{*******************************************************}
 {                                                       }
 {     Copyright (c) 2001-2011 by Alex A. Lagodny        }
 {                                                       }
@@ -19,9 +19,9 @@ const
   sNoCommandHandler = 'no command handler'; // not localize
 
   sUnknownAnswer = 'Unknown answer : %s';
-  sBadParamCount = 'Получено некорректное количество параметров %d из %d.';
+  sBadParamCount = 'РџРѕР»СѓС‡РµРЅРѕ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂР°РјРµС‚СЂРѕРІ %d РёР· %d.';
 
-  // имена свойств датчика
+  // РёРјРµРЅР° СЃРІРѕР№СЃС‚РІ РґР°С‚С‡РёРєР°
   sSensorID = 'ID';
   sSensorName = 'Name';
   sSensorNameEn = 'NameEn';
@@ -71,8 +71,8 @@ const
 
 
 resourcestring
-  SImageNotFound = 'Рисунок ''%s'' не найден';
-  SDataLinkNotFound = 'Объект связи ''%s'' не найден';
+  SImageNotFound = 'Р РёСЃСѓРЅРѕРє ''%s'' РЅРµ РЅР°Р№РґРµРЅ';
+  SDataLinkNotFound = 'РћР±СЉРµРєС‚ СЃРІСЏР·Рё ''%s'' РЅРµ РЅР°Р№РґРµРЅ';
 
 
 

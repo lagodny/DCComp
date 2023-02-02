@@ -193,7 +193,7 @@ type
 
     property StairsOptions : TDCStairsOptionsSet
       read GetStairsOptions write SetStairsOptions default [];
-    property Value : string read GetValue write SetValue stored StoredValue;
+    property Value : string read GetValue write SetValue; // stored StoredValue;
     property PhysID : TPhysID read GetPhysID write SetPhysID;
     property ErrorCode : integer read GetErrorCode write SetErrorCode default 0;// stored false;
     property ErrorString : string read GetErrorString write SetErrorString;// stored false;

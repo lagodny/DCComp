@@ -66,6 +66,15 @@ type
 
     function GetClientList: string; override;
     function GetThreadList: string; override;
+
+    function GetDataFileList(const aPath: string; const aMask: string = ''): string;
+    procedure GetDataFile(aStream: TStream; const aFileName: string; aStartPos: Integer);
+    procedure GetDataFiles(aStream: TStream; aFiles: TStrings);
+
+    function GetFileList(const aPath: string; const aMask: string = '*.*'; aRecursive: Boolean = False): string;
+    procedure DownloadFile(aStream: TStream; const aFileName: string);
+
+
     function GetThreadProp(aThreadName: string): string; override;
     function SetThreadState(ConnectionName: string; aNewState: boolean): string; override;
     function SetThreadLock(ConnectionName: string; aLockState: boolean): string; override;
@@ -81,7 +90,7 @@ type
 
     procedure ChangePassword(aUser, aOldPassword, aNewPassword: string); override;
 
-    procedure GetFile(aFileName: string; var aStream: TStream); override;
+    procedure GetFile(aFileName: string; aStream: TStream); override;
     procedure UploadFile(aFileName: string; aDestDir: string = ''); override;
 
     //function GetSensorProperties(id: string): TSensorProperties; override;
@@ -161,6 +170,8 @@ type
 
     function Report(aParams: string): string;
     function JSONReport(aParam: string): string;
+
+
 
 
   published
@@ -308,6 +319,69 @@ begin
   SendCommandFmt(aCommand, Args);
   CheckCommandResult;
 end;
+
+procedure TaOPCTCPSource_V30.DownloadFile(aStream: TStream; const aFileName: string);
+var
+  aSize: integer;
+  aBlockSize: Integer;
+  aCanceled: Boolean;
+begin
+  Assert(Assigned(aStream), 'Не создан поток');
+
+  LockConnection('DownloadFile');
+  try
+    DoConnect;
+    DoCommandFmt('DownloadFile %s', [Trim(aFileName)]);
+    aSize := StrToInt(ReadLn);
+
+    aCanceled := False;
+    aStream.Position := 0;
+    aBlockSize := Min(cPV30_BlockSize, aSize - aStream.Position);
+    while aStream.Position < aSize do
+    begin
+      ReadStream(aStream, aBlockSize);
+      if Assigned(OnProgress) then
+      begin
+        OnProgress(aStream.Position, aSize, aCanceled);
+        if aCanceled then
+          Break;
+      end;
+      aBlockSize := Min(cPV30_BlockSize, aSize - aStream.Position);
+    end;
+  finally
+    UnLockConnection('DownloadFile');
+  end;
+
+  if aCanceled then
+  begin
+    Disconnect;
+    Reconnect;
+    raise EOPCTCPOperationCanceledException.Create('Выполнение прервано пользователем');
+  end;
+
+end;
+
+//begin
+//  Assert(Assigned(aStream), 'Не создан поток');
+//
+//  LockConnection('DownloadFile');
+//  try
+//    try
+//      DoConnect;
+//
+//      DoCommand(Format('DownloadFile %s', [aFileName]));
+//      ReadStream(aStream);
+//
+//      aStream.Position := 0;
+//    except
+//      on e: EIdException do
+//        if ProcessTCPException(e) then
+//          raise;
+//    end;
+//  finally
+//    UnLockConnection('DownloadFile');
+//  end;
+//end;
 
 procedure TaOPCTCPSource_V30.DownloadSetup(aFileName: string; aStream: TStream);
 var
@@ -637,6 +711,61 @@ begin
   Result := LockAndGetStringsCommand('GetClientList');
 end;
 
+procedure TaOPCTCPSource_V30.GetDataFile(aStream: TStream; const aFileName: string; aStartPos: Integer);
+begin
+  Assert(Assigned(aStream), 'Не создан поток');
+
+  LockConnection('GetDataFile');
+  try
+    try
+      DoConnect;
+
+      DoCommand(Format('GetDataFile %s;%d', [aFileName, aStartPos]));
+      ReadStream(aStream);
+
+      aStream.Position := 0;
+    except
+      on e: EIdException do
+        if ProcessTCPException(e) then
+          raise;
+    end;
+  finally
+    UnLockConnection('GetDataFile');
+  end;
+end;
+
+function TaOPCTCPSource_V30.GetDataFileList(const aPath: string; const aMask: string = ''): string;
+begin
+  if aMask = '' then
+    Result := LockAndGetStringsCommand(Format('GetDataFileList %s', [aPath]))
+  else
+    Result := LockAndGetStringsCommand(Format('GetDataFileList %s;%s', [aPath, aMask]));
+end;
+
+procedure TaOPCTCPSource_V30.GetDataFiles(aStream: TStream; aFiles: TStrings);
+begin
+  Assert(Assigned(aStream), 'Не создан поток');
+
+  LockConnection('GetDataFiles');
+  try
+    try
+      DoConnect;
+
+      aFiles.LineBreak := ';';
+      DoCommand(Format('GetDataFiles %s', [aFiles.Text]));
+      ReadStream(aStream);
+
+      aStream.Position := 0;
+    except
+      on e: EIdException do
+        if ProcessTCPException(e) then
+          raise;
+    end;
+  finally
+    UnLockConnection('GetDataFiles');
+  end;
+end;
+
 function TaOPCTCPSource_V30.GetDeviceProperties(id: string): string;
 begin
   Result := LockAndGetStringsCommand(Format('GetDeviceProperties %s', [id]));
@@ -648,7 +777,7 @@ begin
   Result := FEncrypt;
 end;
 
-procedure TaOPCTCPSource_V30.GetFile(aFileName: string; var aStream: TStream);
+procedure TaOPCTCPSource_V30.GetFile(aFileName: string; aStream: TStream);
 var
   aSize: integer;
   aBlockSize: Integer;
@@ -687,6 +816,14 @@ begin
     raise EOPCTCPOperationCanceledException.Create('Выполнение прервано пользователем');
   end;
 
+end;
+
+function TaOPCTCPSource_V30.GetFileList(const aPath, aMask: string; aRecursive: Boolean): string;
+begin
+  if aRecursive then
+    Result := LockAndGetStringsCommand(Format('GetFileList %s;%s;1', [aPath, aMask]))
+  else
+    Result := LockAndGetStringsCommand(Format('GetFileList %s;%s;0', [aPath, aMask]))
 end;
 
 function TaOPCTCPSource_V30.GetGroupProperties(id: string): string;

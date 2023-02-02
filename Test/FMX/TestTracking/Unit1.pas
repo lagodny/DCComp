@@ -9,9 +9,9 @@ uses
 
 type
   TForm1 = class(TForm)
-    DCHttpConnector1: TDCHttpConnector;
     Button1: TButton;
     Memo1: TMemo;
+    LAHttpConnector1: TLAHttpConnector;
     procedure Button1Click(Sender: TObject);
   private
     procedure Log(const aMsg: string);
@@ -29,11 +29,11 @@ implementation
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
-  aConnection: TDCHttpTrackingConnection;
+  aConnection: TLAHttpTrackingConnection;
   v: Variant;
 begin
 //  DCHttpConnector1.Connect;
-  aConnection := TDCHttpTrackingConnection.Create(nil);
+  aConnection := TLAHttpTrackingConnection.Create(nil);
   try
 //    aConnection.Address := 'localhost:89';
     aConnection.Address := 'https://dc.tdc.org.ua:443';

@@ -4,7 +4,7 @@ interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
   Buttons, ExtCtrls, Dialogs, Messages,
-  aOPCSource, aDCAuthorization;
+  aOPCSource, aOPCAuthorization;
 
 type
   TPasswordForm = class(TForm)
@@ -31,7 +31,7 @@ type
     constructor CreateAndShowOnTaskBar(AOwner: TComponent);
     property OPCSource: TaOPCSource read FOPCSource write SetOPCSource;
 
-    class function Execute(aAuth: TaDCAuthorization): Boolean;
+    class function Execute(aAuth: TaOPCAuthorization): Boolean;
 
   end;
 
@@ -129,7 +129,7 @@ begin
     Params.ExStyle := Params.ExStyle and not WS_EX_TOOLWINDOW or WS_EX_APPWINDOW;
 end;
 
-class function TPasswordForm.Execute(aAuth: TaDCAuthorization): Boolean;
+class function TPasswordForm.Execute(aAuth: TaOPCAuthorization): Boolean;
 var
   f: TPasswordForm;
   User, Password: string;
@@ -138,6 +138,7 @@ begin
 
   f := TPasswordForm.CreateAndShowOnTaskBar(nil);
   try
+    User := aAuth.User;
     f.OPCSource := aAuth.OPCSource;
     f.cbUser.Items.Text := f.OPCSource.GetUsers;
     f.cbUser.ItemIndex := f.cbUser.Items.IndexOf(User);

@@ -25,20 +25,16 @@ object Form1: TForm1
     Size.Height = 471.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
-    Viewport.Width = 439.000000000000000000
-    Viewport.Height = 471.000000000000000000
+    Viewport.Width = 435.000000000000000000
+    Viewport.Height = 467.000000000000000000
   end
-  object DCHttpConnector1: TDCHttpConnector
-    Address = 'localhost:89'
+  object LAHttpConnector1: TLAHttpConnector
     ConnectTimeOut = 0
     ReadTimeOut = 0
     CompressionLevel = 0
-    UserName = #1051#1072#1075#1086#1076#1085#1099#1081
-    Password = '314'
-    Connected = False
     Https = False
     SendTimeOut = 0
-    Left = 304
-    Top = 224
+    Left = 216
+    Top = 248
   end
 end

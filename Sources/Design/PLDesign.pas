@@ -1,4 +1,4 @@
-unit PLDesign;
+п»їunit PLDesign;
 
 interface
 
@@ -203,7 +203,7 @@ var
 begin
   if not Assigned(ProviderList.OPCSource) then
   begin
-    ShowMessage('Не выбран источник данных OPCSource.');
+    ShowMessage('РќРµ РІС‹Р±СЂР°РЅ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… OPCSource.');
     exit;
   end;
   OPCSource := ProviderList.OPCSource;
@@ -220,12 +220,12 @@ begin
   begin
     for i := 0 to TreeForm.SensorsTree.SelectionCount-1 do
     begin
-      // определим параметры датчика
+      // РѕРїСЂРµРґРµР»РёРј РїР°СЂР°РјРµС‚СЂС‹ РґР°С‚С‡РёРєР°
       Data := TStringList(TreeForm.SensorsTree.Selections[i].Data);
 
-      if (Data.Strings[1] = '0') then // это датчик
+      if (Data.Strings[1] = '0') then // СЌС‚Рѕ РґР°С‚С‡РёРє
       begin
-        // определим английское наименование родителя
+        // РѕРїСЂРµРґРµР»РёРј Р°РЅРіР»РёР№СЃРєРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ СЂРѕРґРёС‚РµР»СЏ
         aParentName := '';
         aParent := TreeForm.SensorsTree.Selections[i].Parent;
         if Assigned(aParent) then
@@ -245,7 +245,7 @@ begin
           2:aProvider.StairsOptions := [soIncrease];
           3:aProvider.StairsOptions := [soDecrease];
         end;
-        //aProvider.Hint := FullName(TreeForm.SensorsTree.Selections[i]); // наименование
+        //aProvider.Hint := FullName(TreeForm.SensorsTree.Selections[i]); // РЅР°РёРјРµРЅРѕРІР°РЅРёРµ
 
         aProvider.OPCSource := ProviderList.OPCSource;
 

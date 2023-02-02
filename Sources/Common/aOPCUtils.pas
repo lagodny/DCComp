@@ -9,6 +9,7 @@ uses
   function TryStrToFloat(aValue: string; OpcFS: TFormatSettings): extended;
   function TryStrToFloatDef(aValue: string; OpcFS: TFormatSettings; aDefault: extended = 0): extended;
   function RemoveNonNumbers(aStr: string): string;
+  function DeltaTimeToHuman(aDelta: Double): string;
 
 var
   dotFS: TFormatSettings;
@@ -17,6 +18,27 @@ implementation
 
 uses
   aCustomOPCSource;
+
+function DeltaTimeToHuman(aDelta: Double): string;
+var
+  hh,mm,ss, ms: Word;
+begin
+  Result := '';
+  if aDelta >= 1 then
+    Result := FormatFloat('# ##0.## ä.', aDelta)
+  else
+  begin
+    DecodeTime(aDelta, hh, mm, ss, ms);
+    if hh > 0 then
+      Result := Format('%d÷ %dì', [hh, mm])
+    else if mm > 0 then
+      Result := Format('%dì %dñ', [mm, ss])
+    else
+      Result := Format('%dñ', [ss])
+  end;
+end;
+
+
 
   function RemoveNonNumbers(aStr: string): string;
   var
