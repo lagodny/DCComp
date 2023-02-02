@@ -74,8 +74,8 @@ begin
   // авторизация
 //  RegisterComponents('DC', [TaDCAuthorization]);
 
-//  // справочник
-//  RegisterComponents('DC', [TaOPCLookupList]);
+  // справочник
+  RegisterComponents('DC', [TaOPCLookupList]);
 //
 //  // невизуальный доступ к тегам
 //
