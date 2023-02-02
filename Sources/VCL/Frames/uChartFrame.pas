@@ -752,7 +752,7 @@ end;
 
 procedure TChartFrame.aIntervalExecute(Sender: TObject);
 begin
-  ShowIntervalForm(Interval, cIntervalHelpContext);
+  ShowIntervalForm(Interval, cIntervalHelpContext, GetParentForm(Self));
 end;
 
 procedure TChartFrame.aLegendExecute(Sender: TObject);
