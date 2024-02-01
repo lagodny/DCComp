@@ -83,6 +83,10 @@ type
       aRetByteCount: integer; aTimeOut: integer): string; override;
 
     function LoadLookup(aName: string; var aTimeStamp: TDateTime): string; override;
+    function AddLookupItem(const aTable, aName: string): Integer; override;
+    procedure DeleteLookupItem(const aTable, aName: string); override;
+    procedure UpdateLookupItem(const aTable: string; aID: Int64; const aName: string); override;
+
     function GetNameSpace(aObjectID: string = ''; aLevelCount: Integer = 0): Boolean; override;
 
     procedure FillNameSpaceStrings(aNameSpace: TStrings; aRootID: string = ''; aLevelCount: Integer = 0;
@@ -198,6 +202,11 @@ uses
 
 { TaOPCTCPSource_V30 }
 
+function TaOPCTCPSource_V30.AddLookupItem(const aTable, aName: string): Integer;
+begin
+  Result := LockDoCommandReadLnFmt('AddLookupItem %s;%s', [aTable, aName]).ToInteger;
+end;
+
 procedure TaOPCTCPSource_V30.Authorize(aUser, aPassword: string);
 begin
   DoCommandFmt('Login %s;%s;1', [aUser, StrToHex(aPassword, '')]);
@@ -264,6 +273,11 @@ begin
   ProtocolVersion := 30;
   Connection.Intercept := Intercept;
   UpdateMode := umStreamPacket;  
+end;
+
+procedure TaOPCTCPSource_V30.DeleteLookupItem(const aTable, aName: string);
+begin
+  LockAndDoCommandFmt('DelLookupItem %s;%s', [aTable, aName]);
 end;
 
 function TaOPCTCPSource_V30.DelSensorValue(PhysID: string; Moment: TDateTime): string;
@@ -1904,6 +1918,11 @@ begin
         UnLockConnection('UpdateLanguage');
     end;
   end;
+end;
+
+procedure TaOPCTCPSource_V30.UpdateLookupItem(const aTable: string; aID: Int64; const aName: string);
+begin
+  LockAndDoCommandFmt('UpdateLookupItem %s;%d;%s', [aTable, aID, aName]);
 end;
 
 procedure TaOPCTCPSource_V30.UploadFile(aFileName: string; aDestDir: string = '');

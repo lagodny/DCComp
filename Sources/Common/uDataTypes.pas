@@ -1,6 +1,6 @@
-﻿{$INCLUDE dcDataTypes.inc}
+﻿unit uDataTypes;
 
-unit uDataTypes;
+{$INCLUDE DC.DataTypes.inc}
 
 interface
 

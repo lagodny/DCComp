@@ -3,7 +3,7 @@
         <ProjectGuid>{D8BC19F2-9A67-4D2E-ACEF-A80DF19D815D}</ProjectGuid>
         <MainSource>DCLibVCL.dpk</MainSource>
         <ProjectVersion>19.3</ProjectVersion>
-        <FrameworkType>None</FrameworkType>
+        <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -64,7 +64,7 @@
         <DCC_K>false</DCC_K>
         <GenDll>true</GenDll>
         <GenPackage>true</GenPackage>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>DCLibVCL</SanitizedProjectName>
         <VerInfo_Locale>1049</VerInfo_Locale>
@@ -88,7 +88,7 @@
         <VerInfo_BundleId>$(MSBuildProjectName)</VerInfo_BundleId>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;VCL;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -112,7 +112,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_Description>Data collection library VCL</DCC_Description>
         <DllSuffix>$(Auto)</DllSuffix>
-        <DCC_Namespace>VCLTee;Vcl.Imaging;VCLTee;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>VCLTee;VCLTee;$(DCC_Namespace)</DCC_Namespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -153,6 +153,22 @@
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\..\Sources\Common\DC.Resources.pas"/>
+        <DCCReference Include="..\..\Sources\VCL\Frames\ukzCompressorDetail.pas"/>
+        <DCCReference Include="..\..\Sources\VCL\Frames\ukzCompressorShort.pas"/>
+        <DCCReference Include="..\..\Sources\VCL\Frames\uTankFrame.pas">
+            <Form>frTank</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\..\Sources\VCL\Frames\ChoiceProduct.pas">
+            <Form>ChoiceProductForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\Sources\VCL\Frames\uTanks.pas">
+            <Form>frTanks</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -36,8 +36,8 @@ var
 
 implementation
 
-uses
-  uDCLang;
+//uses
+//  uDCLang;
 
 {$R *.dfm}
 

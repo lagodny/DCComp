@@ -4,7 +4,7 @@ interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
   Buttons, ExtCtrls, Dialogs, Messages,
-  uDCLang,
+  //uDCLang,
   aOPCSource;
 
 type

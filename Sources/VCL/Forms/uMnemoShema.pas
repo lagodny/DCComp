@@ -1,6 +1,6 @@
 ﻿{*******************************************************}
 {                                                       }
-{     Copyright (c) 2001-2016 by Alex A. Lagodny        }
+{     Copyright (c) 2001-2023 by Alex A. Lagodny        }
 {                                                       }
 {*******************************************************}
 {$I OPC.INC}
@@ -31,6 +31,9 @@ const
 type
   TIniSettingsOperationEvent = procedure
     (Sender: TObject; IniFile: TCustomIniFile) of object;
+
+  TChangeScaleEvent = procedure(Sender: TObject; aOldValue, aNewValue: Integer) of object;
+
 
   TfmMnemoShema = class(TForm)
     aOPCSource: TaOPCTCPSource_V30;
@@ -93,6 +96,8 @@ type
     FOnLoadIniSettings: TIniSettingsOperationEvent;
     FBackColor: TColor;
     FLabelColor: TColor;
+    FScale: Integer;
+    FOnChangeScale: TChangeScaleEvent;
 
     procedure DoData(Sender: TObject; const Data: string);
 
@@ -104,8 +109,9 @@ type
     procedure SetAllowClick(const Value: boolean);
     procedure SetUserHint(const Value: string);
     procedure CreateTmpForm;
+    procedure SetScale(const Value: Integer);
   protected
-    OldScale: integer;
+//    OldScale: integer;
 
 //    DevelopInfo: TDevelopInfo;
 
@@ -134,7 +140,8 @@ type
     procedure CustomLoadSettings(aStore: TCustomIniFile); virtual;
     procedure CustomSaveSettings(aStore: TCustomIniFile); virtual;
   public
-    Scale: integer;
+    //Scale: integer;
+    property Scale: Integer read FScale write SetScale;
 //    function AppSectionName: string;
 //    function MainSectionName: string;
 
@@ -151,6 +158,7 @@ type
   published
     property OnLoadIniSettings: TIniSettingsOperationEvent read FOnLoadIniSettings write FOnLoadIniSettings;
     property OnChangeStatus: TNotifyEvent read FOnChangeStatus write FOnChangeStatus;
+    property OnChangeScale: TChangeScaleEvent read FOnChangeScale write FOnChangeScale;
   end;
 
 var
@@ -175,6 +183,7 @@ var
   Registry: TRegistry;
   IniFile: TIniFile;
   aRect: TRect;
+  aScale: Integer;
 begin
   // ини файлик с параметрами подключения
   IniFile := TIniFile.Create(GetIniFileName);
@@ -207,9 +216,9 @@ begin
   aOPCAuthorization.User := AppStorage(TKeys.Home).ReadString(TKeys.Main, 'User', '');
 
   //Scale := 100;
-  Scale := AppStorage.ReadInteger(TKeys.Main, 'Scale', 100);
-  if Scale <= 10 then
-    Scale := 100;
+  aScale := AppStorage.ReadInteger(TKeys.Main, 'Scale', 100);
+  if (aScale <= 10) or (aScale > 500) then
+    aScale := 100;
 
   BackColor := AppStorage.ReadInteger(TKeys.Main, 'BackColor', Color); // $808080);
   LabelColor := AppStorage.ReadInteger(TKeys.Main, 'LabelColor', Font.Color);// clBlack);
@@ -238,8 +247,9 @@ begin
   except
   end;
 
-  if Scale <> 100 then
-    ScaleBy(Scale, 100);
+//  if Scale <> 100 then
+//    ScaleBy(Scale, 100);
+  Scale := aScale;
 
 
 {
@@ -312,6 +322,8 @@ begin
 
 
   AppStorage(TKeys.Home);
+
+  FScale := 100;
 
   aOPCSource.Connected := False;
   CreateTmpForm;
@@ -568,6 +580,20 @@ begin
   TCinemaControlForm.ShowPult(OPCCinema, nil, False);
 end;
 
+procedure TfmMnemoShema.SetScale(const Value: Integer);
+begin
+  if FScale <> Value then
+  begin
+    ScaleBy(100, Scale);
+    ScaleBy(Value, 100);
+
+    if Assigned(FOnChangeScale) then
+      FOnChangeScale(Self, Scale, Value);
+
+    FScale := Value;
+  end;
+end;
+
 procedure TfmMnemoShema.SetStatus(const Value: string);
 begin
   Timer1.Enabled := (Value = ssDemoMode);
@@ -722,11 +748,7 @@ var
   sScale: string;
 begin
   if InputQuery('Укажите масштаб', IntToStr(Scale), sScale) then
-  begin
-    ScaleBy(100, Scale);
     Scale := StrToInt(sScale);
-    ScaleBy(Scale, 100);
-  end;
 end;
 
 function TfmMnemoShema.CheckIfOnlyOne(FUnique: string): boolean;

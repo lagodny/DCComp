@@ -114,18 +114,18 @@ procedure TOPCIntervalFrame.ApplicationEvents1Message(var Msg: tagMSG;
 var
   //mp: TPoint;
   //c: TControl;
-  v: Extended;
+  v: Double;
   vStr: string;
   aFormat: string;
   aDotFounded: boolean;
   aDeltaStr: string;
-  aDelta: Extended;
+  aDelta: Double;
   i: Integer;
   aHandle: Cardinal;
   KeyState: TKeyboardState;
   ShiftState: TShiftState;
-  aWParam: integer;
-  dir: SmallInt;
+//  aWParam: integer;
+//  dir: SmallInt;
 begin
   if Msg.message = WM_MOUSEWHEEL then
   begin
@@ -167,8 +167,9 @@ begin
       if ssShift in ShiftState then
         aDelta := aDelta * 10;
 
-      dir := HiWord(Msg.wParam);
-      if dir > 0 then
+//      dir := HiWord(Msg.wParam);
+//      if dir > 0 then
+      if NativeInt(Msg.wParam) > 0 then
         V := v + aDelta
       else
       begin
@@ -201,9 +202,11 @@ begin
     //else if aHandle = dtpDay.Handle then
     else if ActiveControl is TDateTimePicker then
     begin
-      aWParam := Msg.wParam;
+//      aWParam := Msg.wParam;
+//      dir := HiWord(Msg.wParam);
       aHandle := TDateTimePicker(ActiveControl).Handle;
-      if aWParam > 0 then
+      if NativeInt(Msg.wParam) > 0 then
+//      if aWParam > 0 then
         SendMessage(aHandle, WM_KEYDOWN, VK_UP, 0)
       else
         SendMessage(aHandle, WM_KEYDOWN, VK_DOWN, 0);

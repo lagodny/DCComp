@@ -233,7 +233,7 @@ procedure HyphenParagraph ( Para   : string ;
        RussianLetterOrDivider ( S [ 1 ])
       then Result := Result + '-' ;
     { И убрать лишнее }
-    Result := Trim ( Result ) ;
+//    Result := Trim ( Result ) ;
   end ;
 
   var
@@ -244,7 +244,7 @@ begin
   Res.Clear ;
   ResStr := '' ;
   { Чуть пригладим поданную нам строку }
-  Para := Trim ( Para ) ;
+//  Para := Trim ( Para ) ;
   if length ( Para ) = 0 then exit ;
   { Теперь надо расставить в строке возможные переносы }
   while Para <> '' do

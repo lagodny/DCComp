@@ -251,7 +251,12 @@ type
     procedure InsertValues(PhysID: string; aBuffer: TSensorDataArr); virtual;
 
     function ExecSql(Sql: string): string; virtual;
+
     function LoadLookup(aName: string; var aTimeStamp: TDateTime): string; virtual;
+    function AddLookupItem(const aTable, aName: string): Integer; virtual;
+    procedure DeleteLookupItem(const aTable, aName: string); virtual;
+    procedure UpdateLookupItem(const aTable: string; aID: Int64; const aName: string); virtual;
+
     procedure ForceUpdate;
 
     // устаревшее
@@ -374,6 +379,10 @@ begin
 
 //  FLanguage := langRU;
 
+end;
+
+procedure TaOPCSource.DeleteLookupItem(const aTable, aName: string);
+begin
 end;
 
 function TaOPCSource.DelSensorValue(PhysID: string; Moment: TDateTime): string;
@@ -767,6 +776,10 @@ end;
 procedure TaOPCSource.UpdateDescription;
 begin
 
+end;
+
+procedure TaOPCSource.UpdateLookupItem(const aTable: string; aID: Int64; const aName: string);
+begin
 end;
 
 procedure TaOPCSource.SyncConnect;
@@ -2003,6 +2016,10 @@ begin
     PacketUpdate := True
   else if FUpdateMode = umEach then
     PacketUpdate := false;
+end;
+
+function TaOPCSource.AddLookupItem(const aTable, aName: string): Integer;
+begin
 end;
 
 procedure TaOPCSource.Authorize(aUser: string; aPassword: string);

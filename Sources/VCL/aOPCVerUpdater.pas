@@ -253,7 +253,7 @@ end;
 procedure TaOPCVerUpdater.SetActive(const Value: Boolean);
 begin
   FActive := Value;
-  DoChangeVersion(Self);
+//  DoChangeVersion(Self);
 end;
 
 procedure TaOPCVerUpdater.SetConfirmRun(const Value: Boolean);

@@ -131,7 +131,9 @@ begin
     // cteBeforeDrawAxes: if DrawBehindAxes then PaintBand;
     cteBeforeDrawSeries:
       PaintLine;
-    // cteAfterDraw: if (not DrawBehind) and (not DrawBehindAxes) then PaintBand;
+//    cteAfterDraw:
+//      DrawText;
+   //cteAfterDraw: if (not DrawBehind) and (not DrawBehindAxes) then PaintBand;
   end;
 
 end;
@@ -142,7 +144,8 @@ begin
 
   with Shape do
   begin
-    Shadow.Size := 2;
+    Pen.Width := 0;
+    Shadow.Size := 0;
     Transparency := 0;
     ShapeBounds.Left := 10;
     ShapeBounds.Top := 10;
@@ -417,13 +420,18 @@ begin
 
   with Shape do
   begin
-    Shadow.Size := 2;
+    Pen.Width := 0;
+    Shadow.Size := 1;
     Transparency := 0;
     ShapeBounds.Left := 10;
     ShapeBounds.Top := 10;
     Width := 300;
     Height := 40;
-
+    Margins.Units := maPixels;
+    Margins.Left := 0;
+    Margins.Right := 5;
+    Margins.Top := 0;
+    Margins.Bottom := 0;
   end;
   FBand := NewBand;
   FBand.StartLine.Pen.Width := 0;
@@ -538,17 +546,21 @@ begin
     try
       BackMode := cbmTransparent;
 
-      xLeft := R.Left + Shape.Margins.Size.Left;
+//      xLeft := R.Left + Shape.Margins.Size.Left;
+      xLeft := R.Left + Shape.Margins.Left;
       if Self.Pen.Visible then
         Inc(xLeft, Self.Pen.Width);
 
-      xRight := R.Right - Shape.Margins.Size.Right;
-      xCenter := 1 + ((R.Left + Shape.Margins.Size.Left + R.Right - Shape.Margins.Size.Right) div 2);
+//      xRight := R.Right - Shape.Margins.Size.Right;
+//      xCenter := 1 + ((R.Left + Shape.Margins.Size.Left + R.Right - Shape.Margins.Size.Right) div 2);
+      xRight := R.Right - Shape.Margins.Right;
+      xCenter := 1 + ((R.Left + Shape.Margins.Left + R.Right - Shape.Margins.Right) div 2);
 
       AssignFont(Shape.Font);
       tmpHeight := FontHeight;
 
-      tmpTop := R.Top + Shape.Margins.Size.Top;
+//      tmpTop := R.Top + Shape.Margins.Size.Top;
+      tmpTop := R.Top + Shape.Margins.Top;
 
       if Axis.IsDateTime then
       begin
@@ -611,9 +623,17 @@ begin
 
           if aSeries.CalcSeriesValue(Band.StartValue, v1) and aSeries.CalcSeriesValue(Band.EndValue, v2) then
           begin
-            vStr := FormatFloat(aSeries.DisplayFormat, v2 - v1);
-            TextAlign := ta_Center;
-            TextOut(xCenter, tmpTop + aLineCount * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
+//            vStr := FormatFloat(aSeries.DisplayFormat, v2 - v1);
+//            TextAlign := ta_Center;
+//            TextOut(xCenter, tmpTop + aLineCount * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
+
+		        if not Assigned(aSeries.LookupList) then
+              vStr := FormatValue(v2 - v1, aSeries.DisplayFormat)
+            else
+              vStr := FormatFloat('# ##0', v2 - v1);
+              
+            TextAlign := TA_CENTER;
+            TextOut(xCenter, tmpTop + (t + 1) * tmpHeight, vStr, Shape.TextFormat = ttfHtml);
           end
         end
         else if ParentChart.Series[t] is TFastLineSeries then
@@ -866,3 +886,4 @@ begin
 end;
 
 end.
+

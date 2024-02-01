@@ -24,7 +24,11 @@ uses
   aOPCAuthorization,
 
   uOPCFrame,
-  ukzTempFrame;
+  ukzTempFrame,
+  ukzCompressorDetail,
+  ukzCompressorShort,
+
+  uTankFrame, uTanks;
 
 
 procedure Register;
@@ -46,6 +50,11 @@ begin
   RegisterComponents('DC Controls', [TaOPCAuthorization]);
 
   RegisterComponents('DC Frames', [TkzTemp]);
+  RegisterComponents('DC Frames', [TkzCompressorDetail]);
+  RegisterComponents('DC Frames', [TkzCompressorShort]);
+
+  RegisterComponents('DC Frames', [TfrTank, TfrTanks]);
+
 
 
 end;

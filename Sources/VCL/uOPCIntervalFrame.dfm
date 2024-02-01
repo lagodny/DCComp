@@ -4,6 +4,7 @@ object OPCIntervalFrame: TOPCIntervalFrame
   Width = 249
   Height = 166
   TabOrder = 0
+  PixelsPerInch = 96
   object gbInterval: TGroupBox
     Left = 5
     Top = 91
@@ -15,15 +16,15 @@ object OPCIntervalFrame: TOPCIntervalFrame
     object lFrom: TLabel
       Left = 5
       Top = 25
-      Width = 7
-      Height = 13
+      Width = 8
+      Height = 15
       Caption = #1057
     end
     object lTo: TLabel
       Left = 5
       Top = 46
-      Width = 12
-      Height = 13
+      Width = 14
+      Height = 15
       Caption = #1087#1086
     end
     object dtFrom: TDateTimePicker
@@ -42,6 +43,7 @@ object OPCIntervalFrame: TOPCIntervalFrame
       Top = 20
       Width = 73
       Height = 21
+      Date = 45296.000000000000000000
       Time = 0.384909768516081400
       Enabled = False
       Kind = dtkTime
@@ -64,6 +66,7 @@ object OPCIntervalFrame: TOPCIntervalFrame
       Top = 43
       Width = 73
       Height = 21
+      Date = 45296.000000000000000000
       Time = 0.387262696756806700
       Enabled = False
       Kind = dtkTime
@@ -122,7 +125,7 @@ object OPCIntervalFrame: TOPCIntervalFrame
     Left = 103
     Top = 72
     Width = 133
-    Height = 21
+    Height = 23
     Style = csDropDownList
     Enabled = False
     TabOrder = 8
@@ -144,7 +147,7 @@ object OPCIntervalFrame: TOPCIntervalFrame
     Left = 167
     Top = 3
     Width = 69
-    Height = 21
+    Height = 23
     Style = csDropDownList
     ItemIndex = 0
     TabOrder = 5

@@ -1,6 +1,6 @@
 {*******************************************************}
 {                                                       }
-{     Copyright (c) 2001-2017 by Alex A. Lagodny        }
+{     Copyright (c) 2001-2023 by Oleksandr LAGODNYI     }
 {                                                       }
 {*******************************************************}
 
@@ -17,6 +17,12 @@ uses
 const
   sSerieIdent = 'serie';
   sShowDetail = 'detail';
+
+const
+  сOPCErrorBrushColor = clYellow;
+  cOPCErrorFontColor = clRed;
+  cOPCZeroValueFontColor = clGray;
+
 
 
 type
@@ -77,13 +83,6 @@ uses
   aOPCDataObject,
   aOPCConsts,
   math;
-
-const
-  сOPCErrorBrushColor = clYellow;
-  cOPCErrorFontColor = clRed;
-  cOPCZeroValueFontColor = clGray;
-
-
 
 {$R *.dfm}
 { TaOPCFrame }
@@ -305,8 +304,8 @@ begin
         // если подсказки не заданы, но указано наименование серии, то используем его как подсказку
         if (o.Hints.Count = 0) and (o.Params.Values[sSerieIdent] <> '') then
         begin
-          o.Hints.Add('0=' + o.Params.Values[sSerieIdent]);
-          o.Hint := o.Params.Values[sSerieIdent];
+          o.Hints.Add('0=' + o.Params.Values[sSerieIdent] + #13#10 + '(id=' + o.PhysID + ')');
+          o.Hint := o.Params.Values[sSerieIdent] + #13#10 + '(id=' + o.PhysID + ')';
         end;
 
       end;

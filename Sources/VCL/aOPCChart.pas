@@ -59,6 +59,7 @@ type
 implementation
 
 uses
+  System.UITypes,
   uOPCSeriesTypes, VCLTee.TeeProcs;
 
 
@@ -66,6 +67,33 @@ uses
 
 const
   CZoomFactor = 1.5;
+  cMaxDefaultColors = 19;
+
+  cDefaultPalette:Array[0..cMaxDefaultColors] of TColor=
+      ( $0000FF,// clRed,
+      // Alex **
+        $FF0000,//clBlue,
+        $00AA00,//clGreen,
+      // ** - изменил порядок цветов
+        $800080,
+        $008000,
+        $8000FF,
+        $4080FF,
+        $C080FF,
+        $80FF80,
+        $000080,
+        $808000,
+        $C08080,
+        $8080FF,
+        $FF8000,
+        $FFC68C,
+        $7195F2,
+        $804000,
+        $FF00FF,
+        $808080,
+        $00FF80
+        );
+
 
 constructor TaOPCChart.Create(AOwner: TComponent);
 begin
@@ -80,6 +108,8 @@ begin
   BottomAxis.AutomaticMaximum := false;
   BottomAxis.AutomaticMinimum := false;
   BottomAxis.SetMinMax(Interval.Date1, Interval.Date2);
+
+  Legend.Pen.Width := 0;
 
   FZoomFactor := 1.5;
 end;
@@ -313,13 +343,13 @@ begin
   aZoomRect := ChartRect;
 
   // отработаем случай с перестановкой осей
-  if (aVertAxis.PositionUnits = muPercent) then
+//  if (aVertAxis.PositionUnits = muPercent) then
   begin
     aZoomRect.Top := ChartRect.Top + Round(0.01 * ChartHeight * aVertAxis.StartPosition);
     aZoomRect.Bottom := ChartRect.Top + Round(0.01 * ChartHeight * aVertAxis.EndPosition);
   end;
 
-  if (aVertAxis.PositionUnits = muPercent) then
+//  if (aVertAxis.PositionUnits = muPercent) then
   begin
     aZoomRect.Left := ChartRect.Left + Round(0.01 * ChartWidth * aHorizAxis.StartPosition);
     aZoomRect.Right := ChartRect.Left + Round(0.01 * ChartWidth * aHorizAxis.EndPosition);
@@ -415,5 +445,8 @@ begin
     AnimatedZoom := SaveAnimatedZoom;
   end;
 end;
+
+initialization
+  SetDefaultColorPalette(cDefaultPalette);
 
 end.

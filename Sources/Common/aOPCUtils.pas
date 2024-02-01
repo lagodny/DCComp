@@ -86,6 +86,8 @@ end;
           end;
         end;
       end;
+      if aValue < 1 then
+        aFormat := StringReplace(aFormat, 'dd.mm.yyyy ', '', []);
       Result := FormatDateTime(aFormat,aValue);
     end
     else

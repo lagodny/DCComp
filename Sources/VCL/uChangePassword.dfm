@@ -12,7 +12,6 @@ object fChangePassword: TfChangePassword
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poDesktopCenter
   OnShow = FormShow
   PixelsPerInch = 96
@@ -80,6 +79,7 @@ object fChangePassword: TfChangePassword
     Height = 21
     PasswordChar = '*'
     TabOrder = 2
+    Text = ''
   end
   object eConfirmation: TMaskEdit
     Left = 117
@@ -88,6 +88,7 @@ object fChangePassword: TfChangePassword
     Height = 21
     PasswordChar = '*'
     TabOrder = 3
+    Text = ''
   end
   object eOldPassword: TMaskEdit
     Left = 117
@@ -96,5 +97,6 @@ object fChangePassword: TfChangePassword
     Height = 21
     PasswordChar = '*'
     TabOrder = 1
+    Text = ''
   end
 end

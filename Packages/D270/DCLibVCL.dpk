@@ -57,6 +57,11 @@ contains
   aOPCChartMessureTool in '..\..\Sources\VCL\aOPCChartMessureTool.pas',
   uDCTeeTools in '..\..\Sources\VCL\uDCTeeTools.pas',
   uChartFrame in '..\..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame},
-  DC.Resources in '..\..\Sources\Common\DC.Resources.pas';
+  DC.Resources in '..\..\Sources\Common\DC.Resources.pas',
+  ukzCompressorDetail in '..\..\Sources\VCL\Frames\ukzCompressorDetail.pas',
+  ukzCompressorShort in '..\..\Sources\VCL\Frames\ukzCompressorShort.pas',
+  uTankFrame in '..\..\Sources\VCL\Frames\uTankFrame.pas' {frTank: TFrame},
+  ChoiceProduct in '..\..\Sources\VCL\Frames\ChoiceProduct.pas' {ChoiceProductForm},
+  uTanks in '..\..\Sources\VCL\Frames\uTanks.pas' {frTanks: TFrame};
 
 end.

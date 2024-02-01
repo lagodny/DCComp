@@ -142,6 +142,7 @@ begin
     f.OPCSource := aAuth.OPCSource;
     f.cbUser.Items.Text := f.OPCSource.GetUsers;
     f.cbUser.ItemIndex := f.cbUser.Items.IndexOf(User);
+    f.cbUser.Text := User;
     if f.ShowModal = mrOk then
     begin
       try
