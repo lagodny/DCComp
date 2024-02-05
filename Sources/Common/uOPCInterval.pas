@@ -101,6 +101,9 @@ type
 implementation
 
 uses
+{$IFDEF DKLANG}
+  DKLang,
+{$ENDIF}
   System.Math;
 
 //uses
@@ -605,6 +608,36 @@ end;
 
 class function TOPCInterval.ShiftKindToStr(aShiftKind: TShiftKind): string;
 begin
+{$IFDEF DKLANG}
+  case aShiftKind of
+    skNone:
+      Result := '...';
+    skToday:
+      Result := DKLangConstW('resToday'); //'Сегодня';
+    skYesterday:
+      Result := DKLangConstW('resYesterday'); //'Вчера';
+    skWeek:
+      Result := DKLangConstW('resBeginningWeek'); //'С начала недели';
+    skLastWeek:
+      Result := DKLangConstW('resLastWeek'); //'Прошлая неделя';
+    skMonth:
+      Result := DKLangConstW('resBeginningMonth'); //'С начала месяца';
+    skLastMonth:
+      Result := DKLangConstW('resLastMonth'); //'Прошлый месяц';
+    skTomorrow:
+      Result := DKLangConstW('resTomorrow'); //'Завтра';
+    skNextWeek:
+      Result := DKLangConstW('resNextWeek'); //'Следующая неделя';
+    skNext12Hours:
+      Result := DKLangConstW('resNext12Hours'); //'Следующие 12 часов';
+    skNextDay:
+      Result := DKLangConstW('resNextDay'); //'Седующий день';
+    skYear:
+      Result := DKLangConstW('resYear'); //'Этот год';
+    skLastYear:
+      Result := DKLangConstW('resLastYear'); //'Прошлый год';
+  end;
+{$ELSE}
   case aShiftKind of
     skNone:
       Result := '...';
@@ -632,18 +665,27 @@ begin
       Result := resYear; //'Этот год';
     skLastYear:
       Result := resLastYear; //'Прошлый год';
-
   end;
+{$ENDIF}
 end;
 
 class function TOPCInterval.ShiftUnitToStr(aShiftUnit: TOPCIntervalTimeShiftUnit): string;
 begin
+{$IFDEF DKLANG}
+  case aShiftUnit of
+    tsuHour:
+      Result := DKLangConstW('resHour');
+    tsuDay:
+      Result := DKLangConstW('resDay');
+  end;
+{$ELSE}
   case aShiftUnit of
     tsuHour:
       Result := resHour;
     tsuDay:
       Result := resDay;
   end;
+{$ENDIF}
 end;
 
 //function TOPCInterval.ShowIntervalForm: boolean;
