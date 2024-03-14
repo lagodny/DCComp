@@ -218,7 +218,7 @@ begin
       end;
     end;
 
-    if TaOPCLabel(Sender).Value = '0' then
+    if (not Assigned(TaOPCLabel(Sender).LookupList)) and (TaOPCLabel(Sender).Value = '0') then
       aCanvas.Font.Color := cOPCZeroValueFontColor;
   end
   else

@@ -28,7 +28,9 @@ uses
   ukzCompressorDetail,
   ukzCompressorShort,
 
-  uTankFrame, uTanks;
+  uTankFrame, uTanks,
+
+  uCoolingCell;
 
 
 procedure Register;
@@ -55,6 +57,7 @@ begin
 
   RegisterComponents('DC Frames', [TfrTank, TfrTanks]);
 
+  RegisterComponents('DC Frames', [TCoolingCellFrame]);
 
 
 end;
