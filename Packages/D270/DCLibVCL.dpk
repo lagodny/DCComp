@@ -62,6 +62,7 @@ contains
   ukzCompressorShort in '..\..\Sources\VCL\Frames\ukzCompressorShort.pas',
   uTankFrame in '..\..\Sources\VCL\Frames\uTankFrame.pas' {frTank: TFrame},
   ChoiceProduct in '..\..\Sources\VCL\Frames\ChoiceProduct.pas' {ChoiceProductForm},
-  uTanks in '..\..\Sources\VCL\Frames\uTanks.pas' {frTanks: TFrame};
+  uTanks in '..\..\Sources\VCL\Frames\uTanks.pas' {frTanks: TFrame},
+  uCoolingCell in '..\..\Sources\VCL\Frames\uCoolingCell.pas' {CoolingCellFrame: TFrame};
 
 end.

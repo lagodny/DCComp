@@ -678,7 +678,7 @@ begin
           CheckCommandResult;
 
           // отметим, что мы передали серверу новые адреса запрашиваемых датчиков
-          FDataLinkGroupsChanged := false;
+          FDataLinkGroupsChanged := False;
         finally
           Stream.Free;
         end;

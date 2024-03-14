@@ -1013,6 +1013,7 @@ begin
         if OPCSource.FDataLinkGroupsChanged then
           OPCSource.CalcPhysIDs;
 
+
         DoLog('Получение группы данных...');
 {$REGION 'Получение группы данных'}
         aExceptionMessage := '';
