@@ -38,7 +38,7 @@ type
     function Login: boolean;
 
     procedure ReadCommandLine;
-    procedure ReadCommandLineExt;
+//    procedure ReadCommandLineExt;
 
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
@@ -206,45 +206,55 @@ end;
 
 procedure TaOPCAuthorization.ReadCommandLine;
 var
-  i: integer;
-  ch: string;
+  v: string;
+//  i: integer;
+//  ch: string;
 begin
-  for i := 0 to ParamCount do
-  begin
-    ch := copy(LowerCase(ParamStr(i)), 1, 2);
-    if ch = '-u' then
-      User := Copy(ParamStr(i), 3, length(ParamStr(i)))
-    else if ch = '-p' then
-      Password := Copy(ParamStr(i), 3, length(ParamStr(i)));
-  end;
+  if FindCmdLineSwitch('u', v) or FindCmdLineSwitch('user', v) then
+    User := v;
+  if FindCmdLineSwitch('p', v) or FindCmdLineSwitch('password', v) then
+    Password := v;
+
+//  for i := 0 to ParamCount do
+//  begin
+//    ch := copy(LowerCase(ParamStr(i)), 1, 2);
+//    if (ch = '-u') or (ch = 'u=') then
+//      User := Copy(ParamStr(i), 3, length(ParamStr(i)))
+//    else if (ch = '-p') or (ch = 'p=') then
+//      Password := Copy(ParamStr(i), 3, length(ParamStr(i)))
+//    else if (ch = 'user=') then
+//      User := Copy(ParamStr(i), Length('user=') + 1, length(ParamStr(i)))
+//    else if (ch = 'password=') then
+//      Password := Copy(ParamStr(i), Length('password=') + 1, length(ParamStr(i)));
+//  end;
 end;
 
-procedure TaOPCAuthorization.ReadCommandLineExt;
-var
-  s: TStringList;
-  i: Integer;
-begin
-  s := TStringList.Create;
-  try
-    for i := 1 to ParamCount do
-      s.Add(UpperCase(ParamStr(i)));
-
-    // имя пользователя
-    if s.Values['USER'] <> '' then
-      User := s.Values['USER']
-    else if s.Values['U'] <> '' then
-      User := s.Values['U'];
-
-    // пароль
-    if s.Values['PASSWORD'] <> '' then
-      Password := s.Values['PASSWORD']
-    else if s.Values['P'] <> '' then
-      Password := s.Values['P'];
-  finally
-    s.Free;
-  end;
-
-end;
+//procedure TaOPCAuthorization.ReadCommandLineExt;
+//var
+//  s: TStringList;
+//  i: Integer;
+//begin
+//  s := TStringList.Create;
+//  try
+//    for i := 1 to ParamCount do
+//      s.Add(UpperCase(ParamStr(i)));
+//
+//    // имя пользователя
+//    if s.Values['USER'] <> '' then
+//      User := s.Values['USER']
+//    else if s.Values['U'] <> '' then
+//      User := s.Values['U'];
+//
+//    // пароль
+//    if s.Values['PASSWORD'] <> '' then
+//      Password := s.Values['PASSWORD']
+//    else if s.Values['P'] <> '' then
+//      Password := s.Values['P'];
+//  finally
+//    s.Free;
+//  end;
+//
+//end;
 
 procedure TaOPCAuthorization.SetEncryptedPassword(const Value: string);
 begin

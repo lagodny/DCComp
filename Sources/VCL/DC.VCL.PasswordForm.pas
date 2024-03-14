@@ -143,8 +143,9 @@ begin
     f.cbUser.Items.Text := f.OPCSource.GetUsers;
     f.cbUser.ItemIndex := f.cbUser.Items.IndexOf(User);
     f.cbUser.Text := User;
-    if f.ShowModal = mrOk then
-    begin
+    repeat
+      if f.ShowModal <> mrOk then
+        Exit;
       try
         User := f.cbUser.Text;
         Password := f.ePassword.Text;
@@ -162,7 +163,7 @@ begin
         on e: Exception do
           MessageDlg(e.Message, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
       end;
-    end;
+    until Result;
   finally
     f.Free;
   end;
@@ -181,7 +182,10 @@ begin
   if cbUser.Text = '' then
     ActiveControl := cbUser
   else
+  begin
     ActiveControl := ePassword;
+    ePassword.SelectAll;
+  end;
 
   bChangePassword.Enabled := Assigned(OPCSource);
 

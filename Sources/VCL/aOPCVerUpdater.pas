@@ -187,7 +187,7 @@ begin
       aPassword := '';
     end;
 
-    ExecuteFile(aFileName, Format('/SILENT u="%s" p="%s"', [aUser, aPassword]), ExtractFilePath(aFileName), SW_SHOWNORMAL);
+    ExecuteFile(aFileName, Format('/SILENT -u"%s" -p"%s"', [aUser, aPassword]), ExtractFilePath(aFileName), SW_SHOWNORMAL);
 
     //PostMessage(Application.Handle, WM_QUIT, 0, 0)
     Application.Terminate;
