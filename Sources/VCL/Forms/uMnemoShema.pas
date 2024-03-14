@@ -340,7 +340,7 @@ begin
 
   //aOPCSource.Connected := true;
   try
-    aOPCAuthorization.ReadCommandLineExt;
+    aOPCAuthorization.ReadCommandLine;
     if not aOPCAuthorization.CheckPermissions then
     begin
 //      if not aOPCAuthorization.Execute then

@@ -24,7 +24,7 @@ object fmMnemoShema: TfmMnemoShema
   TextHeight = 13
   object StatusBar: TStatusBar
     Left = 0
-    Top = 250
+    Top = 270
     Width = 715
     Height = 19
     Panels = <
@@ -41,6 +41,7 @@ object fmMnemoShema: TfmMnemoShema
       item
         Width = 50
       end>
+    ExplicitTop = 250
   end
   object aOPCSource: TaOPCTCPSource_V30
     States = llStates
@@ -63,7 +64,7 @@ object fmMnemoShema: TfmMnemoShema
     OnActivate = OPCCinemaActivate
     OnDeactivate = OPCCinemaDeactivate
     OnChangeMoment = OPCCinemaChangeMoment
-    CurrentMoment = 45305.734743692130000000
+    CurrentMoment = 45335.590321284720000000
     UpdateControlsOnChangeMoment = False
     Left = 406
     Top = 15
