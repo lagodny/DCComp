@@ -119,6 +119,7 @@ type
     constructor Create(AOnwer: TComponent); override;
     destructor Destroy; override;
 
+    class function ServerExists(aServerAddress: string): Boolean;
     property Items: TOPCConnectionCollection read FItems write SetItems;
     property Connections[const Name: string]: TOPCConnectionCollectionItem read GetConnection;
   end;
@@ -1032,6 +1033,48 @@ begin
       Result := Items[i];
       exit;
     end;
+  end;
+end;
+
+class function TaOPCCustomConnectionList.ServerExists(aServerAddress: string): Boolean;
+var
+  p, p1: Integer;
+  aSource: TaOPCTCPSource_V30;
+begin
+  Result := False;
+  aSource := TaOPCTCPSource_V30.Create(nil);
+  try
+    p := Pos(':', aServerAddress);
+    if p < 1 then
+    begin
+      //OPCLog.WriteToLogFmt('Некорректная адресная сторка: %s', [aServerAddress]);
+      Exit;
+    end;
+
+    p1 := Pos(';', aServerAddress);
+    if p1 < 1 then
+    begin
+      // нет альтернативы
+      aSource.RemoteMachine := Trim(Copy(aServerAddress, 1, p - 1));
+      aSource.Port := StrToInt(Trim(Copy(aServerAddress, p + 1, Length(aServerAddress) - p)));
+      aSource.AltAddress := '';
+    end
+    else
+    begin
+      aSource.RemoteMachine := Trim(Copy(aServerAddress, 1, p - 1));
+      aSource.Port := StrToInt(Trim(Copy(aServerAddress, p + 1, p1 - p - 1)));
+      aSource.AltAddress := Trim(Copy(aServerAddress, p1 + 1, Length(aServerAddress) - p1))
+    end;
+
+    aSource.ConnectTimeOut := 1000;
+    try
+      aSource.Connected := True;
+      Result := aSource.Connected;
+    except
+      on e: Exception do;
+    end;
+  finally
+    aSource.Free;
   end;
 end;
 
