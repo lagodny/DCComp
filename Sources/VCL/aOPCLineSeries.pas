@@ -371,7 +371,7 @@ begin
       begin
         tmpY := FRec2.y +
           (FRec2.y - FRec1.y) * (Rec.x - FRec2.x) / (FRec2.x - FRec1.x);
-        tmpY := StrToFloatDef(FormatValue(tmpY, DisplayFormat), tmpY);
+        tmpY := StrToFloatDef(aOPCUtils.FormatValue(tmpY, DisplayFormat), tmpY);
 
         if (FRec2.x <> FRec1.x) and (Rec.y = tmpY) then
         begin
@@ -894,7 +894,7 @@ begin
         Result := FloatToStr(v) + ' : ' + Result;
     end
     else
-      Result := FormatValue(v, DisplayFormat);
+      Result := aOPCUtils.FormatValue(v, DisplayFormat);
   end;
 
   if (Result <> '') then
@@ -920,7 +920,7 @@ begin
     if Assigned(LookupList) then
       LookupList.Lookup(FloatToStr(v), Result)
     else
-      Result := FormatValue(v, DisplayFormat);
+      Result := aOPCUtils.FormatValue(v, DisplayFormat);
   end;
   if (Result <> '') and (SensorUnitName <> '') then
     Result := Result + ' ' +SensorUnitName;
@@ -1075,7 +1075,7 @@ procedure TaOPCLineSeries.sAddXY(aRec: TXYS);//x, y: double; aState: extended = 
       end
       else
         // преобразуем исходное значение согласно формату отображения
-        Result := FormatValue(aValue, DisplayFormat);
+        Result := aOPCUtils.FormatValue(aValue, DisplayFormat);
     end
     else // есть ошибки
     begin

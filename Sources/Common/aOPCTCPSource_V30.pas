@@ -97,12 +97,14 @@ type
     procedure GetFile(aFileName: string; aStream: TStream); override;
     procedure UploadFile(aFileName: string; aDestDir: string = ''); override;
 
-    //function GetSensorProperties(id: string): TSensorProperties; override;
+    function GetSensorProperties(id: string): TSensorProperties; override;
     function GetSensorPropertiesEx(id: string): string; override;
     function SetSensorPropertiesEx(id: string; sl: TStrings): string; override;
 
     function GetGroupProperties(id: string): string; override;
     function SetGroupProperties(id: string; sl: TStrings): string; override;
+
+    procedure InitSensors(aIDs: TIDs); override;
 
     function GetDeviceProperties(id: string): string; override;
     function SetDeviceProperties(id: string; sl: TStrings): string; override;
@@ -155,6 +157,7 @@ type
     function GetMessage: TUserMessage; override;
 
     procedure DisconnectUser(aUserGUID: string); override;
+    procedure DebugUser(aUserGUID: string); override;
 
     procedure DownloadSetup(aFileName: string; aStream: TStream); override; // aProgressNotify: TOPCProgressNotify = nil);
 	
@@ -273,6 +276,11 @@ begin
   ProtocolVersion := 30;
   Connection.Intercept := Intercept;
   UpdateMode := umStreamPacket;  
+end;						   
+
+procedure TaOPCTCPSource_V30.DebugUser(aUserGUID: string);
+begin
+  LockAndDoCommandFmt('DebugUser %s', [aUserGUID]);
 end;
 
 procedure TaOPCTCPSource_V30.DeleteLookupItem(const aTable, aName: string);
@@ -1028,6 +1036,22 @@ begin
   LockAndDoCommandFmt('IncValue %s;%s;%s', [PhysID, FloatToStr(aIncValue, DotFS), FloatToStr(DateToServer(Moment), DotFS)]);
 end;
 
+procedure TaOPCTCPSource_V30.InitSensors(aIDs: TIDs);
+var
+  s: string;
+  i: Integer;
+begin
+  if Length(aIDs) > 0 then
+    s := IntToStr(aIDs[0])
+  else
+    Exit;
+
+  for i := 1 to High(aIDs) do
+    s := s + ';' + IntToStr(aIDs[i]);
+
+  LockAndDoCommandFmt('InitSensors %s', [s]);
+end;
+
 procedure TaOPCTCPSource_V30.InsertValues(PhysID: string; aBuffer: TSensorDataArr);
 begin
   LockConnection;
@@ -1050,48 +1074,48 @@ begin
   Result := LockAndGetResultCommandFmt('JSONReport %s', [aParam]);
 end;
 
-//function TaOPCTCPSource_V30.GetSensorProperties(id: string): TSensorProperties;
-//var
-//  s: TStrings;
-//begin
-//  s := TStringList.Create;
-//  try
-//    s.Text := LockAndGetStringsCommand(Format('GetSensorProperties %s', [id]));
-//
-//    with Result do
-//    begin
-//      Name := s.Values[sSensorName];          // наименование датчика
-//      NameEn := s.Values[sSensorNameEn];      // наименование датчика (латиницей)
-//      FullName := s.Values[sSensorFullName];  // полное наименование датчика
-//
-//      ThreadName := s.Values[sSensorConnectionName];    // имя потока сбора данных
-//      EquipmentPath := s.Values[sSensorControllerAddr]; // адрес контроллера
-//      Path := s.Values[sSensorAddr];                    // адрес датчика (тега,сигнала)
-//
-//      Id := s.Values[sSensorID];                        // идентификатор датчика на сервере
-//      UnitName := s.Values[sSensorUnitName];            // единица измерения
-//      DisplayFormat := s.Values[sSensorDisplayFormat];  // формат представления показаний
-//
-//      CorrectM := s.Values[sSensorCorrectMul];  // коэффициент умножения
-//      Correct := s.Values[sSensorCorrectAdd];   // константа добавления
-//
-//      Delta := s.Values[sSensorCompression_DeadSpace];      // мёртвая зона (интервал тишины)
-//      Precision := s.Values[sSensorCompression_Precision];  // точность (знаков после запятой)
-//      UpdateInterval := s.Values[sSensorUpdateInterval];    // интервал обновления
-//      MinReadInterval := s.Values[sSensorMinReadInterval];  // минимальный интервал между чтением показаний
-//      Vn := '0';//s.Values[sSensor]; // номинальная скорость изменения показаний
-//
-//      RefTableName := s.Values[sSensorRefTableName];  // ссылка на справочник расшифровки значений
-//      RefAutoFill := s.Values[sSensorRefAutoFill];    // режим автоматического заполнения справочника
-//
-//      UpdateDBInterval := s.Values[sSensorDataBuffer_DataWriter_UpdateDBInterval]; // интервал записи в БД
-//      FuncName := s.Values[sSensorFuncName]; // наименование функции вычисления значения датчика
-//    end;
-//
-//  finally
-//    s.Free;
-//  end;
-//end;
+function TaOPCTCPSource_V30.GetSensorProperties(id: string): TSensorProperties;
+var
+  s: TStrings;
+begin
+  s := TStringList.Create;
+  try
+    s.Text := LockAndGetStringsCommand(Format('GetSensorProperties %s', [id]));
+
+    with Result do
+    begin
+      Name := s.Values[sSensorName];          // наименование датчика
+      NameEn := s.Values[sSensorNameEn];      // наименование датчика (латиницей)
+      FullName := s.Values[sSensorFullName];  // полное наименование датчика
+
+      ThreadName := s.Values[sSensorConnectionName];    // имя потока сбора данных
+      EquipmentPath := s.Values[sSensorControllerAddr]; // адрес контроллера
+      Path := s.Values[sSensorAddr];                    // адрес датчика (тега,сигнала)
+
+      Id := s.Values[sSensorID];                        // идентификатор датчика на сервере
+      SensorUnitName := s.Values[sSensorUnitName];            // единица измерения
+      DisplayFormat := s.Values[sSensorDisplayFormat];  // формат представления показаний
+
+      CorrectM := s.Values[sSensorCorrectMul];  // коэффициент умножения
+      Correct := s.Values[sSensorCorrectAdd];   // константа добавления
+
+      Delta := s.Values[sSensorCompression_DeadSpace];      // мёртвая зона (интервал тишины)
+      Precision := s.Values[sSensorCompression_Precision];  // точность (знаков после запятой)
+      UpdateInterval := s.Values[sSensorUpdateInterval];    // интервал обновления
+      MinReadInterval := s.Values[sSensorMinReadInterval];  // минимальный интервал между чтением показаний
+      Vn := '0';//s.Values[sSensor]; // номинальная скорость изменения показаний
+
+      RefTableName := s.Values[sSensorRefTableName];  // ссылка на справочник расшифровки значений
+      RefAutoFill := s.Values[sSensorRefAutoFill];    // режим автоматического заполнения справочника
+
+      UpdateDBInterval := s.Values[sSensorDataBuffer_DataWriter_UpdateDBInterval]; // интервал записи в БД
+      FuncName := s.Values[sSensorFuncName]; // наименование функции вычисления значения датчика
+    end;
+
+  finally
+    s.Free;
+  end;
+end;
 
 procedure TaOPCTCPSource_V30.GetSchedule(aSensorID: string; aStream: TStream);
 var
@@ -1253,6 +1277,8 @@ begin
 	    FServerEnableMessage := StrToBool(s.Values['EnableMessage']);
 	    FServerSupportingProtocols := s.Values['SupportingProtocols'];
       FServerOffsetFromUTC := StrToTimeDef(s.Values['OffsetFromUTC'], ClientOffsetFromUTC);
+
+      FMonitoringVerID := s.Values['MonitoringVerID'];
 	  finally
 	    s.Free;
 	  end;

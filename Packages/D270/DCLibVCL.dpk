@@ -63,6 +63,7 @@ contains
   uTankFrame in '..\..\Sources\VCL\Frames\uTankFrame.pas' {frTank: TFrame},
   ChoiceProduct in '..\..\Sources\VCL\Frames\ChoiceProduct.pas' {ChoiceProductForm},
   uTanks in '..\..\Sources\VCL\Frames\uTanks.pas' {frTanks: TFrame},
-  uCoolingCell in '..\..\Sources\VCL\Frames\uCoolingCell.pas' {CoolingCellFrame: TFrame};
+  uCoolingCell in '..\..\Sources\VCL\Frames\uCoolingCell.pas' {CoolingCellFrame: TFrame},
+  SizeControl in '..\..\Sources\VCL\SizeControl.pas';
 
 end.

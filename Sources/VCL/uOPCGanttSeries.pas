@@ -600,7 +600,7 @@ procedure TaOPCGanttSeries.sAddXY(aRec: TXYS);
         aLookupList.Lookup(FloatToStr(aValue), Result)
       else
         // преобразуем исходное значение согласно формату отображения
-        Result := FormatValue(aValue, DisplayFormat);
+        Result := aOPCUtils.FormatValue(aValue, DisplayFormat);
     end
     else // есть ошибки
     begin

@@ -32,7 +32,6 @@ type
     property OPCSource: TaOPCSource read FOPCSource write SetOPCSource;
 
     class function Execute(aAuth: TaOPCAuthorization): Boolean;
-
   end;
 
 

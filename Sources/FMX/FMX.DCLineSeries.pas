@@ -199,7 +199,7 @@ begin
       begin
         tmpY := FRec2.y +
           (FRec2.y - FRec1.y) * (Rec.x - FRec2.x) / (FRec2.x - FRec1.x);
-        tmpY := StrToFloatDef(FormatValue(tmpY, DisplayFormat), tmpY);
+        tmpY := StrToFloatDef(aOPCUtils.FormatValue(tmpY, DisplayFormat), tmpY);
 
         if (FRec2.x <> FRec1.x) and (Rec.y = tmpY) then
         begin
@@ -706,7 +706,7 @@ var
       end
       else
         // преобразуем исходное значение согласно формату отображения
-        Result := FormatValue(aValue, DisplayFormat);
+        Result := aOPCUtils.FormatValue(aValue, DisplayFormat);
     end
     else // есть ошибки
     begin

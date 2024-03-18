@@ -23,6 +23,8 @@ uses
   aOPCVerUpdater,
   aOPCAuthorization,
 
+  SizeControl,
+
   uOPCFrame,
   ukzTempFrame,
   ukzCompressorDetail,
@@ -50,6 +52,8 @@ begin
   RegisterComponents('DC Controls', [TaOPCVerUpdater]);
 
   RegisterComponents('DC Controls', [TaOPCAuthorization]);
+
+  RegisterComponents('DC Controls', [TSizeCtrl]);
 
   RegisterComponents('DC Frames', [TkzTemp]);
   RegisterComponents('DC Frames', [TkzCompressorDetail]);

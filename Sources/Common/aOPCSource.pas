@@ -35,6 +35,8 @@ type
   TCrackOPCLink = class(TaOPCDataLink)
   end;
 
+  TIDs = array of Integer;
+
   TaOPCSource = class;
 
   TOPCUpdateThread = class(TThread)
@@ -110,6 +112,7 @@ type
     procedure SetAvtoShowMessage(const Value: Boolean);
     procedure SetEnableMessage(const Value: Boolean);
   protected
+    FMonitoringVerID: TPhysID;
     FStreamedConnected: Boolean;
 
     FPhysIDs: string;
@@ -211,7 +214,7 @@ type
 
     function GetOPCName: string; override;
 
-    // function GetSensorProperties(id: string): TSensorProperties; virtual;
+     function GetSensorProperties(id: string): TSensorProperties; virtual;
     function GetSensorPropertiesEx(id: string): string; virtual;
 
     function SetSensorPropertiesEx(id: string; sl: TStrings): string; virtual;
@@ -221,6 +224,8 @@ type
 
     function GetDeviceProperties(id: string): string; virtual;
     function SetDeviceProperties(id: string; sl: TStrings): string; virtual;
+
+    procedure InitSensors(aIDs: TIDs); virtual;
 
     function GetPermissions(PhysIDs: string): string; virtual;
 
@@ -306,7 +311,9 @@ type
     function GetMessage: TUserMessage; virtual; abstract;
 
     procedure DisconnectUser(aUserGUID: string); virtual; abstract;
+    procedure DebugUser(aUserGUID: string); virtual; abstract;
 
+    property MonitoringVerID: TPhysID read FMonitoringVerID;
     property ServerTime: TDateTime read GetServerTime;
     property UserMessages: TUserMessageList read FUserMessages;
     procedure UpdateDescription; virtual;
@@ -1501,6 +1508,11 @@ begin
   raise ENotImplemented.Create('IncSensorValue not Implemented');
 end;
 
+procedure TaOPCSource.InitSensors(aIDs: TIDs);
+begin
+
+end;
+
 procedure TaOPCSource.InsertValues(PhysID: string; aBuffer: TSensorDataArr);
 begin
 
@@ -1667,9 +1679,9 @@ begin
   end;
 end;
 
-// function TaOPCSource.GetSensorProperties(id: string): TSensorProperties;
-// begin
-// end;
+function TaOPCSource.GetSensorProperties(id: string): TSensorProperties;
+begin
+end;
 
 function TaOPCSource.GetSensorPropertiesEx(id: string): string;
 begin

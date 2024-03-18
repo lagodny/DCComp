@@ -263,6 +263,37 @@ type
     Time: TDateTime;
   end;
 
+  TSensorProperties = record
+    Name: string; // наименование датчика
+    NameEn: string; // наименование датчика (латиницей)
+    FullName: string; // полное наименование датчика
+
+    ThreadName: string; // имя потока сбора данных
+    EquipmentPath: string; // адрес контроллера
+    Path: string; // адрес датчика (тега,сигнала)
+
+    Id: string; // идентификатор датчика на сервере
+    SensorUnitName: string; // единица измерения
+    DisplayFormat: string; // формат представления показаний
+
+    CorrectM: string; // коэффициент умножения
+    Correct: string; // константа добавления
+
+    Delta: string; // мёртвая зона (интервал тишины)
+    Precision: string; // точность (знаков после запятой)
+    UpdateDBInterval: string; // интервал записи в БД
+    UpdateInterval: string; // интервал обновления
+    MinReadInterval: string; // минимальный интервал между чтением показаний
+    Vn: string; // номинальная скорость изменения показаний
+
+    RefTableName: string; // ссылка на справочник расшифровки значений
+    RefAutoFill: string; // режим автоматического заполнения справочника
+
+    FuncName: string; // наименование функции вычисления значения датчика
+  end;
+
+
+
 const
    cDC_SCS_Trackers: TDCObjectKindSet = [
      ok_scs_TrackerTDC,
