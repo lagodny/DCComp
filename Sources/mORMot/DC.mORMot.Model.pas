@@ -1,4 +1,4 @@
-unit DC.mORMot.Model;
+﻿unit DC.mORMot.Model;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   mORMot;
 
 type
-  // ������� ��������� ������� ����������� ����������� � ������������ � ������������ ������
+  // история изменения записей дополненная информацией о пользователе и расшифровкой записи
   TSQLDCRecordHistory = class(TSQLRecordHistory)
   private
     FRecID: TID;
@@ -24,6 +24,39 @@ type
     property TableName: RawUTF8 index 50 read FTableName write FTableName;
     property LogonName: RawUTF8 index 50 read FLogonName write FLogonName;
   end;
+
+  /// **** підсистема зберігання налаштувань *****
+  ///  необхідно забезпечити можливість зберігання налаштувань довідників, документів, звітів на сервері
+  ///  щоб кожен міг застосувати свої або чужі налаштування
+  ///  кожен може створити таке налаштування але видалити може тільки автор або адмінистратор
+  ///
+  TSQLSettings = class(TSQLRecord)
+  private
+    {$REGION 'Fields'}
+    FObjClassName: RawUTF8;
+    FBinData: TSQLRawBlob;
+    FModUser: TSessionUserID;
+    FTitle: RawUTF8;
+    FVersion: Integer;
+    FComponentName: RawUTF8;
+    {$ENDREGION}
+  published
+    // назва налаштувань
+    property Title: RawUTF8 read FTitle write FTitle;
+    // им'я класу об'єкта чиї налаштування зберігаємо
+    // наприклад: TProjectPivotTableReport
+    property ObjClassName: RawUTF8 read FObjClassName write FObjClassName;
+    // версія (в базі можуть залишатись налаштування для старої версії, які можуть бути несумісні з існуючою)
+    property Version: Integer read FVersion write FVersion;
+    // им'я самого об'єкта (на формі може бути декілька компонентів,
+    //   треба завантажувата та зберігати налаштування для кожного)
+    property ComponentName: RawUTF8 read FComponentName write FComponentName;
+    // самі дані
+    property BinData: TSQLRawBlob read FBinData write FBinData;
+    // хто останній змінював
+    property ModUser: TSessionUserID read FModUser write FModUser;
+  end;
+
 
 implementation
 
