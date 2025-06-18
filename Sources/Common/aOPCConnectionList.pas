@@ -157,7 +157,10 @@ type
     function FindObjectByID(aConnectionID: integer; ID: integer): TDCObject;
     function FindObjectBySourceAndID(aOPCSource: TaCustomOPCSource; ID: integer): TDCObject;
 
+    function GetOPCSourceByConnectionID(const aConnectionID: Integer): TaCustomOPCSource;
     function GetOPCSourceByConnectionName(const aConnectionName: string): TaCustomOPCSource;
+
+    function GetConnectionByID(const aConnectionID: Integer): TOPCConnectionCollectionItem;
     function GetConnectionByName(const aConnectionName: string): TOPCConnectionCollectionItem;
 
     procedure LoadSettings(aCustomIniFile: TCustomIniFile; aSectionName: string; aNotClearItems: Boolean = False);
@@ -1198,6 +1201,17 @@ begin
   Result := FindObjectByID(IndexOfOPCSource(aOPCSource), ID);
 end;
 
+function TaOPCConnectionList.GetConnectionByID(const aConnectionID: Integer): TOPCConnectionCollectionItem;
+var
+  i: Integer;
+begin
+  i := IndexOfConnectionID(aConnectionID);
+  if i > -1 then
+    Result := Items[i]
+  else
+    Result := nil;
+end;
+
 function TaOPCConnectionList.GetConnectionByName(const aConnectionName: string): TOPCConnectionCollectionItem;
 var
   i: Integer;
@@ -1205,6 +1219,17 @@ begin
   i := IndexOfConnectionName(aConnectionName);
   if i > -1 then
     Result := Items[i]
+  else
+    Result := nil;
+end;
+
+function TaOPCConnectionList.GetOPCSourceByConnectionID(const aConnectionID: Integer): TaCustomOPCSource;
+var
+  i: Integer;
+begin
+  i := IndexOfConnectionID(aConnectionID);
+  if i > -1 then
+    Result := TaCustomOPCTCPSource(Items[i].OPCSource)
   else
     Result := nil;
 end;
