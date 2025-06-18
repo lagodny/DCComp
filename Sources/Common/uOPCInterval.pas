@@ -183,7 +183,8 @@ begin
   FEnableTime := True;
   FTimeShift := 0.5; //12 часов
   FTimeShiftUnit := tsuHour;
-  FKind := ikInterval;
+//  FKind := ikInterval;
+  FKind := ikShift;
   FShiftKind := skToday;
   FDate2 := Now;
   FDate1 := Max(FDate2 - TimeShift, 1);
