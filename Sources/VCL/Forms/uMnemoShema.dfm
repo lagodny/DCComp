@@ -24,12 +24,12 @@ object fmMnemoShema: TfmMnemoShema
   TextHeight = 13
   object StatusBar: TStatusBar
     Left = 0
-    Top = 270
+    Top = 250
     Width = 715
     Height = 19
     Panels = <
       item
-        Text = #1058#1077#1082#1091#1097#1077#1077' '#1089#1086#1089#1090#1086#1103#1085#1080#1077
+        Text = #1055#1086#1090#1086#1095#1085#1080#1081' '#1089#1090#1072#1085
         Width = 180
       end
       item
@@ -41,7 +41,6 @@ object fmMnemoShema: TfmMnemoShema
       item
         Width = 50
       end>
-    ExplicitTop = 250
   end
   object aOPCSource: TaOPCTCPSource_V30
     States = llStates
@@ -64,7 +63,7 @@ object fmMnemoShema: TfmMnemoShema
     OnActivate = OPCCinemaActivate
     OnDeactivate = OPCCinemaDeactivate
     OnChangeMoment = OPCCinemaChangeMoment
-    CurrentMoment = 45335.590321284720000000
+    CurrentMoment = 45504.363065381940000000
     UpdateControlsOnChangeMoment = False
     Left = 406
     Top = 15
@@ -106,16 +105,16 @@ object fmMnemoShema: TfmMnemoShema
     Left = 80
     Top = 15
     object aHistory: TAction
-      Category = #1048#1089#1090#1086#1088#1080#1103
-      Caption = #1048#1089#1090#1086#1088#1080#1103
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088#1077#1090#1100' '#1084#1085#1077#1084#1086#1089#1093#1077#1084#1091' '#1074' '#1079#1072#1087#1080#1089#1080
+      Category = #1030#1089#1090#1086#1088#1110#1103
+      Caption = #1030#1089#1090#1086#1088#1110#1103
+      Hint = #1055#1077#1088#1077#1075#1083#1103#1085#1091#1090#1080' '#1084#1077#1085#1110#1084#1086#1089#1093#1077#1084#1091' '#1074' '#1079#1072#1087#1080#1089#1110
       ShortCut = 16456
       OnExecute = aHistoryExecute
     end
     object aPrint: TAction
-      Category = #1055#1077#1095#1072#1090#1100
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1090#1100
+      Category = #1044#1088#1091#1082
+      Caption = #1044#1088#1091#1082
+      Hint = #1056#1086#1079#1076#1088#1091#1082#1091#1074#1072#1090#1080
       ShortCut = 16464
       OnExecute = aPrintExecute
     end
@@ -127,26 +126,26 @@ object fmMnemoShema: TfmMnemoShema
     end
     object aSimulateMode: TAction
       AutoCheck = True
-      Caption = #1056#1077#1078#1080#1084' '#1080#1084#1080#1090#1072#1094#1080#1080
+      Caption = #1056#1077#1078#1080#1084' '#1110#1084#1110#1090#1072#1094#1110#1111
       OnExecute = aSimulateModeExecute
     end
     object aAbout: TAction
-      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
+      Caption = #1055#1088#1086' '#1087#1088#1086#1075#1088#1072#1084#1091
       OnExecute = aAboutExecute
     end
     object HelpContents1: THelpContents
-      Category = #1057#1087#1088#1072#1074#1082#1072
-      Caption = #1057#1087#1088#1072#1074#1082#1072
+      Category = #1044#1086#1074#1110#1076#1082#1072
+      Caption = #1044#1086#1074#1110#1076#1082#1072
       Enabled = False
-      Hint = #1057#1087#1088#1072#1074#1082#1072
+      Hint = #1044#1086#1074#1110#1076#1082#1072
       ImageIndex = 40
       ShortCut = 112
       Visible = False
     end
     object aHelp: TAction
-      Category = #1057#1087#1088#1072#1074#1082#1072
-      Caption = #1057#1087#1088#1072#1074#1082#1072
-      Hint = #1057#1087#1088#1072#1074#1082#1072
+      Category = #1044#1086#1074#1110#1076#1082#1072
+      Caption = #1044#1086#1074#1110#1076#1082#1072
+      Hint = #1044#1086#1074#1110#1076#1082#1072
       ImageIndex = 40
       OnExecute = aHelpExecute
     end

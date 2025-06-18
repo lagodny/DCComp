@@ -24,9 +24,9 @@ uses
   mORMoti18n;
 
 const
-  ssRealTime = 'Режим реального времени';
-  ssShowHistory = 'Режим просмотра истории';
-  ssDemoMode = 'Нет подключения. Демо режим';
+  ssRealTime = 'Режим реального часу';
+  ssShowHistory = 'Режим перегляду історії';
+  ssDemoMode = 'Нема підключень. Демо режим';
 
 type
   TIniSettingsOperationEvent = procedure
@@ -499,7 +499,7 @@ end;
 
 function TfmMnemoShema.GetFormCaption: string;
 begin
-  Result := Format('%s - версия %d', [FDesignFormCaption, VerUpdater.AppVer]);
+  Result := Format('%s - версія %d', [FDesignFormCaption, VerUpdater.AppVer]);
 end;
 
 procedure TfmMnemoShema.SaveSettings;
@@ -747,7 +747,7 @@ procedure TfmMnemoShema.aScaleExecute(Sender: TObject);
 var
   sScale: string;
 begin
-  if InputQuery('Укажите масштаб', IntToStr(Scale), sScale) then
+  if InputQuery('Вкажіть масштаб', IntToStr(Scale), sScale) then
     Scale := StrToInt(sScale);
 end;
 
