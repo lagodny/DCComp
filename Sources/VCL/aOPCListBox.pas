@@ -84,6 +84,10 @@ type
     property DataLinkItems: TDataLinkCollection read FDataLinkItems write SetDataLinkItems;
   end;
 
+resourcestring
+  sValueTooLow = 'value too low';
+  sValueTooHigh = 'value too high';
+
 
 implementation
 
@@ -129,7 +133,8 @@ begin
   for i:=0 to Pred(FDataLinkItems.Count) do
   begin
     dl := FDataLinkItems[i];
-    if not (dl.Name = '') and dl.DataLink.IsActive and (dl.DataLink.ErrorCode = 0) then
+//    if not (dl.Name = '') and dl.DataLink.IsActive and (dl.DataLink.ErrorCode = 0) then
+    if not (dl.Name = '') and dl.DataLink.IsAlarm and (dl.DataLink.ErrorCode = 0) then
       Items.AddObject(dl.Representation, dl);
   end;
   Items.EndUpdate;
@@ -257,7 +262,14 @@ function TDataLinkCollectionItem.GetRepresentation: string;
 begin
   Result := IfThen((DataLink.Moment = 0) or not ShowMoment,
       '',DateTimeToStr(DataLink.Moment)+' : ')+ Name;
-      
+
+  if DataLink.AlarmMinValue <> DataLink.AlarmMaxValue then
+  begin
+    if DataLink.FloatValue < DataLink.AlarmMinValue then
+      Result := Result + ' : ' + sValueTooLow
+    else if DataLink.FloatValue > DataLink.AlarmMaxValue then
+      Result := Result + ' : ' + sValueTooHigh;
+  end;
 end;
 
 function TDataLinkCollectionItem.GetValue: string;

@@ -40,13 +40,17 @@ type
     FOnChangeDataThreaded: TNotifyEvent;
     FOnRequest: TNotifyEvent;
     FPrecision: Integer;
+    FAlarmMinValue: Double;
+    FAlarmMaxValue: Double;
     procedure SetStairsOptions(const Value: TDCStairsOptionsSet);
   protected
     FValue: string;
     FFloatValue: Double;
+    FIsAlarm: Boolean;
 
     FOldValue: string;
     FOldFloatValue: Double;
+    FOldIsAlarm: Boolean;
 
     FMoment: TDateTime;
     FOldMoment: TDateTime;
@@ -65,13 +69,17 @@ type
     procedure ChangeData; virtual;
     procedure DoChangeDataThreaded; virtual;
   public
+    function GetIsAlarm: Boolean;
+
     property Control: TObject read FControl write FControl;
 
     property OldValue: string read FOldValue;
     property OldFloatValue: Double read FOldFloatValue;
+    property OldIsAlarm: Boolean read FOldIsAlarm;
 
     property Value: string read FValue write SetValue;
     property FloatValue: Double read FFloatValue write SetFloatValue;
+    property IsAlarm: Boolean read FIsAlarm;
 
     property ID: Integer read FID;
     property PhysID: TPhysID read GetPhysID write SetPhysID;
@@ -85,6 +93,9 @@ type
     property StairsOptions: TDCStairsOptionsSet read FStairsOptions write SetStairsOptions;
     property Precision: Integer read FPrecision write FPrecision;
     property UpdateOnChangeMoment: boolean read FUpdateOnChangeMoment write FUpdateOnChangeMoment;
+
+    property AlarmMinValue: Double read FAlarmMinValue write FAlarmMinValue;
+    property AlarmMaxValue: Double read FAlarmMaxValue write FAlarmMaxValue;
 
     //при записи в OPC
     property OnUpdateData: TNotifyEvent read FOnUpdateData write FOnUpdateData;
@@ -104,8 +115,8 @@ type
   end;
 
   TaOPCDataLink = class(TaCustomDataLink)
-  private
-    procedure SetOPCSource(const Value: TaCustomOPCSource);
+  protected
+    procedure SetOPCSource(const Value: TaCustomOPCSource); virtual;
   protected
     //[Weak]
     FOPCSource: TaCustomOPCSource;
@@ -675,6 +686,21 @@ begin
     OnChangeDataThreaded(Self);
 end;
 
+function TaCustomDataLink.GetIsAlarm: Boolean;
+begin
+  if (AlarmMinValue = 0) and (AlarmMaxValue = 0) then
+  begin
+    // старый вариант - для датчиков аварий мониторинга
+    Result := not ((Value = '0') or (Value = '') or
+      (Pos('FALSE', UpperCase(Value)) > 0) or (StrToIntDef(Value, 0) = 0));
+  end
+  else
+  begin
+    // новый вариант - для аналоговых датчиков
+    Result := (FloatValue < AlarmMinValue) or (FloatValue > AlarmMaxValue);
+  end;
+end;
+
 function TaCustomDataLink.GetPhysID: TPhysID;
 begin
   Result := FPhysID;
@@ -682,8 +708,17 @@ end;
 
 function TaCustomDataLink.IsActive: boolean;
 begin
-  Result := not ((Value = '0') or (Value = '') or
-    (Pos('FALSE', UpperCase(Value)) > 0) or (StrToIntDef(Value, 0) = 0));
+  if (AlarmMinValue = 0) and (AlarmMaxValue = 0) then
+  begin
+    // старый вариант - для датчиков аварий мониторинга
+    Result := not ((Value = '0') or (Value = '') or
+      (Pos('FALSE', UpperCase(Value)) > 0) or (StrToIntDef(Value, 0) = 0));
+  end
+  else
+  begin
+    // новый вариант - для аналоговых датчиков
+    Result := (FloatValue < AlarmMinValue) or (FloatValue > AlarmMaxValue);
+  end;
 end;
 
 procedure TaCustomDataLink.SetFloatValue(const aValue: Double);
@@ -693,6 +728,9 @@ begin
     FOldFloatValue := FFloatValue;
     FFloatValue := aValue;
     FValue := FloatToStr(FFloatValue);
+
+    FOldIsAlarm := FIsAlarm;
+    FIsAlarm := GetIsAlarm;
     
     ChangeData;
   end;

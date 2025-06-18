@@ -430,8 +430,8 @@ begin
 
   // создаем новый
   FThread := TOPCUpdateThread.Create(True);
-  FThread.OnTerminate := DoUpdateThreadTerminate;
-  FThread.FreeOnTerminate := True;
+//  FThread.OnTerminate := DoUpdateThreadTerminate;
+//  FThread.FreeOnTerminate := True;
   FThread.Interval := Interval;
   FThread.OPCSource := Self;
   FThread.Start;
@@ -460,6 +460,8 @@ begin
 
     CrackDataLink.FValue := DataLinkGroup.Value;
     CrackDataLink.FOldValue := DataLinkGroup.OldValue;
+    CrackDataLink.FOldIsAlarm :=CrackDataLink.IsAlarm;
+
     TryStrToFloat(CrackDataLink.FValue, CrackDataLink.FFloatValue);
     if OpcFS.DecimalSeparator <> FormatSettings.DecimalSeparator then
     begin
@@ -468,6 +470,7 @@ begin
         CrackDataLink.FValue := FloatToStr(tmpFloat);
     end;
 
+    CrackDataLink.FIsAlarm := CrackDataLink.GetIsAlarm;
     CrackDataLink.FMoment := DataLinkGroup.Moment;
     CrackDataLink.ChangeData;
   end;
@@ -577,8 +580,12 @@ begin
   if Assigned(FThread) then
   begin
     FThread.Terminate;
-    while Assigned(FThread) do
-      CheckSynchronize(1000);
+    FThread.WaitFor;
+    FreeAndNil(FThread);
+//    while Assigned(FThread) do
+//      CheckSynchronize(1000);
+
+
   end;
 
   FActive := False;
@@ -1663,15 +1670,18 @@ begin
       begin
         CrackDataLink.FOldValue := aGroupValue;
         CrackDataLink.FOldFloatValue := aGroupFloatValue;
+        CrackDataLink.FOldIsAlarm := False;
       end
       else
       begin
         CrackDataLink.FOldValue := CrackDataLink.FValue;
         CrackDataLink.FOldFloatValue := CrackDataLink.FFloatValue;
+        CrackDataLink.FOldIsAlarm := CrackDataLink.FIsAlarm;
       end;
 
       CrackDataLink.FValue := aGroupValue;
       CrackDataLink.FFloatValue := aGroupFloatValue;
+      CrackDataLink.FIsAlarm := CrackDataLink.GetIsAlarm;
 
 
       CrackDataLink.FMoment := DataLinkGroup.Moment;
