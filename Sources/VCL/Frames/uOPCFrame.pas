@@ -282,7 +282,7 @@ begin
         o.OnClick := aAddToChart;
 
         if o.ErrorHint = '' then
-          o.ErrorHint := 'Ошибка: %s';
+          o.ErrorHint := 'Помилка: %s';
 
         if o is TaCustomOPCLabel then
           TaCustomOPCLabel(o).OnDrawLabel := CommonDrawLabel;
@@ -306,6 +306,7 @@ begin
         begin
           o.Hints.Add('0=' + o.Params.Values[sSerieIdent] + #13#10 + '(id=' + o.PhysID + ')');
           o.Hint := o.Params.Values[sSerieIdent] + #13#10 + '(id=' + o.PhysID + ')';
+          o.ErrorHint := o.ErrorHint + #13#10 + o.Hint;
         end;
 
       end;
