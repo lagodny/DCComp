@@ -1,0 +1,39 @@
+object DCNewMessageForm: TDCNewMessageForm
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  Caption = #1053#1086#1074#1110' '#1087#1086#1074#1110#1076#1086#1084#1083#1077#1085#1085#1103
+  ClientHeight = 128
+  ClientWidth = 325
+  Color = clBtnFace
+  Constraints.MinHeight = 130
+  Constraints.MinWidth = 220
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  FormStyle = fsStayOnTop
+  KeyPreview = True
+  Position = poScreenCenter
+  OnClick = FormClick
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnResize = FormResize
+  PixelsPerInch = 96
+  TextHeight = 13
+  object MsgGrid: TStringGrid
+    Left = 0
+    Top = 0
+    Width = 325
+    Height = 128
+    Align = alClient
+    ColCount = 2
+    DefaultDrawing = False
+    FixedCols = 0
+    RowCount = 3
+    TabOrder = 0
+    OnDrawCell = MsgGridDrawCell
+  end
+end
