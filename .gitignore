@@ -73,3 +73,4 @@ __recovery/
 Test/FMX/Test1/Android/Debug
 Test/FMX/Migration/Android/Debug
 *.skincfg
+Sources/jcl

@@ -58,6 +58,8 @@ contains
   uOPCGanttSeries in '..\Sources\VCL\uOPCGanttSeries.pas',
   aOPCChartMessureTool in '..\Sources\VCL\aOPCChartMessureTool.pas',
   uDCTeeTools in '..\Sources\VCL\uDCTeeTools.pas',
-  uChartFrame in '..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame};
+  uChartFrame in '..\Sources\VCL\Frames\uChartFrame.pas' {ChartFrame: TFrame},
+  DC.Notify.Handler in '..\Sources\VCL\DC.Notify.Handler.pas',
+  DC.VCL.Form.NewMessage in '..\Sources\VCL\Forms\DC.VCL.Form.NewMessage.pas' {DCNewMessageForm};
 
 end.

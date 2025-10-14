@@ -25,7 +25,7 @@
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Data collection library (non visual)'}
+{$DESCRIPTION 'Data collection library'}
 {$LIBSUFFIX AUTO}
 {$IMPLICITBUILD ON}
 
@@ -59,7 +59,7 @@ contains
   uOPCConst in '..\..\Sources\Common\uOPCConst.pas',
   aDCReg in '..\..\Sources\Common\aDCReg.pas',
   PLDesign in '..\..\Sources\Design\PLDesign.pas' {ProvidersEditor},
-  PathPeForm in '..\..\Sources\Design\PathPeForm.pas' {TreeForm};
-
+  PathPeForm in '..\..\Sources\Design\PathPeForm.pas' {TreeForm},
+  DC.Collection in '..\..\Sources\Common\DC.Collection.pas';
 
 end.

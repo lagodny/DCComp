@@ -3,7 +3,7 @@
         <ProjectGuid>{D8BC19F2-9A67-4D2E-ACEF-A80DF19D815D}</ProjectGuid>
         <MainSource>DCLibVCL.dpk</MainSource>
         <ProjectVersion>19.3</ProjectVersion>
-        <FrameworkType>None</FrameworkType>
+        <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -64,7 +64,7 @@
         <DCC_K>false</DCC_K>
         <GenDll>true</GenDll>
         <GenPackage>true</GenPackage>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>DCLibVCL</SanitizedProjectName>
         <VerInfo_Locale>1049</VerInfo_Locale>
@@ -153,6 +153,11 @@
         <DCCReference Include="..\Sources\VCL\Frames\uChartFrame.pas">
             <Form>ChartFrame</Form>
             <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Sources\VCL\DC.Notify.Handler.pas"/>
+        <DCCReference Include="..\Sources\VCL\Forms\DC.VCL.Form.NewMessage.pas">
+            <Form>DCNewMessageForm</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

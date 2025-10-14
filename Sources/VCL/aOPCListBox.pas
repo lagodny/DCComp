@@ -214,7 +214,8 @@ begin
   begin
     s := TDataLinkCollectionItem(Source);
     Name := s.Name;
-    FDataLink.PhysID := s.FDataLink.PhysID;
+//    FDataLink.PhysID := s.FDataLink.PhysID;
+    FDataLink.Assign(s.FDataLink);
   end
   else
     inherited Assign(Source);
