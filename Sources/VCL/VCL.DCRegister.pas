@@ -32,7 +32,9 @@ uses
 
   uTankFrame, uTanks,
 
-  uCoolingCell;
+  uCoolingCell,
+
+  DC.Notify.Handler;
 
 
 procedure Register;
@@ -54,6 +56,9 @@ begin
   RegisterComponents('DC Controls', [TaOPCAuthorization]);
 
   RegisterComponents('DC Controls', [TSizeCtrl]);
+
+  RegisterComponents('DC Controls', [TDCNotifyHandler]);
+
 
   RegisterComponents('DC Frames', [TkzTemp]);
   RegisterComponents('DC Frames', [TkzCompressorDetail]);
