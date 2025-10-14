@@ -50,7 +50,8 @@ uses
 //  aOPCImage2In, aOPCImage3In, aOPCImage4In, aOPCImage5In,
 //  aOPCChart,
 
-  aDCCommandHandler;
+  aDCCommandHandler,
+  DC.Notifier;
 
 procedure Register;
 begin
@@ -81,6 +82,9 @@ begin
 //
   // провайдер
   RegisterComponents('DC', [TaOPCProvider]);
+
+  RegisterComponents('DC', [TDCNotifier]);
+
 
   // список провайдеров
   RegisterComponents('DC', [TaOPCProviderList]);
