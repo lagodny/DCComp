@@ -767,10 +767,12 @@ begin
         CrackDataLink.FOldMoment := CrackDataLink.FMoment;
         CrackDataLink.FOldValue := CrackDataLink.FValue;
         CrackDataLink.FOldFloatValue := CrackDataLink.FFloatValue;
+        CrackDataLink.FOldIsAlarm := CrackDataLink.IsAlarm;
 
         CrackDataLink.FMoment := aDataLinkGroupHistory.Moment;
         CrackDataLink.FValue := aDataLinkGroupHistory.Value;
         CrackDataLink.FFloatValue := aDataLinkGroupHistory.FloatValue;
+        CrackDataLink.FIsAlarm := CrackDataLink.GetIsAlarm;
 
         if CrackDataLink.ErrorCode <> aDataLinkGroupHistory.ErrorCode then
         begin

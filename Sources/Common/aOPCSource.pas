@@ -460,7 +460,8 @@ begin
 
     CrackDataLink.FValue := DataLinkGroup.Value;
     CrackDataLink.FOldValue := DataLinkGroup.OldValue;
-    CrackDataLink.FOldIsAlarm :=CrackDataLink.IsAlarm;
+    CrackDataLink.FOldIsAlarm := CrackDataLink.IsAlarm;
+    CrackDataLink.FOldMoment := CrackDataLink.Moment;
 
     TryStrToFloat(CrackDataLink.FValue, CrackDataLink.FFloatValue);
     if OpcFS.DecimalSeparator <> FormatSettings.DecimalSeparator then
@@ -1674,6 +1675,7 @@ begin
       end
       else
       begin
+        CrackDataLink.FOldMoment := CrackDataLink.FMoment;
         CrackDataLink.FOldValue := CrackDataLink.FValue;
         CrackDataLink.FOldFloatValue := CrackDataLink.FFloatValue;
         CrackDataLink.FOldIsAlarm := CrackDataLink.FIsAlarm;

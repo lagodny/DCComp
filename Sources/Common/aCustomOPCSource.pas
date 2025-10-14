@@ -25,34 +25,40 @@ type
   //  TOPCStairsOptions = (soIncrease,soDecrease);
   //  TOPCStairsOptionsSet = set of TOPCStairsOptions;
 
+  TOnGetIsAlarm = procedure (Sender: TObject; var aIsAlarm: Boolean) of object;
+
   TaCustomDataLink = class(TPersistent)
   private
-    [Weak] FControl: TObject;
+{$REGION 'Fields'}
+      [Weak] FControl: TObject;
 
-    FID: Integer;
-    FPhysID: TPhysID;
-    FDeleted: boolean;
-    FUpdateOnChangeMoment: boolean;
-    FStairsOptions: TDCStairsOptionsSet;
+      FID: Integer;
+      FPhysID: TPhysID;
+      FDeleted: boolean;
+      FUpdateOnChangeMoment: boolean;
+      FStairsOptions: TDCStairsOptionsSet;
 
-    FOnUpdateData: TNotifyEvent;
-    FOnChangeData: TNotifyEvent;
-    FOnChangeDataThreaded: TNotifyEvent;
-    FOnRequest: TNotifyEvent;
-    FPrecision: Integer;
-    FAlarmMinValue: Double;
-    FAlarmMaxValue: Double;
+      FOnUpdateData: TNotifyEvent;
+      FOnChangeData: TNotifyEvent;
+      FOnChangeDataThreaded: TNotifyEvent;
+      FOnRequest: TNotifyEvent;
+      FPrecision: Integer;
+      FAlarmMinValue: Double;
+      FAlarmMaxValue: Double;
+      FAlarmIfNotOK: Boolean;
+      FOnGetIsAlarm: TOnGetIsAlarm;
+{$ENDREGION}
     procedure SetStairsOptions(const Value: TDCStairsOptionsSet);
+    procedure SetAlarmMaxValue(const Value: Double);
   protected
     FValue: string;
     FFloatValue: Double;
     FIsAlarm: Boolean;
+    FMoment: TDateTime;
 
     FOldValue: string;
     FOldFloatValue: Double;
     FOldIsAlarm: Boolean;
-
-    FMoment: TDateTime;
     FOldMoment: TDateTime;
 
     FErrorCode: integer;
@@ -76,6 +82,7 @@ type
     property OldValue: string read FOldValue;
     property OldFloatValue: Double read FOldFloatValue;
     property OldIsAlarm: Boolean read FOldIsAlarm;
+    property OldMoment: TDateTime read FOldMoment;
 
     property Value: string read FValue write SetValue;
     property FloatValue: Double read FFloatValue write SetFloatValue;
@@ -95,7 +102,9 @@ type
     property UpdateOnChangeMoment: boolean read FUpdateOnChangeMoment write FUpdateOnChangeMoment;
 
     property AlarmMinValue: Double read FAlarmMinValue write FAlarmMinValue;
-    property AlarmMaxValue: Double read FAlarmMaxValue write FAlarmMaxValue;
+    property AlarmMaxValue: Double read FAlarmMaxValue write SetAlarmMaxValue;
+
+    property OnGetIsAlarm: TOnGetIsAlarm read FOnGetIsAlarm write FOnGetIsAlarm;
 
     //при записи в OPC
     property OnUpdateData: TNotifyEvent read FOnUpdateData write FOnUpdateData;
@@ -639,6 +648,8 @@ begin
     aDest := TaCustomDataLink(Dest);
     aDest.FPhysID := PhysID;
     aDest.FStairsOptions := StairsOptions;
+    aDest.AlarmMinValue := AlarmMinValue;
+    aDest.AlarmMaxValue := AlarmMaxValue;
     aDest.FUpdateOnChangeMoment := UpdateOnChangeMoment;
 
     //aDest.FOnUpdateData := OnUpdateData;
@@ -688,7 +699,12 @@ end;
 
 function TaCustomDataLink.GetIsAlarm: Boolean;
 begin
-  if (AlarmMinValue = 0) and (AlarmMaxValue = 0) then
+  Result := False;
+  // если есть обработчик определения аварий - вызываем его
+  if Assigned(FOnGetIsAlarm) then
+    FOnGetIsAlarm(Self, Result)
+
+  else if (AlarmMinValue = 0) and (AlarmMaxValue = 0) then
   begin
     // старый вариант - для датчиков аварий мониторинга
     Result := not ((Value = '0') or (Value = '') or
@@ -719,6 +735,11 @@ begin
     // новый вариант - для аналоговых датчиков
     Result := (FloatValue < AlarmMinValue) or (FloatValue > AlarmMaxValue);
   end;
+end;
+
+procedure TaCustomDataLink.SetAlarmMaxValue(const Value: Double);
+begin
+  FAlarmMaxValue := Value;
 end;
 
 procedure TaCustomDataLink.SetFloatValue(const aValue: Double);
