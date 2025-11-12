@@ -59,7 +59,7 @@ type
 
     property ShortName: string read GetShortName write SetShortName;
     property FullName: string read GetFullName write SetFullName;
-    property ShowFullName: boolean read GetShowFullName write SetShowFullName;
+    property ShowFullName: Boolean read GetShowFullName write SetShowFullName;
 
   end;
 

@@ -641,9 +641,10 @@ procedure TaCustomDataLink.AssignTo(Dest: TPersistent);
 var
   aDest: TaCustomDataLink;
 begin
-  if not (Dest is TaCustomDataLink) then
-    inherited AssignTo(Dest)
-  else
+//  if not (Dest is TaCustomDataLink) then
+//    inherited AssignTo(Dest)
+//  else
+  if Dest is TaCustomDataLink then
   begin
     aDest := TaCustomDataLink(Dest);
     aDest.FPhysID := PhysID;
@@ -658,8 +659,9 @@ begin
     //aDest.FOnRequest := OnRequest;
 
     //aDest.FControl := Control;
-  end;
-
+  end
+  else
+    inherited AssignTo(Dest)
 end;
 
 procedure TaCustomDataLink.ChangeData;
@@ -789,17 +791,17 @@ procedure TaOPCDataLink.AssignTo(Dest: TPersistent);
 var
   aDest: TaOPCDataLink;
 begin
-  inherited AssignTo(Dest);
-
   if Dest is TaOPCDataLink then
   begin
+    inherited AssignTo(Dest);
     aDest := TaOPCDataLink(Dest);
     aDest.PhysID := PhysID;
     aDest.StairsOptions := StairsOptions;
     aDest.Precision := Precision;
     aDest.OPCSource := OPCSource;
-  end;
-
+  end
+  else
+    inherited AssignTo(Dest);
 end;
 
 constructor TaOPCDataLink.Create(aControl: TObject);
