@@ -102,6 +102,7 @@ type
     procedure SetParentChart(const Value: TCustomAxisPanel); override;
     procedure ChartEvent(AEvent: TChartToolEvent); override;
 
+//    function GetTextBounds(out x, y: Integer): TRect; overload;
     // procedure DrawText; overload; override;
     procedure DoDrawText(const AParent: TCustomAxisPanel); overload; override;
     procedure ShapeDrawText(Panel: TCustomAxisPanel; R: TRect; XOffset, NumLines: Integer);
@@ -259,6 +260,18 @@ var
   // v: Double;
   vStr: string;
 begin
+  // розрахуємо висоту з урахуванням кількості рядків
+  Panel.Canvas.AssignFont(Shape.Font);
+  tmpHeight := Panel.Canvas.FontHeight;
+  // перший - це час
+  var aRowCount := 1;
+  for var i := 0 to ParentChart.SeriesCount - 1 do
+    if ParentChart.Series[i] is TaOPCLineSeries then
+      Inc(aRowCount);
+  // додамо 5 пікселів
+  R.Height := aRowCount * tmpHeight + 5;
+  Shape.Height := R.Height;
+
   OffsetRect(R, Panel.ChartBounds.Left, Panel.ChartBounds.Top);
 
   if Shape.Visible then
@@ -320,8 +333,8 @@ begin
       end;
       Font.Color := saveColor;
 
-      if (ParentChart.SeriesCount + 1) * tmpHeight + 5 > Shape.Height then
-        Shape.Height := (ParentChart.SeriesCount + 1) * tmpHeight + 5;
+//      if (ParentChart.SeriesCount + 1) * tmpHeight + 5 > Shape.Height then
+//        Shape.Height := (ParentChart.SeriesCount + 1) * tmpHeight + 5;
 
     finally
       if Shape.ClipText then
@@ -408,8 +421,8 @@ begin
     // cteBeforeDrawAxes: if DrawBehindAxes then PaintBand;
     cteBeforeDrawSeries:
       Band.ChartEvent(cteBeforeDrawSeries); // PaintBand;
-    cteAfterDraw:
-      DoDrawText;
+//    cteAfterDraw:
+//      DoDrawText;
     // cteAfterDraw: if (not DrawBehind) and (not DrawBehindAxes) then PaintBand;
   end;
 end;
@@ -520,6 +533,7 @@ var
   xLeft, xRight, xCenter: Integer;
   v1, v2: Double;
   aSeries: TaOPCLineSeries;
+
   function TimeView(aTime: TDateTime): string;
   begin
     if aTime < 1 then
@@ -529,6 +543,19 @@ var
   end;
 
 begin
+  // розрахуємо висоту з урахуванням кількості рядків
+  Panel.Canvas.AssignFont(Shape.Font);
+  tmpHeight := Panel.Canvas.FontHeight;
+  // перший - це час
+  var aRowCount := 1;
+  for var i := 0 to ParentChart.SeriesCount - 1 do
+    if ParentChart.Series[i] is TaOPCLineSeries then
+      Inc(aRowCount);
+  // додамо 5 пікселів
+  R.Height := aRowCount * tmpHeight + 5;
+  Shape.Height := R.Height;
+
+
   OffsetRect(R, Panel.ChartBounds.Left, Panel.ChartBounds.Top);
 
   if Shape.Visible then
@@ -546,20 +573,16 @@ begin
     try
       BackMode := cbmTransparent;
 
-//      xLeft := R.Left + Shape.Margins.Size.Left;
       xLeft := R.Left + Shape.Margins.Left;
       if Self.Pen.Visible then
         Inc(xLeft, Self.Pen.Width);
 
-//      xRight := R.Right - Shape.Margins.Size.Right;
-//      xCenter := 1 + ((R.Left + Shape.Margins.Size.Left + R.Right - Shape.Margins.Size.Right) div 2);
       xRight := R.Right - Shape.Margins.Right;
       xCenter := 1 + ((R.Left + Shape.Margins.Left + R.Right - Shape.Margins.Right) div 2);
 
-      AssignFont(Shape.Font);
-      tmpHeight := FontHeight;
+//      AssignFont(Shape.Font);
+//      tmpHeight := FontHeight;
 
-//      tmpTop := R.Top + Shape.Margins.Size.Top;
       tmpTop := R.Top + Shape.Margins.Top;
 
       if Axis.IsDateTime then
@@ -663,7 +686,12 @@ begin
       Font.Color := saveColor;
 
       //if aLineCount * tmpHeight + 5 > Shape.Height then
-        Shape.Height := aLineCount * tmpHeight + 5;
+//      var aNewHeight: Integer := aLineCount * tmpHeight + 5;
+//      if aNewHeight <> Shape.Height then
+//      begin
+//        Shape.Height := aLineCount * tmpHeight + 5;
+//        ParentChart.Invalidate;
+//      end;
 
     finally
       if Shape.ClipText then
