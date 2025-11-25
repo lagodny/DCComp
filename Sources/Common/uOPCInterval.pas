@@ -373,12 +373,19 @@ begin
   end
   else
   begin
+{$IFDEF DKLANG}
     if TimeShiftUnit = tsuHour then
-      Result := Format(resNLastHours, //'последние %s ч.',
-        [FormatFloat('0.##', TimeShift * 24)])
+      Result := Format(DKLangConstW('resNLastHours'), [FormatFloat('0.##', TimeShift * 24)])
     else
-      Result := Format(resNLastDays, //'последние %s д.',
-        [FormatFloat('0.##', TimeShift)])
+      Result := Format(DKLangConstW('resNLastDays'), [FormatFloat('0.##', TimeShift)])
+{$ELSE}
+
+    if TimeShiftUnit = tsuHour then
+      Result := Format(resNLastHours, [FormatFloat('0.##', TimeShift * 24)])
+    else
+      Result := Format(resNLastDays, [FormatFloat('0.##', TimeShift)])
+{$ENDIF}
+
   end;
 end;
 
@@ -632,7 +639,7 @@ begin
     skNext12Hours:
       Result := DKLangConstW('resNext12Hours'); //'Следующие 12 часов';
     skNextDay:
-      Result := DKLangConstW('resNextDay'); //'Седующий день';
+      Result := DKLangConstW('resNext24Hours'); //'Следующие 24 часа';
     skYear:
       Result := DKLangConstW('resYear'); //'Этот год';
     skLastYear:
