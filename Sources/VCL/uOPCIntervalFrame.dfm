@@ -116,7 +116,7 @@ object OPCIntervalFrame: TOPCIntervalFrame
     Left = 103
     Top = 3
     Width = 58
-    Height = 21
+    Height = 23
     TabOrder = 4
     Text = '12'
     OnKeyPress = eHoursKeyPress

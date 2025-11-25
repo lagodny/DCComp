@@ -1023,8 +1023,7 @@ begin
   inherited Destroy;
 end;
 
-function TaOPCCustomConnectionList.GetConnection(
-  const Name: string): TOPCConnectionCollectionItem;
+function TaOPCCustomConnectionList.GetConnection(const Name: string): TOPCConnectionCollectionItem;
 var
   i: integer;
 begin
