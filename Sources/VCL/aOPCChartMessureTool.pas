@@ -147,15 +147,18 @@ begin
   begin
     Pen.Width := 0;
     Shadow.Size := 0;
-    Transparency := 0;
     ShapeBounds.Left := 10;
     ShapeBounds.Top := 10;
     Width := 150;
     Height := 50;
+    TextFormat := ttfHtml;
+    Transparency := 0;
   end;
 
   FLine := NewColorLine;
   FLine.Pen.Width := 0;
+
+  FLine.NoLimitDrag := True;
 end;
 
 class function TaOPCMessureTool.Description: String;
@@ -445,10 +448,16 @@ begin
     Margins.Right := 5;
     Margins.Top := 0;
     Margins.Bottom := 0;
+    TextFormat := ttfHtml;
+    Transparency := 0;
   end;
   FBand := NewBand;
   FBand.StartLine.Pen.Width := 0;
   FBand.EndLine.Pen.Width := 0;
+
+  FBand.StartLine.NoLimitDrag := True;
+  FBand.EndLine.NoLimitDrag := True;
+
 end;
 
 class function TaOPCMessureBandTool.Description: String;
@@ -536,7 +545,9 @@ var
 
   function TimeView(aTime: TDateTime): string;
   begin
-    if aTime < 1 then
+    if aTime < 1/MinsPerDay then
+      Result := FormatDateTime('S.ZZZ с.', aTime)
+    else if aTime < 1 then
       Result := FormatDateTime('HH:MM:SS', aTime)
     else
       Result := FormatFloat('# ##0.## д.', aTime);
@@ -576,6 +587,8 @@ begin
       xLeft := R.Left + Shape.Margins.Left;
       if Self.Pen.Visible then
         Inc(xLeft, Self.Pen.Width);
+
+//      Shape.Margins.Right := 10;
 
       xRight := R.Right - Shape.Margins.Right;
       xCenter := 1 + ((R.Left + Shape.Margins.Left + R.Right - Shape.Margins.Right) div 2);
