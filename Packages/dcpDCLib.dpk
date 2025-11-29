@@ -1,4 +1,4 @@
-﻿package DCLib;
+﻿package dcpDCLib;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -32,17 +32,15 @@
 requires
   rtl,
   designIDE,
-  bindengine,
   bindcomp,
   IndySystem,
   IndyProtocols,
   IndyCore,
-  JclContainers,
-  Jcl,
+  mORMotCrossplatform,
+  Fundamentals,
   DCPcrypt,
-  LA.Fundamentals.Utils,
-  LA.Fundamentals.Crypto,
-  LA.mORMot.Crossplatform;
+  JclContainers,
+  Jcl;
 
 contains
   aOPCCollection in '..\Sources\Common\aOPCCollection.pas',
