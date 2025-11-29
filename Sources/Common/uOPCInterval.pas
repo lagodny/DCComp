@@ -480,7 +480,8 @@ begin
   else
   begin
     if FDate2 < Value then
-      raise EIntervalException.Create(StrDate1MoreDate2Error);
+      FDate2 := Value;
+//      raise EIntervalException.Create(StrDate1MoreDate2Error);
 
     FDate1 := Max(1, Value);
 
@@ -504,7 +505,8 @@ begin
   else
   begin
     if Value < FDate1 then
-      raise EIntervalException.Create(StrDate1MoreDate2Error);
+      FDate1 := Value;
+//      raise EIntervalException.Create(StrDate1MoreDate2Error);
 
     FDate2 := Max(Value, 1);
     FTimeShift := FDate2 - FDate1;
