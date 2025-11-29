@@ -52,9 +52,15 @@
 
 unit uExprEval;
 
-{$I jcl.inc}
+{.$I jcl.inc}
 
 {$DEFINE SUPPORTS_EXTENDED}
+
+{$DEFINE RTL150_UP}
+{$DEFINE RTL230_UP}
+{$DEFINE SUPPORTS_INLINE}
+{$DEFINE HAS_UNITSCOPE}
+
 
 interface
 
