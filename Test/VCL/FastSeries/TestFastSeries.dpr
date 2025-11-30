@@ -5,7 +5,8 @@ uses
   uMain in 'uMain.pas' {Form1},
   aOPCFastSeries in '..\..\..\Sources\VCL\aOPCFastSeries.pas',
   uOPCSeriesAdapter in '..\..\..\Sources\Common\uOPCSeriesAdapter.pas',
-  uOPCSeriesAdapterIntf in '..\..\..\Sources\VCL\uOPCSeriesAdapterIntf.pas';
+  uOPCSeriesAdapterIntf in '..\..\..\Sources\VCL\uOPCSeriesAdapterIntf.pas',
+  DC.Chart in '..\..\..\Sources\VCL\DC.Chart.pas';
 
 {$R *.res}
 

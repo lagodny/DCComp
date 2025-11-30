@@ -133,6 +133,7 @@
         <DCCReference Include="..\..\..\Sources\VCL\aOPCFastSeries.pas"/>
         <DCCReference Include="..\..\..\Sources\Common\uOPCSeriesAdapter.pas"/>
         <DCCReference Include="..\..\..\Sources\VCL\uOPCSeriesAdapterIntf.pas"/>
+        <DCCReference Include="..\..\..\Sources\VCL\DC.Chart.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

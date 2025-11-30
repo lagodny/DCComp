@@ -33,7 +33,6 @@ object Form1: TForm1
     Legend.Font.Name = 'Verdana'
     Legend.Frame.Width = 0
     Legend.Shadow.Transparency = 0
-    Legend.Visible = False
     RightWall.Color = clLightyellow
     Title.Font.Name = 'Verdana'
     Title.Text.Strings = (
@@ -64,6 +63,7 @@ object Form1: TForm1
     LeftAxis.LabelsFormat.Font.Name = 'Verdana'
     LeftAxis.TicksInner.Color = clDarkgray
     LeftAxis.Title.Font.Name = 'Verdana'
+    Panning.MouseWheel = pmwNone
     RightAxis.Axis.Color = 4210752
     RightAxis.Grid.Color = clDarkgray
     RightAxis.LabelsFormat.Font.Name = 'Verdana'

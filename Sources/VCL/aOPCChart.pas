@@ -109,6 +109,13 @@ begin
   BottomAxis.AutomaticMinimum := false;
   BottomAxis.SetMinMax(Interval.Date1, Interval.Date2);
 
+  Title.Visible := False;
+  Panning.MouseWheel := pmwNone;
+  Legend.Visible := True;
+  Legend.Alignment := laBottom;
+  Legend.CheckBoxes := True;
+  Legend.LegendStyle := lsSeries;
+
   Legend.Pen.Width := 0;
 
   FZoomFactor := 1.5;
