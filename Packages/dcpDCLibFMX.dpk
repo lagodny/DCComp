@@ -33,8 +33,8 @@ requires
   rtl,
   fmx,
   IndySystem,
-  FMXTee927,
-  DCLib;
+  FMXTee929,
+  dcpDCLib;
 
 contains
   FMX.DCChart in '..\Sources\FMX\FMX.DCChart.pas',

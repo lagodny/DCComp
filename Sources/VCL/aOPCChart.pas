@@ -5,7 +5,7 @@ interface
 uses
   Classes, Windows, SysUtils, Types,
   VCL.Controls,
-  aOPCSource, aOPCLineSeries, uChoiceIntervalExt, uOPCInterval,
+  aOPCSource, aOPCLineSeries, aOPCFastSeries, uChoiceIntervalExt, uOPCInterval,
   VCLTee.Chart, VCLTee.TeEngine, VCLTee.TeCanvas;
 
 type

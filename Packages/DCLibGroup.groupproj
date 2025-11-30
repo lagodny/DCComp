@@ -3,13 +3,13 @@
         <ProjectGuid>{A184BCA4-FECD-4847-862C-DB79AD887173}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="DCLib.dproj">
+        <Projects Include="dcpDCLib.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="DCLibVCL.dproj">
+        <Projects Include="dcpDCLibVCL.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="DCLibFMX.dproj">
+        <Projects Include="dcpDCLibFMX.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -20,41 +20,41 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="DCLib">
-        <MSBuild Projects="DCLib.dproj"/>
+    <Target Name="dcpDCLib">
+        <MSBuild Projects="dcpDCLib.dproj"/>
     </Target>
-    <Target Name="DCLib:Clean">
-        <MSBuild Projects="DCLib.dproj" Targets="Clean"/>
+    <Target Name="dcpDCLib:Clean">
+        <MSBuild Projects="dcpDCLib.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="DCLib:Make">
-        <MSBuild Projects="DCLib.dproj" Targets="Make"/>
+    <Target Name="dcpDCLib:Make">
+        <MSBuild Projects="dcpDCLib.dproj" Targets="Make"/>
     </Target>
-    <Target Name="DCLibVCL">
-        <MSBuild Projects="DCLibVCL.dproj"/>
+    <Target Name="dcpDCLibVCL">
+        <MSBuild Projects="dcpDCLibVCL.dproj"/>
     </Target>
-    <Target Name="DCLibVCL:Clean">
-        <MSBuild Projects="DCLibVCL.dproj" Targets="Clean"/>
+    <Target Name="dcpDCLibVCL:Clean">
+        <MSBuild Projects="dcpDCLibVCL.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="DCLibVCL:Make">
-        <MSBuild Projects="DCLibVCL.dproj" Targets="Make"/>
+    <Target Name="dcpDCLibVCL:Make">
+        <MSBuild Projects="dcpDCLibVCL.dproj" Targets="Make"/>
     </Target>
-    <Target Name="DCLibFMX">
-        <MSBuild Projects="DCLibFMX.dproj"/>
+    <Target Name="dcpDCLibFMX">
+        <MSBuild Projects="dcpDCLibFMX.dproj"/>
     </Target>
-    <Target Name="DCLibFMX:Clean">
-        <MSBuild Projects="DCLibFMX.dproj" Targets="Clean"/>
+    <Target Name="dcpDCLibFMX:Clean">
+        <MSBuild Projects="dcpDCLibFMX.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="DCLibFMX:Make">
-        <MSBuild Projects="DCLibFMX.dproj" Targets="Make"/>
+    <Target Name="dcpDCLibFMX:Make">
+        <MSBuild Projects="dcpDCLibFMX.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="DCLib;DCLibVCL;DCLibFMX"/>
+        <CallTarget Targets="dcpDCLib;dcpDCLibVCL;dcpDCLibFMX"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DCLib:Clean;DCLibVCL:Clean;DCLibFMX:Clean"/>
+        <CallTarget Targets="dcpDCLib:Clean;dcpDCLibVCL:Clean;dcpDCLibFMX:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DCLib:Make;DCLibVCL:Make;DCLibFMX:Make"/>
+        <CallTarget Targets="dcpDCLib:Make;dcpDCLibVCL:Make;dcpDCLibFMX:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

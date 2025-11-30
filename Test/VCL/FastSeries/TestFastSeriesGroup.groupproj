@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{E1BBA8BB-C46C-4D8D-99B5-EF18DC168554}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="TestFastSeries.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\..\..\Projects\Monitoring\Monitoring2\Monitoring2.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="TestFastSeries">
+        <MSBuild Projects="TestFastSeries.dproj"/>
+    </Target>
+    <Target Name="TestFastSeries:Clean">
+        <MSBuild Projects="TestFastSeries.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestFastSeries:Make">
+        <MSBuild Projects="TestFastSeries.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Monitoring2">
+        <MSBuild Projects="..\..\..\..\..\Projects\Monitoring\Monitoring2\Monitoring2.dproj"/>
+    </Target>
+    <Target Name="Monitoring2:Clean">
+        <MSBuild Projects="..\..\..\..\..\Projects\Monitoring\Monitoring2\Monitoring2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Monitoring2:Make">
+        <MSBuild Projects="..\..\..\..\..\Projects\Monitoring\Monitoring2\Monitoring2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="TestFastSeries;Monitoring2"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="TestFastSeries:Clean;Monitoring2:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="TestFastSeries:Make;Monitoring2:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
