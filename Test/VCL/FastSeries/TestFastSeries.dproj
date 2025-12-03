@@ -130,10 +130,13 @@
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\Sources\VCL\aOPCFastSeries.pas"/>
-        <DCCReference Include="..\..\..\Sources\Common\uOPCSeriesAdapter.pas"/>
-        <DCCReference Include="..\..\..\Sources\VCL\uOPCSeriesAdapterIntf.pas"/>
+        <DCCReference Include="..\..\..\Sources\VCL\DC.FastSeries.pas"/>
+        <DCCReference Include="..\..\..\Sources\VCL\DC.SeriesAdapter.pas"/>
+        <DCCReference Include="..\..\..\Sources\VCL\DC.SeriesAdapterIntf.pas"/>
         <DCCReference Include="..\..\..\Sources\VCL\DC.Chart.pas"/>
+        <DCCReference Include="..\..\..\Sources\VCL\DC.LineSeries.pas"/>
+        <DCCReference Include="..\..\..\Sources\VCL\DC.GantSeries.pas"/>
+        <DCCReference Include="..\..\..\Sources\VCL\DC.SeriesTypes.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

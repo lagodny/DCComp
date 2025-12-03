@@ -3,10 +3,13 @@
 uses
   Vcl.Forms,
   uMain in 'uMain.pas' {Form1},
-  aOPCFastSeries in '..\..\..\Sources\VCL\aOPCFastSeries.pas',
-  uOPCSeriesAdapter in '..\..\..\Sources\Common\uOPCSeriesAdapter.pas',
-  uOPCSeriesAdapterIntf in '..\..\..\Sources\VCL\uOPCSeriesAdapterIntf.pas',
-  DC.Chart in '..\..\..\Sources\VCL\DC.Chart.pas';
+  DC.FastSeries in '..\..\..\Sources\VCL\DC.FastSeries.pas',
+  DC.SeriesAdapter in '..\..\..\Sources\VCL\DC.SeriesAdapter.pas',
+  DC.SeriesAdapterIntf in '..\..\..\Sources\VCL\DC.SeriesAdapterIntf.pas',
+  DC.Chart in '..\..\..\Sources\VCL\DC.Chart.pas',
+  DC.LineSeries in '..\..\..\Sources\VCL\DC.LineSeries.pas',
+  DC.GantSeries in '..\..\..\Sources\VCL\DC.GantSeries.pas',
+  DC.SeriesTypes in '..\..\..\Sources\VCL\DC.SeriesTypes.pas';
 
 {$R *.res}
 

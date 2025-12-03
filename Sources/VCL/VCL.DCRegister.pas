@@ -34,11 +34,16 @@ uses
 
   uCoolingCell,
 
+  DC.Chart, DC.FastSeries, DC.LineSeries, DC.GantSeries,
+
   DC.Notify.Handler;
 
 
 procedure Register;
 begin
+  RegisterComponents('DC Controls', [TDCChart]);
+
+
   RegisterComponents('DC Controls', [TaOPCLabel, TaOPCColorLabel, TaOPCBlinkLabel]);
   RegisterComponents('DC Controls', [TaOPCImage, TaOPCImage2In]);
   RegisterComponents('DC Controls', [TaOPCImageList]);

@@ -53,7 +53,7 @@ type
 implementation
 
 uses
-  uOPCSeriesAdapter, uOPCSeriesAdapterIntf;
+  DC.SeriesAdapter, DC.SeriesAdapterIntf;
 
 const
   cZoomFactor = 1.5;
@@ -164,7 +164,7 @@ end;
 procedure TDCChart.SetRealTime(const Value: Boolean);
 var
   i: Integer;
-  s: IOPCSeriesAdapter;
+  s: IDCSeriesAdapter;
 begin
   if FRealTime = Value then
     Exit;
@@ -172,8 +172,8 @@ begin
   UndoZoom;
   FRealTime := Value;
   for i := 0 to SeriesCount - 1 do
-    if Supports(Series[i], IOPCSeriesAdapter, s) then
-      s.OPCAdapter.UpdateRealTime;
+    if Supports(Series[i], IDCSeriesAdapter, s) then
+      s.DCAdapter.UpdateRealTime;
 end;
 
 procedure TDCChart.SetZoomFactor(const Value: Double);

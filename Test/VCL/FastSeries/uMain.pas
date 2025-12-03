@@ -6,15 +6,17 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   uOPCInterval,
-  aOPCLineSeries, aOPCFastSeries, uOPCGanttSeries,
-  uOPCSeriesAdapter, uOPCSeriesAdapterIntf,
+  //aOPCLineSeries,
+  DC.FastSeries, DC.LineSeries, DC.GantSeries, DC.Chart,
+  //uOPCGanttSeries,
+  DC.SeriesAdapter, DC.SeriesAdapterIntf,
   VCLTee.Series,
   VclTee.TeeGDIPlus, aCustomOPCSource, aOPCSource, aCustomOPCTCPSource, aOPCTCPSource_V30,
   Vcl.StdCtrls, Vcl.ExtCtrls, VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.Chart, aOPCChart, VCLTee.TeeShape;
 
 type
   TForm1 = class(TForm)
-    Chart: TaOPCChart;
+    Chart: TDCChart;
     Panel1: TPanel;
     bAdd: TButton;
     aOPCTCPSource_V301: TaOPCTCPSource_V30;
@@ -27,6 +29,7 @@ type
     Label1: TLabel;
     bAddLine: TButton;
     bCalcTime: TButton;
+    bAddGant: TButton;
     procedure bAddClick(Sender: TObject);
     procedure bClearClick(Sender: TObject);
     procedure bIntervalClick(Sender: TObject);
@@ -35,6 +38,7 @@ type
     procedure ApplyClick(Sender: TObject);
     procedure bAddLineClick(Sender: TObject);
     procedure bCalcTimeClick(Sender: TObject);
+    procedure bAddGantClick(Sender: TObject);
   private
 //    FDAPStyle       : TDrawAllPointsStyle;
 //    FDrawAll        : Boolean;
@@ -58,11 +62,11 @@ uses
 
 procedure TForm1.AddSerie(aDAPStyle: TDrawAllPointsStyle; aDrawAll: Boolean; aDrawStyle: TFastLineDrawStyle);
 var
-  f: TaOPCFastLineSeries;
-  a: TOPCSeriesAdapter;
-  aIntf: IOPCSeriesAdapter;
+  f: TDCFastLineSeries;
+  a: TDCSeriesAdapter;
+  aIntf: IDCSeriesAdapter;
 begin
-  f := TaOPCFastLineSeries.Create(Chart);
+  f := TDCFastLineSeries.Create(Chart);
 
   f.DrawAllPoints := aDrawAll;
   f.DrawAllPointsStyle := aDAPStyle;
@@ -72,13 +76,13 @@ begin
   f.IgnoreNulls := True;
   f.Stairs := False;
 
-  if not Supports(f, IOPCSeriesAdapter, aIntf) then
+  if not Supports(f, IDCSeriesAdapter, aIntf) then
   begin
     f.Free;
     Exit;
   end;
 
-  a := aIntf.OPCAdapter;
+  a := aIntf.DCAdapter;
 
   a.PhysID := '4';
   a.OPCSource := aOPCTCPSource_V301;
@@ -89,12 +93,12 @@ end;
 
 procedure TForm1.ApplyClick(Sender: TObject);
 var
-  f: TaOPCFastLineSeries;
+  f: TDCFastLineSeries;
 begin
   if Chart.SeriesList.Count < 1 then
     Exit;
 
-  f := Chart.Series[0] as TaOPCFastLineSeries;
+  f := Chart.Series[0] as TDCFastLineSeries;
 
   f.DrawAllPoints := chDrawAll.Checked;
   f.DrawAllPointsStyle := TDrawAllPointsStyle(cbDrawAllStyle.ItemIndex);
@@ -105,6 +109,37 @@ end;
 procedure TForm1.bAddClick(Sender: TObject);
 begin
   AddSerie(TDrawAllPointsStyle(cbDrawAllStyle.ItemIndex), chDrawAll.Checked, TFastLineDrawStyle(cbDrawStyle.ItemIndex));
+end;
+
+procedure TForm1.bAddGantClick(Sender: TObject);
+var
+  f: TDCGantSeries;
+  a: TDCSeriesAdapter;
+  aIntf: IDCSeriesAdapter;
+begin
+  f := TDCGantSeries.Create(Chart);
+
+//  f.DrawAllPoints := aDrawAll;
+//  f.DrawAllPointsStyle := aDAPStyle;
+//  f.DrawStyle := aDrawStyle;
+//
+//  f.FastPen := True;
+//  f.IgnoreNulls := True;
+//  f.Stairs := False;
+
+  if not Supports(f, IDCSeriesAdapter, aIntf) then
+  begin
+    f.Free;
+    Exit;
+  end;
+
+  a := aIntf.DCAdapter;
+
+  a.PhysID := '9965';
+  a.OPCSource := aOPCTCPSource_V301;
+  Chart.AddSeries(a.Series);
+  a.FillSerie(Chart.Interval.Kind = ikShift)
+
 end;
 
 procedure TForm1.bClearClick(Sender: TObject);
@@ -124,11 +159,11 @@ end;
 
 procedure TForm1.bAddLineClick(Sender: TObject);
 var
-  f: TaOPCLineSeries;
-  a: TOPCSeriesAdapter;
-  aIntf: IOPCSeriesAdapter;
+  f: TDCLineSeries;
+  a: TDCSeriesAdapter;
+  aIntf: IDCSeriesAdapter;
 begin
-  f := TaOPCLineSeries.Create(Chart);
+  f := TDCLineSeries.Create(Chart);
 
 //  f.DrawAllPoints := aDrawAll;
 //  f.DrawAllPointsStyle := aDAPStyle;
@@ -138,7 +173,7 @@ begin
 //  f.IgnoreNulls := True;
 //  f.Stairs := False;
 
-//  if not Supports(f, IOPCSeriesAdapter, aIntf) then
+//  if not Supports(f, IDCSeriesAdapter, aIntf) then
 //  begin
 //    f.Free;
 //    Exit;
@@ -146,10 +181,10 @@ begin
 
 //  a := aIntf.OPCAdapter;
 
-  f.PhysID := '4';
-  f.OPCSource := aOPCTCPSource_V301;
+  f.DCAdapter.PhysID := '4';
+  f.DCAdapter.OPCSource := aOPCTCPSource_V301;
   Chart.AddSeries(f);
-  f.FillSerie(Chart.Interval.Kind = ikShift)
+  f.DCAdapter.FillSerie(Chart.Interval.Kind = ikShift)
 
 end;
 
@@ -163,7 +198,7 @@ end;
 
 procedure TForm1.DoIntervalChanged(Sender: TObject);
 var
-  s: IOPCSeriesAdapter;
+  s: IDCSeriesAdapter;
 begin
   Chart.UndoZoom;
   if Chart.RealTime then
@@ -173,8 +208,8 @@ begin
 
   for var i := 0 to Chart.SeriesCount - 1 do
   begin
-    if Supports(Chart.Series[i], IOPCSeriesAdapter, s) then
-      s.OPCAdapter.FillSerie(Chart.Interval.Kind = ikShift);
+    if Supports(Chart.Series[i], IDCSeriesAdapter, s) then
+      s.DCAdapter.FillSerie(Chart.Interval.Kind = ikShift);
   end;
 
 end;

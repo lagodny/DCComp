@@ -12,7 +12,7 @@ object Form1: TForm1
   Font.Style = []
   OnCreate = FormCreate
   TextHeight = 15
-  object Chart: TaOPCChart
+  object Chart: TDCChart
     Left = 0
     Top = 0
     Width = 1056
@@ -30,13 +30,17 @@ object Form1: TForm1
     Gradient.StartColor = 15395562
     Gradient.Visible = True
     LeftWall.Color = clLightyellow
+    Legend.Alignment = laBottom
+    Legend.CheckBoxes = True
     Legend.Font.Name = 'Verdana'
     Legend.Frame.Width = 0
+    Legend.LegendStyle = lsSeries
     Legend.Shadow.Transparency = 0
     RightWall.Color = clLightyellow
     Title.Font.Name = 'Verdana'
     Title.Text.Strings = (
       'TaOPCChart')
+    Title.Visible = False
     BottomAxis.Automatic = False
     BottomAxis.AutomaticMaximum = False
     BottomAxis.AutomaticMinimum = False
@@ -45,7 +49,7 @@ object Form1: TForm1
     BottomAxis.LabelsFormat.Font.Name = 'Verdana'
     BottomAxis.LabelStyle = talValue
     BottomAxis.Maximum = 45991.000000000000000000
-    BottomAxis.Minimum = 45658.000000000000000000
+    BottomAxis.Minimum = 45990.000000000000000000
     BottomAxis.TicksInner.Color = clDarkgray
     BottomAxis.Title.Font.Name = 'Verdana'
     DepthAxis.Axis.Color = 4210752
@@ -80,12 +84,11 @@ object Form1: TForm1
     ZoomFactor = 1.500000000000000000
     Interval.Kind = ikInterval
     Interval.ShiftKind = skNone
-    Interval.Date1 = 45658.000000000000000000
+    Interval.Date1 = 45990.000000000000000000
     Interval.Date2 = 45991.000000000000000000
-    Interval.TimeShift = 333.000000000000000000
+    Interval.TimeShift = 1.000000000000000000
     Interval.TimeShiftUnit = tsuHour
     Interval.EnableTime = True
-    ShowZero = False
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = 13
   end
@@ -98,7 +101,7 @@ object Form1: TForm1
     TabOrder = 1
     object Label1: TLabel
       Left = 24
-      Top = 313
+      Top = 353
       Width = 34
       Height = 15
       Caption = 'Label1'
@@ -114,7 +117,7 @@ object Form1: TForm1
     end
     object bClear: TButton
       Left = 16
-      Top = 79
+      Top = 119
       Width = 75
       Height = 25
       Caption = 'Clear'
@@ -123,7 +126,7 @@ object Form1: TForm1
     end
     object bInterval: TButton
       Left = 14
-      Top = 110
+      Top = 150
       Width = 75
       Height = 25
       Caption = 'Interval...'
@@ -132,7 +135,7 @@ object Form1: TForm1
     end
     object chDrawAll: TCheckBox
       Left = 16
-      Top = 160
+      Top = 200
       Width = 97
       Height = 17
       Caption = 'Draw All'
@@ -140,7 +143,7 @@ object Form1: TForm1
     end
     object cbDrawAllStyle: TComboBox
       Left = 16
-      Top = 183
+      Top = 223
       Width = 87
       Height = 23
       ItemIndex = 0
@@ -152,7 +155,7 @@ object Form1: TForm1
     end
     object cbDrawStyle: TComboBox
       Left = 16
-      Top = 212
+      Top = 252
       Width = 87
       Height = 23
       ItemIndex = 0
@@ -164,7 +167,7 @@ object Form1: TForm1
     end
     object Apply: TButton
       Left = 16
-      Top = 241
+      Top = 281
       Width = 75
       Height = 25
       Caption = 'Apply'
@@ -182,12 +185,21 @@ object Form1: TForm1
     end
     object bCalcTime: TButton
       Left = 16
-      Top = 282
+      Top = 322
       Width = 75
       Height = 25
       Caption = 'Calc Time'
       TabOrder = 8
       OnClick = bCalcTimeClick
+    end
+    object bAddGant: TButton
+      Left = 16
+      Top = 78
+      Width = 75
+      Height = 25
+      Caption = 'Add Gant'
+      TabOrder = 9
+      OnClick = bAddGantClick
     end
   end
   object aOPCTCPSource_V301: TaOPCTCPSource_V30
