@@ -114,6 +114,8 @@ type
     procedure ClearRecs;
     procedure UpdateRecs(aRec: TXYS);
 
+    function ValueAsText(aValue, aErrorCode: Double ): string;
+
 
     procedure sAddXY(aRec: TXYS); overload;
     procedure sAddXY(x, y: Double; s: Double = 0); overload;
@@ -787,6 +789,41 @@ end;
 function TDCSeriesAdapter.GetStairsOptions: TDCStairsOptionsSet;
 begin
   Result := FDataLink.StairsOptions;
+end;
+
+function TDCSeriesAdapter.ValueAsText(aValue, aErrorCode: Double ): string;
+var
+  aLookupList: TaOPCLookupList;
+  aStates: TaOPCLookupList;
+begin
+  if IsState and Assigned(StateLookupList) then
+    aLookupList := StateLookupList
+  else
+    aLookupList := LookupList;
+
+  if aErrorCode = 0 then // нет ошибок
+  begin
+    // если есть справочник, то поищем в нём
+    if Assigned(aLookupList) then
+    begin
+      // поищем в справочнике
+      aLookupList.Lookup(FloatToStr(aValue), Result);
+    end
+    else
+      // преобразуем исходное значение согласно формату отображения
+      Result := aOPCUtils.FormatValue(aValue, DisplayFormat);
+  end
+  else // есть ошибки
+  begin
+    Result := 'no States reference';
+
+    aStates := StateLookupList;
+    if not Assigned(aStates) and Assigned(OPCSource) then
+      aStates := TaOPCLookupList(OPCSource.States);
+
+    if Assigned(aStates) then
+      aStates.Lookup(FloatToStr(aErrorCode), Result);
+  end;
 end;
 
 procedure TDCSeriesAdapter.Notification(AComponent: TComponent; Operation: TOperation);
