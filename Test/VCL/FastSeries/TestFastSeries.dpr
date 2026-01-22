@@ -9,7 +9,8 @@ uses
   DC.Chart in '..\..\..\Sources\VCL\DC.Chart.pas',
   DC.LineSeries in '..\..\..\Sources\VCL\DC.LineSeries.pas',
   DC.GantSeries in '..\..\..\Sources\VCL\DC.GantSeries.pas',
-  DC.SeriesTypes in '..\..\..\Sources\VCL\DC.SeriesTypes.pas';
+  DC.SeriesTypes in '..\..\..\Sources\VCL\DC.SeriesTypes.pas',
+  TeeChartTouchZoom in 'TeeChartTouchZoom.pas';
 
 {$R *.res}
 

@@ -12,7 +12,9 @@ uses
   DC.SeriesAdapter, DC.SeriesAdapterIntf,
   VCLTee.Series,
   VclTee.TeeGDIPlus, aCustomOPCSource, aOPCSource, aCustomOPCTCPSource, aOPCTCPSource_V30,
-  Vcl.StdCtrls, Vcl.ExtCtrls, VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.Chart, aOPCChart, VCLTee.TeeShape;
+  Vcl.StdCtrls, Vcl.ExtCtrls,
+  TeeChartTouchZoom,
+  VCLTee.TeEngine, VCLTee.TeeProcs, VCLTee.Chart, aOPCChart, VCLTee.TeeShape;
 
 type
   TForm1 = class(TForm)
@@ -34,18 +36,19 @@ type
     procedure bClearClick(Sender: TObject);
     procedure bIntervalClick(Sender: TObject);
     procedure DoIntervalChanged(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure ApplyClick(Sender: TObject);
     procedure bAddLineClick(Sender: TObject);
     procedure bCalcTimeClick(Sender: TObject);
     procedure bAddGantClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
 //    FDAPStyle       : TDrawAllPointsStyle;
 //    FDrawAll        : Boolean;
 //    FDrawStyle      : TFastLineDrawStyle;
     procedure AddSerie(aDAPStyle: TDrawAllPointsStyle; aDrawAll: Boolean; aDrawStyle: TFastLineDrawStyle);
   public
-    { Public declarations }
+    TouchZoom: TTChartTouchZoom;
   end;
 
 var
@@ -217,6 +220,14 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Chart.Interval.OnChanged := DoIntervalChanged;
+
+//  TouchZoom := TTChartTouchZoom.Create(Chart);
+//  TouchZoom.WheelZoomScale := 1.03; // якщо хочеш плавніший zoomend;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+//  TouchZoom.Free;
 end;
 
 end.
