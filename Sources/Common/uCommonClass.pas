@@ -15,9 +15,11 @@ type
     FImageIndex: integer;
     FSensorKind: integer;
     FLookupList: TaOPCLookupList;
+    FVn: Double;
     procedure SetSensorKind(const Value: integer);
     procedure SetImageIndex(const Value: integer);
     procedure SetLookupList(const Value: TaOPCLookupList);
+    procedure SetVn(const Value: Double);
   public
     function IsLookup:boolean;
 
@@ -29,6 +31,8 @@ type
     property ImageIndex:integer read FImageIndex write SetImageIndex;
     property SensorKind:integer read FSensorKind write SetSensorKind;
     property LookupList:TaOPCLookupList read FLookupList write SetLookupList;
+    // номінальна швидкість зміни датчика (лічильника) одиниць/годину
+    property Vn: Double read FVn write SetVn;
   end;
 
   TExtOPCDataLink = class (TaOPCDataLink)
@@ -122,6 +126,11 @@ end;
 procedure TSensor.SetSensorKind(const Value: integer);
 begin
   FSensorKind := Value;
+end;
+
+procedure TSensor.SetVn(const Value: Double);
+begin
+  FVn := Value;
 end;
 
 end.
