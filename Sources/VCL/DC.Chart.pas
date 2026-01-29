@@ -37,15 +37,24 @@ type
     FLastRec: TRect;
 
     FOldWndProc: TWndMethod;
+    FShowZero: Boolean;
     procedure NewWndProc(var Msg: TMessage);
     procedure WM_Touch(var Msg: TMessage);
+    procedure WM_Touch1(var Msg: TMessage);
+    procedure SetShowZero(const Value: Boolean);
   protected
+    procedure CreateWnd; override;
+    procedure DestroyWnd; override;
+
     function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     procedure DoChangeInterval(Sender: TObject); virtual;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
+    // масштабувати та перетягнути aRect1 в aRect2
+    procedure RectToRect(aRect1, aRect2: TRect);
 
     procedure ZoomByPoint(aPoint: TPoint; aZoomFactorX, aZoomFactorY: Extended; aZoomSet: TZoomSet);
   published
@@ -56,6 +65,7 @@ type
     property Interval: TOPCInterval read FInterval write SetInterval;
     property OnIntervalChanged: TNotifyEvent read FOnIntervalChanged write FOnIntervalChanged;
 
+    property ShowZero: Boolean read FShowZero write SetShowZero;
     property Touch;
   end;
 
@@ -84,8 +94,6 @@ begin
 
   FOldWndProc := WindowProc;
   WindowProc := NewWndProc;
-  RegisterTouchWindow(Handle, 0);
-
 
   FInterval := TOPCInterval.Create;
   FInterval.OnChanged := DoChangeInterval;
@@ -111,10 +119,25 @@ begin
   FZoomFactor := cZoomFactor;
 end;
 
+procedure TDCChart.CreateWnd;
+begin
+  inherited;
+
+  // На цьому етапі Handle вже створено
+  if not RegisterTouchWindow(Handle, TWF_FINETOUCH or TWF_WANTPALM) then
+    RaiseLastOSError;
+end;
+
 destructor TDCChart.Destroy;
 begin
   WindowProc := FOldWndProc;
   FInterval.Free;
+  inherited;
+end;
+
+procedure TDCChart.DestroyWnd;
+begin
+  UnregisterTouchWindow(Handle);
   inherited;
 end;
 
@@ -180,6 +203,62 @@ begin
   end;
 end;
 
+procedure TDCChart.RectToRect(aRect1, aRect2: TRect);
+var
+  i: Integer;
+  aSerie: TChartSeries;
+  aVertAxis, aHorizAxis: TChartAxis;
+  x1, x2: Integer;
+  k, b: Double;
+begin
+  aVertAxis := nil;
+  aHorizAxis := nil;
+  for i := 0 to SeriesList.Count - 1 do
+  begin
+    aSerie := Series[i];
+    if aSerie.Active then
+    begin
+      case aSerie.VertAxis of
+        aLeftAxis, aBothVertAxis:
+          aVertAxis := LeftAxis;
+        aRightAxis:
+          aVertAxis := RightAxis;
+        aCustomVertAxis:
+          aVertAxis := aSerie.CustomVertAxis;
+      end;
+
+      case aSerie.HorizAxis of
+        aTopAxis, aBothHorizAxis:
+          aHorizAxis := TopAxis;
+        aBottomAxis:
+          aHorizAxis := BottomAxis;
+        aCustomHorizAxis:
+          aHorizAxis := aSerie.CustomHorizAxis;
+      end;
+
+      Break;
+    end;
+  end;
+
+  if not Assigned(aVertAxis) or not Assigned(aHorizAxis) then
+    Exit;
+
+//  // треба прорахвати Мін / Макс значення кожної осі з урахуванням співвідношення прямокутників
+  k := aRect2.Width/aRect1.Width;
+  b := aRect2.Left - k * aRect2.Left;
+//  x1 := aHorizAxis.IStartPos + b;
+//  x2 := aHorizAxis.Minimum + k * (aHorizAxis.Maximum - aHorizAxis.Minimum) + b;
+  x1 := aRect2.Left + Round((aHorizAxis.IStartPos - aRect1.Left) * k);
+  x2 := aRect2.Left + Round((aHorizAxis.IEndPos - aRect1.Left) * k);
+  aHorizAxis.SetMinMax(aHorizAxis.CalcPosPoint(x1), aHorizAxis.CalcPosPoint(x2));
+
+//  k :=  aRect2.Height/aRect1.Height;
+//  x1 := aRect2.Top + (aVertAxis.Minimum - aRect1.Top) * k;
+//  x2 := aRect2.Top + (aVertAxis.Maximum - aRect1.Top) * k;
+//  aVertAxis.SetMinMax(x1, x2);
+
+end;
+
 procedure TDCChart.SetAutoScaleY(const Value: Boolean);
 var
   i: Integer;
@@ -209,12 +288,57 @@ begin
       s.DCAdapter.UpdateRealTime;
 end;
 
+procedure TDCChart.SetShowZero(const Value: Boolean);
+begin
+  SetBooleanProperty(FShowZero, Value);
+end;
+
 procedure TDCChart.SetZoomFactor(const Value: Double);
 begin
   FZoomFactor := Value;
 end;
 
 procedure TDCChart.WM_Touch(var Msg: TMessage);
+var
+  Inputs: array of TTouchInput;
+  aRect: TRect;
+  aCount: Integer;
+//  X1, Y1, X2, Y2: Integer;
+//  dx, dy: Integer;
+//  Dist: Integer;
+//  MidX, MidY: Integer;
+//  MidP: TPoint;
+//  aZoomFactorX, aZoomFactorY: Double;
+begin
+//  if not FEnabled then Exit;
+
+  aCount := Msg.WParam and $FFFF;
+  if aCount <> 2 then
+  begin
+    FLastDist := 0;
+    FLastRec := TRect.Empty;
+    Exit;
+  end;
+
+  SetLength(Inputs, aCount);
+
+  if GetTouchInputInfo(Msg.LParam, aCount, @Inputs[0], SizeOf(TTouchInput)) then
+  begin
+    aRect := ScreenToClient(Rect(
+      Min(Inputs[0].x, Inputs[1].x) div 100,
+      Min(Inputs[0].y, Inputs[1].y) div 100,
+      Max(Inputs[0].x, Inputs[1].x) div 100,
+      Max(Inputs[0].y, Inputs[1].y) div 100));
+
+    if not FLastRec.IsEmpty then
+      RectToRect(FLastRec, aRect);
+    FLastRec := aRect;
+
+    CloseTouchInputHandle(Msg.LParam);
+  end;
+end;
+
+procedure TDCChart.WM_Touch1(var Msg: TMessage);
 var
   Inputs: array of TTouchInput;
   Count: Integer;
@@ -226,8 +350,6 @@ var
   aRect: TRect;
   aZoomFactorX, aZoomFactorY: Double;
 begin
-//  if not FEnabled then Exit;
-
   Count := Msg.WParam and $FFFF;
   if Count <> 2 then
   begin
@@ -296,31 +418,6 @@ begin
     FLastMidY := MidY;
     FLastDX := dx;
     FLastDY := dy;
-
-
-//    aRect := ScreenToClient(Rect(X1, Y2, X2, Y2));
-//    if not (FLastRec.IsEmpty) then
-//    begin
-//      DoZoom(FLastRec.Top, aRect.Top, FLastRec.Bottom, aRect.Bottom, FLastRec.Left, aRect.Left, FLastRec.Right, aRect.Right);
-//    end;
-//    FLastRec := aRect;
-
-//    // масштабування
-//    if (Dist <> 0) and (FLastDist <> 0) then
-//    begin
-//      aZoomFactor := FLastDist/Dist;
-//      if aZoomFactor < 0.1 then
-//        aZoomFactor := 0.1;
-//      if aZoomFactor > 10 then
-//        aZoomFactor := 10;
-//
-//      ZoomByPoint(ScreenToClient(Point(MidX, MidY)), aZoomFactor, [zsTime, zsValue]);
-////    DoPinchZoom(Dist);
-//    end;
-//    FLastDist := Dist;
-
-    // панорамування
-//    DoPan(MidX, MidY);
 
     CloseTouchInputHandle(Msg.LParam);
   end;
