@@ -190,6 +190,15 @@ object Form1: TForm1
       TabOrder = 9
       OnClick = bAddGantClick
     end
+    object Button1: TButton
+      Left = 16
+      Top = 384
+      Width = 75
+      Height = 25
+      Caption = 'UnZoom'
+      TabOrder = 10
+      OnClick = Button1Click
+    end
   end
   object aOPCTCPSource_V301: TaOPCTCPSource_V30
     RemoteMachine = '193.109.249.118'

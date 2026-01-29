@@ -32,6 +32,7 @@ type
     bAddLine: TButton;
     bCalcTime: TButton;
     bAddGant: TButton;
+    Button1: TButton;
     procedure bAddClick(Sender: TObject);
     procedure bClearClick(Sender: TObject);
     procedure bIntervalClick(Sender: TObject);
@@ -42,6 +43,7 @@ type
     procedure bAddGantClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
 //    FDAPStyle       : TDrawAllPointsStyle;
 //    FDrawAll        : Boolean;
@@ -160,6 +162,11 @@ begin
   ShowIntervalForm(Chart.Interval, 0, Self);
 end;
 
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  Chart.UndoZoom;
+end;
+
 procedure TForm1.bAddLineClick(Sender: TObject);
 var
   f: TDCLineSeries;
@@ -223,6 +230,8 @@ begin
 
 //  TouchZoom := TTChartTouchZoom.Create(Chart);
 //  TouchZoom.WheelZoomScale := 1.03; // якщо хочеш плавніший zoomend;
+//  RegisterTouchWindow(Chart.Handle, 0);
+
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
