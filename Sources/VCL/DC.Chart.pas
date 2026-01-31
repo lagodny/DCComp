@@ -243,19 +243,37 @@ begin
   if not Assigned(aVertAxis) or not Assigned(aHorizAxis) then
     Exit;
 
+  if (aRect1.Width = 0) or (aRect1.Height = 0) then
+    Exit;
+
 //  // треба прорахвати Мін / Макс значення кожної осі з урахуванням співвідношення прямокутників
-  k := aRect2.Width/aRect1.Width;
-  b := aRect2.Left - k * aRect2.Left;
-//  x1 := aHorizAxis.IStartPos + b;
-//  x2 := aHorizAxis.Minimum + k * (aHorizAxis.Maximum - aHorizAxis.Minimum) + b;
-  x1 := aRect2.Left + Round((aHorizAxis.IStartPos - aRect1.Left) * k);
-  x2 := aRect2.Left + Round((aHorizAxis.IEndPos - aRect1.Left) * k);
-  aHorizAxis.SetMinMax(aHorizAxis.CalcPosPoint(x1), aHorizAxis.CalcPosPoint(x2));
+  if (aRect1.Width > 2) and (aRect2.Width > 2) then
+  begin
+    k := aRect2.Width/aRect1.Width;
+    b := aRect2.Left - k * aRect2.Left;
+  //  x1 := aHorizAxis.IStartPos + b;
+  //  x2 := aHorizAxis.Minimum + k * (aHorizAxis.Maximum - aHorizAxis.Minimum) + b;
+    x1 := aRect2.Left + Round((aHorizAxis.IStartPos - aRect1.Left) * k);
+    x2 := aRect2.Left + Round((aHorizAxis.IEndPos - aRect1.Left) * k);
+    aHorizAxis.SetMinMax(aHorizAxis.CalcPosPoint(x1), aHorizAxis.CalcPosPoint(x2));
+  end;
 
 //  k :=  aRect2.Height/aRect1.Height;
 //  x1 := aRect2.Top + (aVertAxis.Minimum - aRect1.Top) * k;
 //  x2 := aRect2.Top + (aVertAxis.Maximum - aRect1.Top) * k;
 //  aVertAxis.SetMinMax(x1, x2);
+
+  if (aRect1.Height > 2) and (aRect2.Height > 2) then
+  begin
+    k := aRect2.Height/aRect1.Height;
+    b := aRect2.Top - k * aRect2.Top;
+  //  x1 := aHorizAxis.IStartPos + b;
+  //  x2 := aHorizAxis.Minimum + k * (aHorizAxis.Maximum - aHorizAxis.Minimum) + b;
+    x1 := aRect2.Top + Round((aVertAxis.IStartPos - aRect1.Top) * k);
+    x2 := aRect2.Top + Round((aVertAxis.IEndPos - aRect1.Top) * k);
+    aVertAxis.SetMinMax(aVertAxis.CalcPosPoint(x1), aVertAxis.CalcPosPoint(x2));
+  end;
+
 
 end;
 
@@ -324,14 +342,20 @@ begin
 
   if GetTouchInputInfo(Msg.LParam, aCount, @Inputs[0], SizeOf(TTouchInput)) then
   begin
+//    aRect := ScreenToClient(Rect(
+//      Min(Inputs[0].x, Inputs[1].x) div 100,
+//      Min(Inputs[0].y, Inputs[1].y) div 100,
+//      Max(Inputs[0].x, Inputs[1].x) div 100,
+//      Max(Inputs[0].y, Inputs[1].y) div 100));
     aRect := ScreenToClient(Rect(
-      Min(Inputs[0].x, Inputs[1].x) div 100,
-      Min(Inputs[0].y, Inputs[1].y) div 100,
-      Max(Inputs[0].x, Inputs[1].x) div 100,
-      Max(Inputs[0].y, Inputs[1].y) div 100));
+      Inputs[0].x div 100,
+      Inputs[0].y div 100,
+      Inputs[1].x div 100,
+      Inputs[1].y div 100));
 
-    if not FLastRec.IsEmpty then
-      RectToRect(FLastRec, aRect);
+//    if (FLastRec.Width > 2) and (aRect.Width > 2)
+//      and (FLastRec.Height > 2) and (aRect.Height > 2) then
+      RectToRect(aRect, FLastRec);
     FLastRec := aRect;
 
     CloseTouchInputHandle(Msg.LParam);
